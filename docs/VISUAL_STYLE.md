@@ -37,6 +37,15 @@ Vale para todos os mapas atuais e para as próximas campanhas. Quem criar mapa, 
 - Mapa de praia novo: incluir o `id` na checagem `st.beach` de `FXV.reset`.
 - Raios de luz só aparecem em área a céu aberto (`m.ambZ` ou sala com `T.out`).
 
+## Personagens (`ZRIG` e `rigPolish`)
+
+- Todo humanoide usa o esqueleto do Marcus (`rigRender`): mesma proporção, mesmo contorno, mesma paleta de sombra.
+- Zumbi humanoide novo: uma linha em `ZRIG.BASE` (roupa, cores, cabelo, pele) ou em `ZRIG.VO` para variação de um tipo existente. Nada de folha de sprite externa.
+- Pele de zumbi: tons doentes de `SK` (verde, cinza, azulado, amarelado). Cor de pele definida em `ZV` é misturada com verde.
+- Poses de zumbi em `pose()`: tronco inclinado, cabeça caída, braços à frente. Animação cíclica sai com o dobro de quadros (`s.sub = 2`).
+- `rigPolish`: luz de cima. O contorno do topo vira a cor interna escurecida e a linha logo abaixo ganha brilho. Aplicado a todo sprite do rig.
+- Sangue na boca e mancha na roupa são aplicados por cima, por variação.
+
 ## Regras técnicas
 
 - JavaScript ES2015 apenas (sem `?.`, `??`).
@@ -49,5 +58,5 @@ Vale para todos os mapas atuais e para as próximas campanhas. Quem criar mapa, 
 
 1. **Luz e clima** — feito na v27.0.
 2. **Chefes e onda 14** — cutscene de 4 a 5 s na chegada do chefe (jogo pausado, sem spawn, sem dano) e partida terminando na onda 14 com passagem para a próxima quebrada.
-3. **Personagens** — Marcus repaginado, animações mais fluidas, zumbis com estilo único derivado do Marcus.
+3. **Personagens** — feito na v27.1: zumbis humanoides no rig do Marcus (`ZRIG`), contorno seletivo (`rigPolish`), caminhada e corrida com mais quadros. Falta: redesenho do rosto/roupa do Marcus, zumbis não humanoides (cão, rastejante, selvagem) e chefes no mesmo traço.
 4. **Cenário** — placas, grafites, desenhos de parede, fundos e objetos à frente refeitos em todos os mapas.
