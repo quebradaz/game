@@ -1,0 +1,53 @@
+# Quebrada Z — Guia de estilo visual (v27+)
+
+Vale para todos os mapas atuais e para as próximas campanhas. Quem criar mapa, personagem ou efeito novo segue este guia.
+
+## Direção de arte
+
+- Pixel art sempre. Nada de borda suavizada em sprite ou cenário; suavização só em brilho (halo, bloom, raios).
+- Alvo: as três referências do dono do projeto (noite, manhã, tarde): céu dramático, cidade em camadas, luz colorida forte, chão que reflete.
+- Três períodos, cada um com identidade fixa:
+  - **Dia**: céu azul limpo, sol alto, sombra fria, luz quente no topo.
+  - **Tarde**: sol baixo laranja, nuvens rosadas, raios de luz fortes, sombra roxa.
+  - **Noite**: lua de sangue, céu vinho/roxo, neon magenta e ciano, chão molhado.
+- Objetos grandes à frente do personagem (camada `FRONT`, parallax 1,25) dão sensação de profundidade. Todo mapa novo tem pelo menos três.
+- Grafite, placa e desenho de parede contam a história do lugar: gíria de quebrada, PT-BR, nada genérico.
+- Personagens novos partem do Marcus (mesma proporção, mesmo contorno, mesma paleta de pele/sombra) para o elenco parecer um jogo só.
+
+## Camadas (do fundo para a frente)
+
+| Camada | Parallax | Onde |
+|---|---|---|
+| Céu pintado (`ART`) + `skyDraw` do mapa | ~0,05 | `buildMap` |
+| Astro, nuvens, relâmpago | 0,015 a 0,08 | `FXV.sky` |
+| Fundo da sala (`BD_THEMES`) | 0,30 | `drawRoomBackdrops` |
+| Cidade próxima | 0,45 | `nearLayer` |
+| Cenário, personagens, efeitos | 1,00 | `render` |
+| Luz ambiente e lâmpadas | 1,00 | `lights` |
+| Reflexo no chão, raios de luz | tela | `FXV.ground` |
+| Objetos à frente | 1,25 | `drawFront` |
+| Areia, clima, gradação, bloom, vinheta | tela | `FXV.post` |
+
+## Módulo `FXV` (atmosfera)
+
+- Tudo em `index.html`, bloco `const FXV`. Só visual: não muda regra de jogo.
+- Paleta por período em `FXV.SKY` (astro, nuvem, raio, gradação, bloom, vinheta). Mudar o clima de um período é mudar essa tabela.
+- Clima sorteado por partida em `FXV.reset`: `clear`, `rain`, `storm` (raio + trovão), `sand` (só mapa de praia, `id: "copa"`).
+- Teste rápido no console: `FXV.set("storm")`, `FXV.set("sand")`, `FXV.set()` para limpar.
+- Mapa de praia novo: incluir o `id` na checagem `st.beach` de `FXV.reset`.
+- Raios de luz só aparecem em área a céu aberto (`m.ambZ` ou sala com `T.out`).
+
+## Regras técnicas
+
+- JavaScript ES2015 apenas (sem `?.`, `??`).
+- `VW` nunca varia por qualidade.
+- Efeito novo respeita `QUAL.tier` (0 alto, 1 médio, 2 baixo) e `fxReduced()`. Hoje: bloom só no tier 0; reflexo, raios e gradação nos tiers 0 e 1; tier 2 fica com astro, nuvens e vinheta.
+- Clarão de relâmpago desliga com efeitos reduzidos (fotossensibilidade).
+- Sprite gerado por código fica em cache; nada de criar canvas por quadro.
+
+## Fases do remake visual
+
+1. **Luz e clima** — feito na v27.0.
+2. **Chefes e onda 14** — cutscene de 4 a 5 s na chegada do chefe (jogo pausado, sem spawn, sem dano) e partida terminando na onda 14 com passagem para a próxima quebrada.
+3. **Personagens** — Marcus repaginado, animações mais fluidas, zumbis com estilo único derivado do Marcus.
+4. **Cenário** — placas, grafites, desenhos de parede, fundos e objetos à frente refeitos em todos os mapas.
