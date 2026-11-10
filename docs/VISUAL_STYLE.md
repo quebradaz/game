@@ -62,7 +62,10 @@ Vale para todos os mapas atuais e para as próximas campanhas. Quem criar mapa, 
 - Três camadas contínuas por mapa, geradas por código na primeira partida: morros com o Cristo (parallax 0,05), morro de barracos com igreja (0,12), casas grandes com caixa d'água, varal, postes, fios, bandeirinhas e muro grafitado (0,22).
 - Cores saem de `SCN.PAL` por período: luz do período (`tint`), escuridão (`dark`), janelas acesas (`lit`) e névoa por distância (`haze`). Camada mais longe = mais névoa.
 - `SCN.KINDS` lista os tipos de fundo de sala que o módulo substitui. Mapa novo de favela não precisa de nada; mapa com paisagem própria (praia, mata, centro) fica fora da lista e desenha o seu.
-- Grafite: palavras em `WORDS`, cores em `GCOL`. Letra de pixel com contorno fino, volume e escorrido. Sempre gíria de quebrada, PT-BR.
+- Estilo por mapa em `STYLE` (ou `m.scn` no mapa novo): `favela` (padrão), `centro` (sobrados coloniais, prédios altos, Arcos com bondinho), `praia` (morros, Pão de Açúcar e orla parando na linha do mar, `SEA_HZ`), `mata` (baía, serra coberta de mata, árvores, palmeiras e o pico com a estátua).
+- `GRAF`: atlas com 43 grafites feitos pelo dono do projeto, já recortados e convertidos em pixel art (borda irregular, cores reduzidas). Entram no muro de fundo e, pelo `SCN.decay`, em parede lisa do cenário jogável, longe de placa de arma, máquina, geladeira e porta. Arte nova: recortar, reduzir para até 46 px de altura, reduzir cores e acrescentar ao atlas. Não usar recorte que copie personagem ou marca conhecida.
+- `SCN.decay` (estética de apocalipse, vale para todo mapa): musgo no topo de tudo que encosta no céu, trepadeira, mancha de água escorrida, mato e musgo no pé das paredes. Cores em `MOSS`.
+- Grafite por código: palavras em `WORDS`, cores em `GCOL`. Letra de pixel com contorno fino, volume e escorrido. Sempre gíria de quebrada, PT-BR.
 - `SCN.fx`: toda luz baixa do mapa (`m.lights`, máquinas de perk, geladeira) ganha risco refletido no chão; lâmpada comum ganha cone de luz; noite e tarde têm névoa baixa. Mais forte com chuva.
 
 ## Regras técnicas
@@ -78,4 +81,4 @@ Vale para todos os mapas atuais e para as próximas campanhas. Quem criar mapa, 
 1. **Luz e clima** — feito na v27.0.
 2. **Chefes** — feito na v27.2: cutscene de 4,6 s na chegada do chefe (`CUT`). Progressão feita na v27.1: chegar na onda 14 libera a próxima quebrada da fila; a partida continua até a onda 20.
 3. **Personagens** — feito na v27.1: zumbis humanoides, selvagem, rastejante e Observador no rig do Marcus (`ZRIG`); cão zumbi desenhado por código no mesmo traço; contorno seletivo e sombra inferior (`rigPolish`); caminhada e corrida com mais quadros. Falta: rosto/roupa do Marcus e Capitão Caveira (arte própria da v26.8).
-4. **Cenário** — feito na v27.3 para os mapas de favela (adega, lava-rápido, quadra, laje): fundo em três camadas (`SCN`), muro grafitado, fios, bandeirinhas, reflexo de luz no chão, cone de luz e névoa. Falta: Cristo, Copacabana e Lapa no mesmo módulo (hoje usam os fundos próprios antigos), e placas/objetos dentro das salas.
+4. **Cenário** — feito na v27.3 em todos os mapas: fundo em camadas (`SCN`) com estilo por mapa (favela, centro, praia, mata), muro com os grafites do atlas `GRAF`, fios, bandeirinhas, musgo e abandono (`SCN.decay`), reflexo de luz no chão, cone de luz e névoa. Falta: o céu ainda é a imagem antiga; placas e móveis dentro das salas não foram redesenhados.
