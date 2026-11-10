@@ -47,6 +47,14 @@ Vale para todos os mapas atuais e para as próximas campanhas. Quem criar mapa, 
 - Corpo que não cabe no esqueleto humano (cão) é desenhado em função própria dentro de `ZRIG` (`dog`), com o mesmo contorno (`RIG_O`) e passando por `rigPolish`.
 - Sangue na boca e mancha na roupa são aplicados por cima, por variação.
 
+## Chefes (`CUT`)
+
+- Todo chefe novo chama `cutStart(z, nome, frase)` no fim da função que o cria.
+- Durante a cutscene `update` não roda: ninguém nasce, anda ou causa dano. Só o clima e a animação parada do chefe continuam.
+- Visual fixo: faixas pretas de cinema, faixa diagonal vermelha com close do chefe (o próprio sprite ampliado), nome grande em branco com sombra vermelha, frase curta embaixo.
+- Nome e frase usam a fonte de pixel `FONT`. Ela só tem Ã e Ú de acento; outro acento precisa de glifo novo.
+- Toque ou tecla pula depois de 1 s. Clarão desliga com efeitos reduzidos.
+
 ## Regras técnicas
 
 - JavaScript ES2015 apenas (sem `?.`, `??`).
@@ -58,6 +66,6 @@ Vale para todos os mapas atuais e para as próximas campanhas. Quem criar mapa, 
 ## Fases do remake visual
 
 1. **Luz e clima** — feito na v27.0.
-2. **Chefes** — cutscene de 4 a 5 s na chegada do chefe (jogo pausado, sem spawn, sem dano). Progressão já feita na v27.1: chegar na onda 14 libera a próxima quebrada da fila; a partida continua até a onda 20.
+2. **Chefes** — feito na v27.2: cutscene de 4,6 s na chegada do chefe (`CUT`). Progressão feita na v27.1: chegar na onda 14 libera a próxima quebrada da fila; a partida continua até a onda 20.
 3. **Personagens** — feito na v27.1: zumbis humanoides, selvagem, rastejante e Observador no rig do Marcus (`ZRIG`); cão zumbi desenhado por código no mesmo traço; contorno seletivo e sombra inferior (`rigPolish`); caminhada e corrida com mais quadros. Falta: rosto/roupa do Marcus e Capitão Caveira (arte própria da v26.8).
 4. **Cenário** — placas, grafites, desenhos de parede, fundos e objetos à frente refeitos em todos os mapas.
