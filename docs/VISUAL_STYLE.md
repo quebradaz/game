@@ -44,6 +44,7 @@ Vale para todos os mapas atuais e para as próximas campanhas. Quem criar mapa, 
 - Pele de zumbi: tons doentes de `SK` (verde, cinza, azulado, amarelado). Cor de pele definida em `ZV` é misturada com verde.
 - Poses de zumbi em `pose()`: tronco inclinado, cabeça caída, braços à frente. Animação cíclica sai com o dobro de quadros (`s.sub = 2`).
 - `rigPolish`: luz de cima. O contorno do topo vira a cor interna escurecida e a linha logo abaixo ganha brilho. Aplicado a todo sprite do rig.
+- Corpo que não cabe no esqueleto humano (cão) é desenhado em função própria dentro de `ZRIG` (`dog`), com o mesmo contorno (`RIG_O`) e passando por `rigPolish`.
 - Sangue na boca e mancha na roupa são aplicados por cima, por variação.
 
 ## Regras técnicas
@@ -57,6 +58,6 @@ Vale para todos os mapas atuais e para as próximas campanhas. Quem criar mapa, 
 ## Fases do remake visual
 
 1. **Luz e clima** — feito na v27.0.
-2. **Chefes e onda 14** — cutscene de 4 a 5 s na chegada do chefe (jogo pausado, sem spawn, sem dano) e partida terminando na onda 14 com passagem para a próxima quebrada.
-3. **Personagens** — feito na v27.1: zumbis humanoides no rig do Marcus (`ZRIG`), contorno seletivo (`rigPolish`), caminhada e corrida com mais quadros. Falta: redesenho do rosto/roupa do Marcus, zumbis não humanoides (cão, rastejante, selvagem) e chefes no mesmo traço.
+2. **Chefes** — cutscene de 4 a 5 s na chegada do chefe (jogo pausado, sem spawn, sem dano). Progressão já feita na v27.1: chegar na onda 14 libera a próxima quebrada da fila; a partida continua até a onda 20.
+3. **Personagens** — feito na v27.1: zumbis humanoides, selvagem, rastejante e Observador no rig do Marcus (`ZRIG`); cão zumbi desenhado por código no mesmo traço; contorno seletivo e sombra inferior (`rigPolish`); caminhada e corrida com mais quadros. Falta: rosto/roupa do Marcus e Capitão Caveira (arte própria da v26.8).
 4. **Cenário** — placas, grafites, desenhos de parede, fundos e objetos à frente refeitos em todos os mapas.
