@@ -63,9 +63,9 @@ Vale para todos os mapas atuais e para as próximas campanhas. Quem criar mapa, 
 - Cores saem de `SCN.PAL` por período: luz do período (`tint`), escuridão (`dark`), janelas acesas (`lit`) e névoa por distância (`haze`). Camada mais longe = mais névoa.
 - `SCN.KINDS` lista os tipos de fundo de sala que o módulo substitui. Mapa novo de favela não precisa de nada; mapa com paisagem própria (praia, mata, centro) fica fora da lista e desenha o seu.
 - Estilo por mapa em `STYLE` (ou `m.scn` no mapa novo): `favela` (padrão), `centro` (sobrados coloniais, prédios altos, Arcos com bondinho), `praia` (morros, Pão de Açúcar e orla parando na linha do mar, `SEA_HZ`), `mata` (baía, serra coberta de mata, árvores, palmeiras e o pico com a estátua).
-- `GRAF`: atlas com 43 grafites feitos pelo dono do projeto, já recortados e convertidos em pixel art (borda irregular, cores reduzidas). Entram no muro de fundo e, pelo `SCN.decay`, em parede lisa do cenário jogável, longe de placa de arma, máquina, geladeira e porta. Arte nova: recortar, reduzir para até 46 px de altura, reduzir cores e acrescentar ao atlas. Não usar recorte que copie personagem ou marca conhecida.
+- `GRAF`: atlas com 19 grafites feitos pelo dono do projeto, recortados pelo contorno (sem o fundo escuro), com cores reduzidas e contorno de 1 px. `grafPut(c, R, x, y, w, h)` pinta um deles centralizado numa caixa. Entram no muro de fundo, no lugar dos grafites antigos do cenário e, pelo `SCN.decay`, em parede lisa longe de placa de arma, máquina, geladeira e porta. Arte nova: recortar pelo contorno, reduzir para até 46 px de altura, reduzir cores e acrescentar ao atlas. Não usar recorte que copie personagem ou marca conhecida.
+- Grafite escrito por código (letra da fonte de pixel) não entra mais: foi reprovado. Todo grafite vem do atlas.
 - `SCN.decay` (estética de apocalipse, vale para todo mapa): musgo no topo de tudo que encosta no céu, trepadeira, mancha de água escorrida, mato e musgo no pé das paredes. Cores em `MOSS`.
-- Grafite por código: palavras em `WORDS`, cores em `GCOL`. Letra de pixel com contorno fino, volume e escorrido. Sempre gíria de quebrada, PT-BR.
 - `SCN.fx`: toda luz baixa do mapa (`m.lights`, máquinas de perk, geladeira) ganha risco refletido no chão; lâmpada comum ganha cone de luz; noite e tarde têm névoa baixa. Mais forte com chuva.
 
 ## Regras técnicas
