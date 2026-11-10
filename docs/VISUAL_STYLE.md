@@ -20,10 +20,12 @@ Vale para todos os mapas atuais e para as próximas campanhas. Quem criar mapa, 
 |---|---|---|
 | Céu pintado (`ART`) + `skyDraw` do mapa | ~0,05 | `buildMap` |
 | Astro, nuvens, relâmpago | 0,015 a 0,08 | `FXV.sky` |
-| Fundo da sala (`BD_THEMES`) | 0,30 | `drawRoomBackdrops` |
+| Quebrada em 3 camadas (`SCN.draw`) | 0,05 / 0,12 / 0,22 | `render` |
+| Fundo da sala (`BD_THEMES`, só paisagem própria) | 0,30 | `drawRoomBackdrops` |
 | Cidade próxima | 0,45 | `nearLayer` |
 | Cenário, personagens, efeitos | 1,00 | `render` |
 | Luz ambiente e lâmpadas | 1,00 | `lights` |
+| Cone de luz, risco no chão, névoa | tela | `SCN.fx` |
 | Reflexo no chão, raios de luz | tela | `FXV.ground` |
 | Objetos à frente | 1,25 | `drawFront` |
 | Areia, clima, gradação, bloom, vinheta | tela | `FXV.post` |
@@ -55,6 +57,14 @@ Vale para todos os mapas atuais e para as próximas campanhas. Quem criar mapa, 
 - Nome e frase usam a fonte de pixel `FONT`. Ela só tem Ã e Ú de acento; outro acento precisa de glifo novo.
 - Toque ou tecla pula depois de 1 s. Clarão desliga com efeitos reduzidos.
 
+## Cenário de fundo (`SCN`)
+
+- Três camadas contínuas por mapa, geradas por código na primeira partida: morros com o Cristo (parallax 0,05), morro de barracos com igreja (0,12), casas grandes com caixa d'água, varal, postes, fios, bandeirinhas e muro grafitado (0,22).
+- Cores saem de `SCN.PAL` por período: luz do período (`tint`), escuridão (`dark`), janelas acesas (`lit`) e névoa por distância (`haze`). Camada mais longe = mais névoa.
+- `SCN.KINDS` lista os tipos de fundo de sala que o módulo substitui. Mapa novo de favela não precisa de nada; mapa com paisagem própria (praia, mata, centro) fica fora da lista e desenha o seu.
+- Grafite: palavras em `WORDS`, cores em `GCOL`. Letra de pixel com contorno fino, volume e escorrido. Sempre gíria de quebrada, PT-BR.
+- `SCN.fx`: toda luz baixa do mapa (`m.lights`, máquinas de perk, geladeira) ganha risco refletido no chão; lâmpada comum ganha cone de luz; noite e tarde têm névoa baixa. Mais forte com chuva.
+
 ## Regras técnicas
 
 - JavaScript ES2015 apenas (sem `?.`, `??`).
@@ -68,4 +78,4 @@ Vale para todos os mapas atuais e para as próximas campanhas. Quem criar mapa, 
 1. **Luz e clima** — feito na v27.0.
 2. **Chefes** — feito na v27.2: cutscene de 4,6 s na chegada do chefe (`CUT`). Progressão feita na v27.1: chegar na onda 14 libera a próxima quebrada da fila; a partida continua até a onda 20.
 3. **Personagens** — feito na v27.1: zumbis humanoides, selvagem, rastejante e Observador no rig do Marcus (`ZRIG`); cão zumbi desenhado por código no mesmo traço; contorno seletivo e sombra inferior (`rigPolish`); caminhada e corrida com mais quadros. Falta: rosto/roupa do Marcus e Capitão Caveira (arte própria da v26.8).
-4. **Cenário** — placas, grafites, desenhos de parede, fundos e objetos à frente refeitos em todos os mapas.
+4. **Cenário** — feito na v27.3 para os mapas de favela (adega, lava-rápido, quadra, laje): fundo em três camadas (`SCN`), muro grafitado, fios, bandeirinhas, reflexo de luz no chão, cone de luz e névoa. Falta: Cristo, Copacabana e Lapa no mesmo módulo (hoje usam os fundos próprios antigos), e placas/objetos dentro das salas.
