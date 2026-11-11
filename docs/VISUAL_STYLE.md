@@ -75,7 +75,10 @@ Vale para todos os mapas atuais e para as próximas campanhas. Quem criar mapa, 
 
 - JavaScript ES2015 apenas (sem `?.`, `??`).
 - `VW` nunca varia por qualidade.
-- Efeito novo respeita `QUAL.tier` (0 alto, 1 médio, 2 baixo) e `fxReduced()`. Hoje: bloom só no tier 0; reflexo, raios e gradação nos tiers 0 e 1; tier 2 fica com astro, nuvens e vinheta.
+- A cara do jogo não muda com a qualidade: chuva, reflexo no chão, gradação de cor, fundo em camadas, névoa e risco de luz ficam ligados nos três níveis de `QUAL.tier`. A qualidade só mexe em custo: bloom (só no 0), raios de sol e cone de luz (0 e 1), número de gotas, faixas do reflexo, camadas de névoa, resolução da luz. Efeito novo segue essa regra e respeita `fxReduced()`.
+- Reflexo no chão sempre ligado (`REFL` por período; mais forte com chuva). Nunca copiar o canvas nele mesmo dentro de laço: copiar a faixa uma vez para um canvas pequeno e desenhar a partir dele.
+- Qualidade automática: cai um nível após 3 s abaixo de 45 fps e só sobe após 60 s acima de 58 fps, para não ficar trocando no meio da partida.
+- Folha de zumbi do rig usa quadro de 80 px (`ZF`, recorte do quadro de 128 do rig): 2,5 vezes menos memória.
 - Clarão de relâmpago desliga com efeitos reduzidos (fotossensibilidade).
 - Sprite gerado por código fica em cache; nada de criar canvas por quadro.
 
