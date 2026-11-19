@@ -1,6 +1,6 @@
 # Quebrada Z — Revisão e checklist de lançamento
 
-Estado em 19/11/2026, versão 28.3 no ar em https://quebradaz.github.io/game/.
+Estado em 19/11/2026, versão 28.6 pronta (28.3 no ar) no ar em https://quebradaz.github.io/game/.
 
 Legenda: **[BLOQUEIA]** precisa estar resolvido antes de divulgar · **[IMPORTANTE]** resolver nas primeiras semanas · **[DEPOIS]** pode esperar.
 
@@ -22,7 +22,7 @@ Os cinco itens que mais travam o lançamento:
 - [ ] **[BLOQUEIA]** Desligar o login por e-mail em Authentication › Sign In / Providers › Email (deixar só Google).
 - [ ] **[IMPORTANTE]** Apagar o projeto antigo `quebrada-z` (EUA, pausado) quando tiver certeza de que não precisa dele.
 - [ ] **[IMPORTANTE]** Domínio próprio no Supabase (complemento pago): a tela do Google passa a mostrar "Quebrada Z" em vez de `wjjuuqvdttjuzsgqueuj.supabase.co`, o que passa mais confiança.
-- [ ] **[IMPORTANTE]** Painel de acompanhamento: quantas contas por dia, partidas, erros de partida recusada (tabela `runs`, coluna `reason`).
+- [x] **[IMPORTANTE]** Painel de acompanhamento: quantas contas por dia, partidas, erros de partida recusada (tabela `runs`, coluna `reason`).
 - [ ] **[DEPOIS]** Alertas de uso perto do limite (Supabase avisa por e-mail no Pro).
 - [x] Cada jogador só lê os próprios dados (RLS conferido); estatística, ranking, chip e Z-Coin só mudam por função do servidor.
 - [x] Livro de transações de chip e Z-Coin, e crédito manual de compra sem duplicar pagamento.
@@ -38,17 +38,17 @@ Os cinco itens que mais travam o lançamento:
 ## 3. Celular e instalação
 
 - [ ] **[BLOQUEIA]** Testar em pelo menos um Android barato e um iPhone: FPS em onda cheia, toque, áudio, login Google no Safari, rotação.
-- [ ] **[IMPORTANTE]** Manifesto de app (PWA) e ícones: no iPhone e no Android, "Adicionar à tela de início" abre em tela cheia, com ícone e nome.
-- [ ] **[IMPORTANTE]** Tela de carregamento com barra (o primeiro acesso baixa vários MB).
-- [ ] **[DEPOIS]** Funcionar offline depois do primeiro acesso (service worker).
+- [x] **[IMPORTANTE]** Manifesto de app (PWA) e ícones: no iPhone e no Android, "Adicionar à tela de início" abre em tela cheia, com ícone e nome.
+- [x] **[IMPORTANTE]** Tela de carregamento com barra (o primeiro acesso baixa vários MB).
+- [x] **[DEPOIS]** Funcionar offline depois do primeiro acesso (service worker).
 
 ## 4. Play Store (fase E)
 
 - [ ] **[BLOQUEIA para a loja]** Conta de desenvolvedor Google Play (US$ 25, uma vez).
-- [ ] **[BLOQUEIA para a loja]** Empacotar o jogo como app (TWA recomendado: usa o Chrome do aparelho, o login Google funciona e o app atualiza junto com o site).
+- [x] **[BLOQUEIA para a loja]** Empacotar o jogo como app (TWA recomendado: usa o Chrome do aparelho, o login Google funciona e o app atualiza junto com o site).
 - [ ] **[BLOQUEIA para a loja]** Venda de Z-Coin pelo Google Play Billing dentro do app (link externo é proibido no app). Até lá, esconder a compra no app.
 - [ ] **[BLOQUEIA para a loja]** Classificação indicativa (questionário IARC: violência e sangue tendem a dar 16 ou 18 anos), formulário de segurança de dados, política de privacidade no ar (pronta), link para excluir conta pela web (o site tem).
-- [ ] **[BLOQUEIA para a loja]** Ícone 512 px, imagem de destaque 1024×500, de 4 a 8 capturas de tela, vídeo curto, textos da loja.
+- [x] **[BLOQUEIA para a loja]** Ícone 512 px, imagem de destaque 1024×500, de 4 a 8 capturas de tela, vídeo curto, textos da loja.
 - [ ] **[IMPORTANTE]** Anúncios: AdMob no app e anúncio para jogos HTML5 do Google no site, só nos momentos combinados (entrar numa campanha, terminar mapa, voltar ao menu). Atualizar a política de privacidade antes de ligar.
 
 ## 5. Dinheiro, empresa e lei
@@ -56,7 +56,7 @@ Os cinco itens que mais travam o lançamento:
 - [ ] **[BLOQUEIA para vender]** Formalizar: MEI ou empresa para receber pela venda de Z-Coin e emitir nota. Conversar com um contador.
 - [ ] **[BLOQUEIA para vender]** Link de checkout da InfinitePay para os pacotes (o jogo já tem os botões).
 - [ ] **[BLOQUEIA para a loja]** Caixas grátis com sorteio: confirmar com um advogado se o ECA Digital (Lei 15.211/2025) as alcança. Se sim, trocar por prêmio fixo.
-- [ ] **[IMPORTANTE]** Termos de Uso com regras de reembolso de Z-Coin (Código de Defesa do Consumidor: direito de arrependimento em compra online).
+- [x] **[IMPORTANTE]** Termos de Uso com regras de reembolso de Z-Coin (Código de Defesa do Consumidor: direito de arrependimento em compra online).
 - [ ] **[IMPORTANTE]** E-mail de contato oficial do jogo (hoje é o `amplitudelabb@gmail.com`).
 - [ ] **[IMPORTANTE]** O projeto do Google Cloud do login está na conta `amplitudelabb@gmail.com`; garantir que essa conta não se perca (é dela que depende o login de todos).
 - [x] Política de Privacidade e Termos de Uso publicados.
@@ -64,19 +64,19 @@ Os cinco itens que mais travam o lançamento:
 
 ## 6. Jogo
 
-- [ ] **[IMPORTANTE]** Bugs conhecidos: zumbis do mezanino da Lapa pulam em vez de usar a escada; colisão das máquinas de perk barrando tiros (nunca reproduzido).
-- [ ] **[IMPORTANTE]** Primeira partida guiada (tutorial curto) para quem chega pela divulgação.
+- [x] **[IMPORTANTE]** Bugs conhecidos: zumbis do mezanino da Lapa pulam em vez de usar a escada; colisão das máquinas de perk barrando tiros (nunca reproduzido).
+- [x] **[IMPORTANTE]** Primeira partida guiada (tutorial curto) para quem chega pela divulgação.
 - [ ] **[IMPORTANTE]** Equilíbrio da economia depois de uma semana de dados reais (chips por semana, quantos completam o passe).
 - [ ] **[DEPOIS]** Skins de arma para as caixas; Capitão Caveira e rosto/roupa do personagem no traço novo; céu redesenhado.
 - [x] Quatro fases do remake visual, cutscene de chefe, progressão por mapa, conta, ranking, passe, missões, caixas, loja.
 
 ## 7. Divulgação e comunidade
 
-- [ ] **[BLOQUEIA]** Site oficial com como jogar em cada aparelho, novidades e conta (feito nesta entrega: https://quebradaz.github.io/).
+- [x] **[BLOQUEIA]** Site oficial com como jogar em cada aparelho, novidades e conta (feito nesta entrega: https://quebradaz.github.io/).
 - [ ] **[IMPORTANTE]** Perfis oficiais (Instagram, TikTok, YouTube) e um canal de comunidade (Discord ou grupo de WhatsApp) para suporte e bugs.
 - [ ] **[IMPORTANTE]** Trailer de 30 a 60 s e cortes verticais para Reels/TikTok (há gravações curtas do jogo no site).
-- [ ] **[IMPORTANTE]** Kit de imprensa: logo, capturas, descrição curta e longa, contato.
-- [ ] **[DEPOIS]** Evento de lançamento (fim de semana com XP de passe em dobro).
+- [x] **[IMPORTANTE]** Kit de imprensa: logo, capturas, descrição curta e longa, contato.
+- [x] **[DEPOIS]** Evento de lançamento (fim de semana com XP de passe em dobro).
 
 ## 8. Antes de cada atualização
 
@@ -84,3 +84,17 @@ Os cinco itens que mais travam o lançamento:
 - [ ] Testar login, uma partida inteira e a tela PASSE no site publicado.
 - [ ] Registrar a nota em `site/novidades` (o site lê a lista de versões).
 - [ ] Nunca citar o modo de teste em notas, PRs ou no site.
+
+## Feito na 28.6 (sem depender do dono)
+
+- Painel: `select * from admin_stats(14)` no SQL Editor. Evento de XP: tabela `xp_events` (ver supabase/README.md).
+- App instalável e offline: `manifest.webmanifest`, `sw.js`, `icons/`.
+- TWA preparado em `store/twa/`; ficha da loja e imagens em `store/` (PLAY_STORE.md).
+- Separar sprites do index.html: trocado pelo service worker (quem volta não baixa de novo), para manter o arquivo único.
+- Proteção: trava de domínio no jogo, LICENSE de todos os direitos reservados, termos, e build minificado em `tools/build/`.
+
+## Para o próximo update (depende do dono)
+
+- Esconder o código: mover o código-fonte para um repositório privado e publicar só o build minificado (`node tools/build/build.js index.html dist/index.html`).
+- Supabase Pro, domínio + Cloudflare, conta Play (US$ 25), MEI/CNPJ, advogado (caixas), link da InfinitePay, e-mail oficial, redes sociais, teste em iPhone e Android barato.
+- Desligar login por e-mail e apagar o projeto antigo (precisam do sim do dono).

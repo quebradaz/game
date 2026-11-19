@@ -1,0 +1,14 @@
+<!doctype html><meta charset="utf-8"><body style="background:#222"><canvas id="c"></canvas><script>
+fetch('meta.json').then(r=>r.json()).then(async M=>{
+const K=Object.keys(M),S=4,cw=80*S,ch=22*S+28,cols=4,rows=Math.ceil(K.length/cols);
+const c=document.getElementById('c');c.width=cols*cw;c.height=rows*ch;const x=c.getContext('2d');x.imageSmoothingEnabled=false;
+x.fillStyle='#2b2b33';x.fillRect(0,0,c.width,c.height);
+const c1=document.createElement('canvas');let W1=0;K.forEach(k=>W1+=M[k].w+2);c1.width=W1;c1.height=20;const x1=c1.getContext('2d');let ox=0;const atlas={};
+for(let i=0;i<K.length;i++){const k=K[i],m=M[k],im=new Image();im.src=k+'.png';await im.decode();
+const cx=(i%cols)*cw,cy=Math.floor(i/cols)*ch;x.strokeStyle='#44444f';x.strokeRect(cx+.5,cy+.5,cw-1,ch-1);
+const px=cx+(cw-m.w*S)/2,py=cy+10+(22*S-m.h*S)/2;x.drawImage(im,px,py,m.w*S,m.h*S);
+const dot=(p,col)=>{if(!p)return;x.fillStyle=col;x.fillRect(px+p[0]*S,py+p[1]*S,S,S)};
+x.fillStyle='#ddd';x.font='bold 15px monospace';x.fillText(k+'  '+m.w+'x'+m.h,cx+8,cy+ch-8);
+x1.drawImage(im,ox,0);atlas[k]=Object.assign({x:ox,y:0},m);ox+=m.w+2;}
+window.OUT={sheet:c.toDataURL(),atlas:c1.toDataURL(),json:atlas};});
+</script>

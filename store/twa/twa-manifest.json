@@ -1,0 +1,22 @@
+{
+  "packageId": "io.github.quebradaz.game",
+  "host": "quebradaz.github.io",
+  "name": "Quebrada Z",
+  "launcherName": "Quebrada Z",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "themeColor": "#0d0b14",
+  "navigationColor": "#0d0b14",
+  "backgroundColor": "#0d0b14",
+  "enableNotifications": false,
+  "startUrl": "/game/",
+  "iconUrl": "https://quebradaz.github.io/game/icons/icon-512.png",
+  "maskableIconUrl": "https://quebradaz.github.io/game/icons/maskable-512.png",
+  "webManifestUrl": "https://quebradaz.github.io/game/manifest.webmanifest",
+  "appVersionName": "28.6",
+  "appVersionCode": 1,
+  "minSdkVersion": 21,
+  "fallbackType": "customtabs",
+  "features": {},
+  "signingKey": { "path": "./android.keystore", "alias": "quebradaz" }
+}
