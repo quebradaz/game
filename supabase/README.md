@@ -51,3 +51,15 @@ select public.admin_credit_zcoin('NomeDoPersonagem', 330, 'infinitepay 12345');
 ```
 
 O terceiro valor é o identificador do pagamento: o mesmo pagamento não é creditado duas vezes. Nenhum jogador consegue chamar essa função.
+
+## Feedback dos jogadores (v28.5)
+
+No SQL Editor:
+
+```sql
+select created_at, kind, body, ver, device from public.feedback order by id desc limit 50;
+```
+
+## Caixas (v28.5)
+
+Lendário 4% (roupa 3%, 25 Z-Coin 1%), raro 14% (roupa 11%, chip 3%), comum 82% (roupa 45%, moedas 37%). Itens das caixas: `shop_items.kind = 'box'`, lista em `tools/patches/v28.5-itens.js`.
