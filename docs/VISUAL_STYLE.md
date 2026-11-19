@@ -71,6 +71,13 @@ Vale para todos os mapas atuais e para as próximas campanhas. Quem criar mapa, 
 - `SCN.decay` (estética de apocalipse, vale para todo mapa): musgo no topo de tudo que encosta no céu, trepadeira, mancha de água escorrida, mato e musgo no pé das paredes. Cores em `MOSS`.
 - `SCN.fx`: toda luz baixa do mapa (`m.lights`, máquinas de perk, geladeira) ganha risco refletido no chão; lâmpada comum ganha cone de luz; noite e tarde têm névoa baixa. Mais forte com chuva.
 
+## Escala e ambiente (v28)
+
+- Personagem tem ~62 px em pé: 1 px ≈ 2,8 cm. Mesa 26 px, assento 16 px, encosto 28 px, banqueta 26 px, garrafa ~12 px (`bottleDims` reduz as medidas de `BOTTLE_T`). Prop novo segue essa escala.
+- Vela só em ambiente interno (`indoorAt`). Rua, praia e o que fica fora das salas: nenhuma vela.
+- Chuva para no teto: `rainFloor` dá, por coluna do mundo, até onde a gota desce (chão na rua, teto em sala fechada) e o respingo cai ali.
+- Praia (`STYLE` `praia`): céu limpo até o horizonte, sem cidade nem morros; mar em faixas pontilhadas com ondas em perspectiva (`SEA` no mapa da praia). `SCN.decay` não põe musgo na linha do mar nem grafite na rua da praia.
+
 ## Regras técnicas
 
 - JavaScript ES2015 apenas (sem `?.`, `??`).
