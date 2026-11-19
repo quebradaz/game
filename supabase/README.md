@@ -63,3 +63,18 @@ select created_at, kind, body, ver, device from public.feedback order by id desc
 ## Caixas (v28.5)
 
 Lendário 4% (roupa 3%, 25 Z-Coin 1%), raro 14% (roupa 11%, chip 3%), comum 82% (roupa 45%, moedas 37%). Itens das caixas: `shop_items.kind = 'box'`, lista em `tools/patches/v28.5-itens.js`.
+
+## Painel e eventos (v28.6)
+
+Painel dos últimos 14 dias no SQL Editor:
+
+```sql
+select * from public.admin_stats(14);
+```
+
+Evento de XP do passe (ex.: fim de semana de lançamento com XP em dobro). O jogo mostra o aviso na tela PASSE enquanto durar:
+
+```sql
+insert into public.xp_events (name, starts_at, ends_at, mult)
+values ('de lançamento', '2026-12-05 00:00-03', '2026-12-08 00:00-03', 2);
+```
