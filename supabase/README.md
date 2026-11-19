@@ -29,3 +29,25 @@ O que isso protege: ninguém lê ou altera dado de outro jogador; estatística e
 ## Edge Function `delete-account`
 
 Fonte em `functions/delete-account/index.ts`. Apaga o usuário do Auth; perfil, progresso, estatísticas, partidas e ranking saem em cascata. Exige login (`verify_jwt`).
+
+## Economia (migrações `v28_economia` e `v28_economia_import_seguro`)
+
+Nenhuma tabela é lida ou escrita direto pelo jogo; tudo passa por funções (exigem login):
+
+- `get_economy()`: carteira, habilidades, itens, loja, missões da semana, passe e caixas, numa chamada.
+- `boss_drop(run, chefe)`: o servidor sorteia o chip (50%) e a Z-Coin (10%, 5 Z), um sorteio por chefe por partida, com tempo mínimo de partida.
+- `buy_skill(skill)`, `buy_item(item)`, `buy_pass()`, `claim_pass(nivel, trilha)`, `claim_mission(slot)`, `open_box(id)`, `next_box()`.
+- `import_skills()`: uma vez, traz as habilidades compradas com moedas antes da fase D (lê do save da conta; só contas criadas antes da mudança).
+- `submit_run` (v2): além do ranking, soma XP do passe, avança missões e dá uma caixa a quem vence o mapa.
+
+Tabelas: `wallets`, `ledger` (livro de toda entrada e saída de chip e Z-Coin), `boss_rolls`, `skill_costs`, `skill_levels`, `shop_items`, `items_owned`, `mission_pool`, `mission_week`, `mission_progress`, `seasons`, `pass_rewards`, `pass_progress`, `boxes`.
+
+### Creditar Z-Coin de uma compra pela InfinitePay
+
+No painel do Supabase, em SQL Editor:
+
+```sql
+select public.admin_credit_zcoin('NomeDoPersonagem', 330, 'infinitepay 12345');
+```
+
+O terceiro valor é o identificador do pagamento: o mesmo pagamento não é creditado duas vezes. Nenhum jogador consegue chamar essa função.
