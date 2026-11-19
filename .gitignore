@@ -174,3 +174,6 @@ $RECYCLE.BIN/
 
 # === ssc (sprite sheet generator) ===
 /cache/
+node_modules/
+dist/
+*.keystore
