@@ -11129,8 +11129,31 @@ function rigHairUnder() {
 /* bonés dos zumbis: desenhados no rig (acompanham a cabeça em todo quadro) no lugar do retângulo por cima */
 const ZHAT = {
   cap: { id: "bone", pal: { base: "#c0392b", shade: "#8e1611", light: "#e05a4a" } },
-  garicap: { id: "bone", pal: { base: "#ff9a3c", shade: "#c25a1c", light: "#ffe27a" } }
+  garicap: { id: "bone", pal: { base: "#ff9a3c", shade: "#c25a1c", light: "#ffe27a" } },
+  hardhat: { id: "zh_obra" },
+  moto: { id: "zh_moto" },
+  rollers: { id: "zh_bobes" }
 };
+const ZBACK = { gas: { id: "zh_gas" } };
+/* capacetes que quebram: o zumbi ganha a folha "<variante>~" sem o capacete */
+const ZARM = { hardhat: 1, moto: 1 };
+/* v28.6: capacetes, bobes e botijão dos zumbis no rig */
+RIG_ITEMS.zh_obra = { slot: "hat", pal: { base: "#f2c230", shade: "#c99a1c", light: "#ffe27a" }, layers: { hat: function(R, A, it) {
+  const p = it.pal, P = { h: R.c(p.base), H: R.c(p.shade), l: R.c(p.light) };
+  rigOnHead(R, A, ["....hhhh.....", "..hhllhhhh...", ".hhlhhhhhhh..", ".hhhhhhhhhh..", "HHHHHHHHHHHHH"], P, -1, -2, 13, true);
+} } };
+RIG_ITEMS.zh_moto = { slot: "hat", pal: { base: "#b8302a", shade: "#7a1d18", light: "#ff7a6a" }, layers: { hat: function(R, A, it) {
+  const p = it.pal, P = { h: R.c(p.base), H: R.c(p.shade), l: R.c(p.light), v: R.c("#1a1a28"), V: R.c("#9ab8e0") };
+  rigOnHead(R, A, ["...hhhhhh...", "..hhllhhhh..", ".hhlhhhhhhh.", ".hhhhhhhhhh.", ".hhhhhhvvvvh", ".hhhhhhvVvvh", ".hhhhhhvvvvh", ".hhhhhhhhhhh", ".HHHHHHHHHH.", "..HHHHHHHH.."], P, 0, -1, 13, true);
+} } };
+RIG_ITEMS.zh_bobes = { slot: "hat", pal: { base: "#ff8ab8" }, layers: { hat: function(R, A, it) {
+  const P = { a: R.c("#ff8ab8"), b: R.c("#8ac8ff"), c: R.c("#f2f2f2"), A: R.c("#c0587a"), B: R.c("#5a8ab8"), C: R.c("#b8b8b8") };
+  rigOnHead(R, A, [".aa.bb.cc..", ".AA.BB.CC.."], P, 1, -1, 13, true);
+} } };
+RIG_ITEMS.zh_gas = { slot: "back", pal: { base: "#d4572a", shade: "#8e2f12", light: "#f08a5a" }, layers: { back: function(R, A, it) {
+  const p = it.pal, P = { h: R.c(p.base), H: R.c(p.shade), l: R.c(p.light), g: R.c("#9aa0a6"), G: R.c("#5a6066") };
+  rigOnTorso(R, A, ["..gg..", "..GG..", ".hhhh.", "hllhhH", "hlhhhH", "hlhhhH", "hhhhhH", "hlhhhH", "hlhhhH", "HhhhHH", ".HHHH."], P, 20, -15, 1, true);
+} } };
 const RIG_DEFAULT_LOOK = { skin: 0, eyes: 0, hair: 0, hairC: 0 };
 const RIG_DEFAULT_EQ = { chest: "jaqueta", legs: "calca", feet: "tenis", belt: "cinto", face: "oculos", hat: null, back: null, front: null };
 const RIG_SLOTS = ["chest", "legs", "feet", "belt", "face", "hat", "back", "front"];
@@ -12054,6 +12077,8 @@ const ZRIG = (() => {
     return s;
   }
   function lookEq(base, vid) {
+    const nh = !!(vid && vid.slice(-1) === "~");
+    if (nh) vid = vid.slice(0, -1);
     const d = BASE[base], v = vid && ZV[vid] || {}, o = vid && VO[vid] || {}, g2 = (k) => o[k] !== void 0 ? o[k] : d[k];
     let hsh = 0;
     for (let i = 0; i < (vid || base).length; i++) hsh = hsh * 31 + (vid || base).charCodeAt(i) >>> 0;
@@ -12067,7 +12092,7 @@ const ZRIG = (() => {
     const eq = {
       chest: { id: ch, pal: ch === "jaqueta" ? { base: c0, shade: c1, crease: c2, in: d.inn ? d.inn[0] : shade(c0, 0.25), inD: d.inn ? d.inn[1] : c1 } : { base: c0, shade: c1 } },
       legs: { id: g2("legs"), pal: { base: pa[0], shade: pa[1] || shade(pa[0], -0.3), light: pa[2] && pa.length > 2 && d.pants === pa ? pa[2] : shade(pa[0], 0.18) } },
-      feet: g2("feet"), belt: null, face: null, hat: ZHAT[v.acc] || null, back: null, front: null
+      feet: g2("feet"), belt: null, face: null, hat: nh ? null : ZHAT[v.acc] || null, back: ZBACK[v.acc] || null, front: null
     };
     const hairN = typeof HAIR_STYLES !== "undefined" ? HAIR_STYLES.length : 1;
     const look = { skin: sk, eyes: 1, hair: v.acc === "hardhat" || v.acc === "moto" ? 1 % hairN : (o.hair !== void 0 ? o.hair : vid ? d.hair + hsh % 2 : d.hair) % hairN, hairC: v.hair ? [v.hair, shade(v.hair, -0.35), shade(v.hair, 0.3)] : o.hc !== void 0 ? o.hc : d.hc };
@@ -12126,7 +12151,11 @@ const ZRIG = (() => {
       if (!BASE[v.base]) continue;
       for (const k in SHEETS) if (k.indexOf(v.base + "_") === 0) {
         VIMG[vid + ":" + k] = IMG[k];
-        if (v.shirt || v.pants || v.skin || v.hair || VO[vid] || ZHAT[v.acc]) pending.push([vid, v.base, k]);
+        if (ZARM[v.acc]) {
+          VIMG[vid + "~:" + k] = IMG[k];
+          pending.push([vid + "~", v.base, k]);
+        }
+        if (v.shirt || v.pants || v.skin || v.hair || VO[vid] || ZHAT[v.acc] || ZBACK[v.acc]) pending.push([vid, v.base, k]);
       }
     }
     setTimeout(pump, 200);
@@ -12299,7 +12328,7 @@ function zGradeAll() {
 }
 function drawAcc(c, z, key, fr, back) {
   const v = ZV[z.v];
-  if (!v.acc || ZHAT[v.acc] || z.armor === 0 && (v.acc === "hardhat" || v.acc === "moto")) return;
+  if (!v.acc || ZHAT[v.acc] || ZBACK[v.acc]) return;
   const s = SHEETS[key], hd = (HEAD[key] || [])[fr];
   if (!hd) return;
   const sc = v.scale || 1, hx = z.x + z.face * (hd[0] - s.ax) * sc, hy = z.y - (s.f - hd[1]) * sc, f2 = z.face, O = "#0a0808";
@@ -17160,7 +17189,7 @@ function drawZ0(c, z) {
     c.fillRect(Math.round(z.x - sw / 2), Math.round(z.gy) - 1, Math.round(sw), 2);
   }
   drawAcc(c, z, kk, fr, true);
-  drawZimg(c, VIMG[z.v + ":" + kk] || IMG[kk], kk, fr, z.x, z.y, z.face, a, sc);
+  drawZimg(c, VIMG[(z.armor === 0 && ZARM[(ZV[z.v] || {}).acc] ? z.v + "~" : z.v) + ":" + kk] || IMG[kk], kk, fr, z.x, z.y, z.face, a, sc);
   if (z.flashT > 0) {
     const wf = whiteFrame(kk, fr);
     if (wf) {
