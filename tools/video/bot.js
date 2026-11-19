@@ -399,4 +399,66 @@
     const bl = new Blob(ch, { type: 'video/webm' }), fr = new FileReader();
     return new Promise((res) => { fr.onload = () => fetch('http://127.0.0.1:8379/?name=' + encodeURIComponent(name), { method: 'POST', body: fr.result }).then((r) => r.text()).then(res); fr.readAsDataURL(bl); });
   };
+
+  // regrava um vídeo pronto em outro formato/tamanho tocando ele num canvas (sem ffmpeg).
+  // o: { src, name, w, h, vbps, mime, clips: [[t0, t1, legenda?], ...] ou nulo (vídeo inteiro), draw: 'full' | 'vertical', intro, outro }
+  Q.encode = async (o) => {
+    const blob = await (await fetch(o.src)).blob();
+    const v = document.createElement('video'); v.src = URL.createObjectURL(blob); v.preload = 'auto'; v.playsInline = true;
+    await new Promise((ok) => (v.oncanplaythrough = ok));
+    const W = o.w, H = o.h, big = document.createElement('canvas'); big.width = W; big.height = H;
+    const bx = big.getContext('2d');
+    const ac = new AudioContext(), dst = ac.createMediaStreamDestination();
+    ac.createMediaElementSource(v).connect(dst);
+    const st = big.captureStream(30); for (const tr of dst.stream.getAudioTracks()) st.addTrack(tr);
+    const mt = o.mime || 'video/mp4;codecs=avc1.640028,mp4a.40.2';
+    const mr = new MediaRecorder(st, { mimeType: mt, videoBitsPerSecond: o.vbps || 3e6, audioBitsPerSecond: 128e3 }), ch = [];
+    mr.ondataavailable = (e) => e.data.size && ch.push(e.data);
+    let card = null, cap = '', on = 1, showV = false;
+    const yT = (t) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    (function f() {
+      if (!on) return;
+      bx.imageSmoothingEnabled = true; bx.imageSmoothingQuality = 'high';
+      bx.fillStyle = '#07050b'; bx.fillRect(0, 0, W, H);
+      if (o.draw === 'vertical') {
+        // meio: recorte central do jogo (a câmera segue o personagem), em cima o nome, embaixo a legenda
+        const g = bx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#1a0c1e'); g.addColorStop(0.5, '#07050b'); g.addColorStop(1, '#1a0c1e');
+        bx.fillStyle = g; bx.fillRect(0, 0, W, H);
+        const cw = 810, sx = (1280 - cw) / 2, dh = 720 * W / cw, dy = (H - dh) / 2;
+        if (showV) bx.drawImage(v, sx, 0, cw, 720, 0, dy, W, dh);
+        bx.textAlign = 'center'; bx.textBaseline = 'middle';
+        bx.font = '120px Yoster, monospace'; bx.fillStyle = '#000'; bx.fillText('QUEBRADA Z', W / 2 + 6, 250 + 6); bx.fillStyle = '#ffc21a'; bx.fillText('QUEBRADA Z', W / 2, 250);
+        bx.font = '600 42px system-ui, sans-serif'; bx.fillStyle = '#ece8f4'; bx.fillText('Sobreviva aos zumbis nas quebradas do Rio', W / 2, 345);
+        if (cap) { bx.font = '84px Yoster, monospace'; bx.fillStyle = '#000'; bx.fillText(yT(cap), W / 2 + 5, dy + dh + 120 + 5); bx.fillStyle = '#fff'; bx.fillText(yT(cap), W / 2, dy + dh + 120); }
+        bx.font = '700 44px system-ui, sans-serif'; bx.fillStyle = '#ffc21a'; bx.fillText('Grátis no navegador · PC, Android e iOS', W / 2, H - 200);
+        bx.font = '40px system-ui, sans-serif'; bx.fillStyle = '#ece8f4'; bx.fillText('quebradaz.github.io/game', W / 2, H - 135);
+      } else if (showV) bx.drawImage(v, 0, 0, W, H);
+      if (card) {
+        bx.fillStyle = 'rgba(7,5,11,' + (card.bg == null ? 1 : card.bg) + ')'; bx.fillRect(0, 0, W, H);
+        bx.textAlign = 'center'; bx.textBaseline = 'middle';
+        const k = W / 1280 * (o.draw === 'vertical' ? 1.6 : 1);
+        bx.font = Math.round(86 * k) + 'px Yoster, monospace'; bx.fillStyle = '#000'; bx.fillText(yT(card.t), W / 2 + 4 * k, H / 2 - 12 * k + 4 * k); bx.fillStyle = '#ffc21a'; bx.fillText(yT(card.t), W / 2, H / 2 - 12 * k);
+        if (card.s) { bx.font = Math.round(30 * k) + 'px system-ui, sans-serif'; bx.fillStyle = '#ece8f4'; bx.fillText(card.s, W / 2, H / 2 + 58 * k); }
+        if (card.s2) { bx.font = Math.round(26 * k) + 'px system-ui, sans-serif'; bx.fillStyle = '#ffc21a'; bx.fillText(card.s2, W / 2, H / 2 + 110 * k); }
+      }
+      requestAnimationFrame(f);
+    })();
+    mr.start(500);
+    if (o.intro) { card = o.intro; await Q.wait(o.intro.ms || 2000); card = null; }
+    const clips = o.clips || [[0, v.duration]];
+    for (const c of clips) {
+      v.currentTime = c[0];
+      await new Promise((ok) => { v.onseeked = ok; setTimeout(ok, 3000); });
+      cap = c[2] || ''; showV = true;
+      await v.play();
+      await new Promise((ok) => { const t = () => { if (v.ended || v.currentTime >= c[1]) ok(); else requestAnimationFrame(t); }; t(); });
+      v.pause();
+    }
+    showV = false; cap = '';
+    if (o.outro) { card = o.outro; await Q.wait(o.outro.ms || 3000); }
+    await new Promise((ok) => { mr.onstop = ok; mr.stop(); });
+    on = 0; ac.close();
+    const bl = new Blob(ch, { type: mt.split(';')[0] }), fr = new FileReader();
+    return new Promise((res) => { fr.onload = () => fetch('http://127.0.0.1:8379/?name=' + encodeURIComponent(o.name), { method: 'POST', body: fr.result }).then((r) => r.text()).then(res); fr.readAsDataURL(bl); });
+  };
 })();
