@@ -3,7 +3,7 @@
 -- como 'coin' com motivo "nivel N". wallets.lv_paid guarda até que nível já foi pago (igual a d.lvPaid no jogo).
 -- Na importação do save antigo: save que ainda não passou pelo LEVEL.settle (lvV <> 288) recebe as moedas dos
 -- níveis que já tinha; save que já passou tem essas moedas dentro de d.coins e não recebe de novo.
--- AINDA NÃO APLICADA no projeto (aguardando aprovação).
+-- Aplicada no projeto em 2026-11-21 (migração v28_8c_moedas_de_nivel).
 create table if not exists public.level_rewards (level integer primary key, coins integer not null check (coins > 0));
 alter table public.level_rewards enable row level security;
 insert into public.level_rewards (level, coins) values (2,150), (8,250), (14,350), (18,400), (23,500), (27,600), (29,650), (33,750), (37,850), (39,900), (42,1000), (44,1000), (47,1200), (49,1500)
