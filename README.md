@@ -2,7 +2,7 @@
 
 Jogo 2D de sobrevivência por ondas (estilo CoD Zombies) numa favela do Rio. Feito para jogar no celular deitado.
 
-**Jogar:** https://symbiozyy.github.io/quebrada-z/
+**Jogar:** https://quebradaz.github.io/game/
 
 O jogo inteiro está em `index.html` (um arquivo só). O progresso fica salvo no próprio navegador.
 
@@ -68,3 +68,11 @@ O jogo inteiro está em `index.html` (um arquivo só). O progresso fica salvo no
   - **Fase 3 (fúria)**: sem farda de cima, corpo inchado com veias em brasa, olhos acesos, garras e um brilho vermelho de calor em volta; arremessa sangue e esmaga o chão.
 - Caixa de acerto e ponto de saída do tiro ajustados à arte nova. O jogo ficou ~840 KB mais leve.
 - O desenho é gerado por `tools/capitao/` (`build.py` renderiza as folhas, `embed.py` coloca no `index.html`).
+
+## Novidades da v28.9
+- **Passe de batalha visual:** os prêmios aparecem como cartas numa trilha com rolagem lateral, trilha grátis e premium lado a lado, com prévia da roupa.
+- **Área de amigos:** adicione pelo nome do personagem, aceite ou recuse pedidos e veja o ranking só entre amigos.
+- **Níveis até o 50:** curva mais suave e cada nível libera roupa, habilidade, título ou moedas. Com conta, moedas, nível e XP ficam no servidor.
+- **Menu de habilidades novo:** mapa de medalhões com painel de detalhe.
+- **100 itens novos** no passe, no baú e na loja Z-Coin.
+- **Textos mais legíveis** no celular e no PC.
