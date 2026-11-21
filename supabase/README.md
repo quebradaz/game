@@ -78,3 +78,15 @@ Evento de XP do passe (ex.: fim de semana de lançamento com XP em dobro). O jog
 insert into public.xp_events (name, starts_at, ends_at, mult)
 values ('de lançamento', '2026-12-05 00:00-03', '2026-12-08 00:00-03', 2);
 ```
+
+## Moedas, nível e XP no servidor (v28.8, migração `v28_8_moedas_nivel_servidor`)
+
+Com conta, moedas comuns, nível e XP do personagem moram em `wallets` (`coins`, `char_level`, `char_xp`). O save do aparelho (`progress.data`) passa a ser só espelho desses três campos.
+
+- `submit_run`: se a partida for aceita, paga moedas (onda × 6 + abates × 0,4, vitória +400) e XP (onda × 45 + abates × 2, vitória +250) e sobe o nível. Partida recusada não paga nada.
+- `claim_mission` e `grant_prize` (passe e caixa) creditam as moedas no servidor.
+- `buy_look(item)` e `buy_kit(kit)`: loja do menu. Preços em `coin_prices` e `coin_kits`, gerados do jogo por `tools/patches/v28.8-precos-sql.js`. Erros: `MOEDAS_INSUFICIENTES`, `JA_TEM`, `ITEM_INVALIDO`.
+- `import_meta()`: uma vez por conta, traz moedas, nível, XP e roupas de moeda do save antigo, com teto por partida aceita (`meta_config`). Contas novas já nascem importadas.
+- Toda moeda entra no `ledger` com `currency = 'coin'`. Os valores ficam em `meta_config` (uma linha).
+
+Sem conta ou no modo de teste, o jogo continua somando só no aparelho.
