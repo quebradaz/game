@@ -78,3 +78,15 @@ Evento de XP do passe (ex.: fim de semana de lançamento com XP em dobro). O jog
 insert into public.xp_events (name, starts_at, ends_at, mult)
 values ('de lançamento', '2026-12-05 00:00-03', '2026-12-08 00:00-03', 2);
 ```
+
+## Amigos (v28.8, migração `migrations/v28_8_amigos.sql`)
+
+Tabela `friendships` (um par por linha, `user_low < user_high`, estado `pending`, `accepted` ou `declined`). RLS ligado e nenhuma política: o jogo não lê nem escreve nela direto. Tudo por funções (exigem login, só agem sobre `auth.uid()`, nunca devolvem o id de outro jogador):
+
+- `friend_request(p_name)`: pede amizade pelo nome exato do personagem (sem diferenciar maiúsculas). Se a outra pessoa já tinha pedido, vira amizade na hora. Erros: `SEM_NOME`, `JOGADOR_NAO_ENCONTRADO`, `VOCE_MESMO`, `JA_AMIGOS`, `JA_PEDIU`, `RECUSADO_ESPERA`, `LIMITE_PEDIDOS`, `LIMITE_AMIGOS`, `LIMITE_AMIGOS_DELE`.
+- `friend_respond(p_name, p_accept)`: aceita ou recusa um pedido recebido.
+- `friend_remove(p_name)`: desfaz amizade ou cancela um pedido enviado.
+- `get_friends()`: amigos (recorde, abates, há quantos dias jogou), pedidos recebidos e enviados. Pedido pendente mostra só nome e foto.
+- `get_friends_leaderboard(p_map)`: ranking do mapa só entre você e seus amigos (mesmo critério do ranking geral).
+
+Limites em `friend_limits()`: 100 amigos, 20 pedidos esperando resposta, 30 pedidos por dia, 7 dias de espera para pedir de novo a quem recusou. Testes num Postgres local: `tests/integration/amigos/run.sh`.
