@@ -92,3 +92,15 @@ Com conta, moedas comuns, nível e XP do personagem moram em `wallets` (`coins`,
 - Moedas de nível (migração `v28_8c_moedas_de_nivel`): `level_rewards` com as moedas de `CONFIG.meta.road` (PR #16); `char_xp_add` paga uma vez por nível (`wallets.lv_paid`) e lança no `ledger` como `nivel N`.
 
 Sem conta ou no modo de teste, o jogo continua somando só no aparelho.
+
+## Amigos (v28.8, migração `migrations/v28_8_amigos.sql`)
+
+Tabela `friendships` (um par por linha, `user_low < user_high`, estado `pending`, `accepted` ou `declined`). RLS ligado e nenhuma política: o jogo não lê nem escreve nela direto. Tudo por funções (exigem login, só agem sobre `auth.uid()`, nunca devolvem o id de outro jogador):
+
+- `friend_request(p_name)`: pede amizade pelo nome exato do personagem (sem diferenciar maiúsculas). Se a outra pessoa já tinha pedido, vira amizade na hora. Erros: `SEM_NOME`, `JOGADOR_NAO_ENCONTRADO`, `VOCE_MESMO`, `JA_AMIGOS`, `JA_PEDIU`, `RECUSADO_ESPERA`, `LIMITE_PEDIDOS`, `LIMITE_AMIGOS`, `LIMITE_AMIGOS_DELE`.
+- `friend_respond(p_name, p_accept)`: aceita ou recusa um pedido recebido.
+- `friend_remove(p_name)`: desfaz amizade ou cancela um pedido enviado.
+- `get_friends()`: amigos (recorde, abates, há quantos dias jogou), pedidos recebidos e enviados. Pedido pendente mostra só nome e foto.
+- `get_friends_leaderboard(p_map)`: ranking do mapa só entre você e seus amigos (mesmo critério do ranking geral).
+
+Limites em `friend_limits()`: 100 amigos, 20 pedidos esperando resposta, 30 pedidos por dia, 7 dias de espera para pedir de novo a quem recusou. Testes num Postgres local: `tests/integration/amigos/run.sh`.
