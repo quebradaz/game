@@ -5,7 +5,7 @@ insert into public.progress (user_id, data) values ('00000000-0000-0000-0000-000
 insert into public.player_stats (user_id, matches) values ('00000000-0000-0000-0000-00000000000c', 0);
 insert into public.wallets (user_id) values ('00000000-0000-0000-0000-00000000000c');
 insert into public.progress (user_id, data) values
- ('00000000-0000-0000-0000-00000000000a', '{"coins":5000,"level":3,"xp":100,"inv":["bone_preto","oculos_escuro"]}'),
+ ('00000000-0000-0000-0000-00000000000a', '{"coins":5000,"level":3,"xp":100,"lvV":288,"lvPaid":3,"inv":["bone_preto","oculos_escuro"]}'),
  ('00000000-0000-0000-0000-00000000000b', '{"coins":999999999,"level":99,"xp":5}');
 insert into public.player_stats (user_id, matches) values ('00000000-0000-0000-0000-00000000000a', 2), ('00000000-0000-0000-0000-00000000000b', 0);
 insert into public.wallets (user_id) values ('00000000-0000-0000-0000-00000000000a'), ('00000000-0000-0000-0000-00000000000b');
@@ -28,12 +28,12 @@ begin
   update public.runs set started_at = now() - interval '10 minutes' where id = rid;
   r := public.submit_run(rid, 10, 100, 590, 300, 200, 1, false, 20, false);
   r := public.import_meta();
-  assert (r->>'coins')::int = 300 and (r->>'level')::int = 2, 'sem dobrar ' || r::text;
+  assert (r->>'coins')::int = 300 + 150 and (r->>'level')::int = 2, 'sem dobrar, com moeda do nivel 2 ' || r::text;
   raise notice 'C importou: %', r;
   -- trapaça: teto
   perform set_config('test.uid', '00000000-0000-0000-0000-00000000000b', false);
   r := public.import_meta();
-  assert (r->>'coins')::int = 5000, 'teto moedas ' || r::text;
+  assert (r->>'coins')::int = 5000 + 150 + 250 + 350, 'teto moedas + moedas de nivel ' || r::text;
   assert (r->>'level')::int <= 14, 'teto nivel ' || r::text;
   raise notice 'trapaceiro importou: %', r;
   -- partida aceita
@@ -55,6 +55,13 @@ begin
   update public.runs set started_at = now() - interval '20 minutes' where id = rid;
   r := public.submit_run(rid, 20, 500, 1190, 900, 700, 3, true, 50, true);
   assert (r->>'coins')::int = 120 + 200 + 400 and (r->>'char_xp')::int = 900 + 1000 + 250, 'vitoria ' || r::text;
+  assert (r->>'level')::int = 7 and (r->>'wallet_coins')::int = 5100 + 720, 'sem moeda de nivel ate o 7 ' || r::text;
+  assert not exists (select 1 from public.ledger where user_id = auth.uid() and reason like 'nivel%'), 'A ja tinha pago';
+  r := public.char_xp_add(auth.uid(), 100000);
+  assert (r->>'level_coins')::int = 250 + 350 + 400 + 500 + 600 + 650, 'moedas de nivel (7 a 32) ' || r::text;
+  r := public.char_xp_add(auth.uid(), 0);
+  assert (r->>'level_coins')::int = 0, 'paga uma vez so ' || r::text;
+  update public.wallets set coins = 5820 where user_id = auth.uid();
   raise notice 'vitoria: %', r;
   -- loja
   r := public.buy_look('bone_vermelho');

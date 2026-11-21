@@ -89,5 +89,6 @@ Com conta, moedas comuns, nível e XP do personagem moram em `wallets` (`coins`,
 - `import_meta()`: uma vez por conta, traz moedas, nível, XP e roupas de moeda do save antigo, com teto por partida aceita (`meta_config`). Contas novas já nascem importadas.
 - Toda moeda entra no `ledger` com `currency = 'coin'`. Os valores ficam em `meta_config` (uma linha).
 - Curva de nível (migração `v28_8b_curva_nivel`): `lvl_need(n) = 300 + 90(n-1) + 5(n-1)²`, teto no nível 50, igual à nova curva do jogo. Com `meta_config.level_quad` nulo, volta para a curva antiga `300 × 1,22^(n-1)`.
+- Moedas de nível (migração `v28_8c_moedas_de_nivel`, **ainda não aplicada**): `level_rewards` com as moedas de `CONFIG.meta.road` (PR #16); `char_xp_add` paga uma vez por nível (`wallets.lv_paid`) e lança no `ledger` como `nivel N`.
 
 Sem conta ou no modo de teste, o jogo continua somando só no aparelho.
