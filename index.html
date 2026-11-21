@@ -25115,7 +25115,7 @@ const ACCT_ERR = {
   SEM_LOGIN: "Sua sessão acabou. Entre de novo.",
   REDE: "Sem conexão com o servidor. Tenta de novo daqui a pouco."
 };
-const acctErr = (e) => ACCT_ERR[e && e.message] || ACCT_ERR[(e && e.message || "").replace(/^.*?([A-Z_]{6,}).*$/, "$1")] || "Deu ruim: " + (e && e.message || "erro");
+const acctErr = (e) => /friend|PGRST202|Could not find the function/i.test(e && (e.code || "") + " " + (e.message || "")) && !/[A-Z_]{6,}/.test(e && e.message || "") ? "A área de amigos está sendo ligada no servidor. Tenta de novo daqui a pouco." : ACCT_ERR[e && e.message] || ACCT_ERR[(e && e.message || "").replace(/^.*?([A-Z_]{6,}).*$/, "$1")] || "Deu ruim: " + (e && e.message || "erro");
 function acctUI() {
   const n = (NET.st.name || "VOCÊ").toUpperCase();
   $("tName").textContent = n;
