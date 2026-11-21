@@ -5,7 +5,7 @@
 -- de moeda vai para o `ledger` com currency = 'coin'.
 -- O save do aparelho continua guardando visual, recordes e mapas vencidos; moedas, XP e nível de lá
 -- passam a ser só um espelho do que o servidor devolve.
--- AINDA NÃO APLICADA no projeto. Os preços (final do arquivo) saem de:
+-- Aplicada no projeto em 2026-11-21 (migração v28_8_moedas_nivel_servidor). Os preços (final do arquivo) saem de:
 --   node tools/serve.js . 8377 &  node tools/patches/v28.8-precos-sql.js
 
 -- ---------- carteira: moedas, nível e XP ----------

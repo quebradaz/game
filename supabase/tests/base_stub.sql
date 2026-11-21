@@ -1,6 +1,8 @@
 -- Esboço mínimo do banco de produção (tabelas e funções auxiliares, sem dados) para testar migrações num Postgres local.
 -- auth.uid() lê a configuração test.uid. Ver supabase/tests/README.md.
-create role anon; create role authenticated; create role service_role;
+do $$ begin create role anon; exception when duplicate_object then null; end $$;
+do $$ begin create role authenticated; exception when duplicate_object then null; end $$;
+do $$ begin create role service_role; exception when duplicate_object then null; end $$;
 create schema auth;
 create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('test.uid', true), '')::uuid $$;
 grant usage on schema auth to public;

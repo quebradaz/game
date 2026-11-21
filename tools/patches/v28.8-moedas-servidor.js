@@ -63,8 +63,10 @@ rep(`  ready: 0, chips: 0, zcoin: 0, data: null, items: [], tab: "pass",`,
     $("sCoins").textContent = "+" + (r.coins | 0);
     $("sXp").textContent = "+" + (r.char_xp | 0);
     $("ovLvl").textContent = D.level;
-    $("ovXp").style.width = D.xp / lvlNeed(D.level) * 100 + "%";
-    $("ovXpTx").textContent = (D.level > lv0 ? \`Subiu pro n\\xEDvel \${D.level}! \` : "") + \`\${D.xp} / \${lvlNeed(D.level)} XP\`;
+    // a barra usa o "need" do servidor: a curva de nível que vale é a dele (meta_config)
+    const need = r.need || lvlNeed(D.level);
+    $("ovXp").style.width = D.xp / need * 100 + "%";
+    $("ovXpTx").textContent = (D.level > lv0 ? \`Subiu pro n\\xEDvel \${D.level}! \` : "") + \`\${D.xp} / \${need} XP\`;
   },`);
 rep(`    const first = !this.imported ? NET.rpc("import_skills", {}).then(() => this.imported = 1, () => {
     }) : Promise.resolve();`,

@@ -34,7 +34,7 @@ begin
   perform set_config('test.uid', '00000000-0000-0000-0000-00000000000b', false);
   r := public.import_meta();
   assert (r->>'coins')::int = 5000, 'teto moedas ' || r::text;
-  assert (r->>'level')::int <= 13, 'teto nivel ' || r::text;
+  assert (r->>'level')::int <= 14, 'teto nivel ' || r::text;
   raise notice 'trapaceiro importou: %', r;
   -- partida aceita
   perform set_config('test.uid', '00000000-0000-0000-0000-00000000000a', false);
@@ -83,7 +83,7 @@ begin
   r := public.grant_prize(auth.uid(), 'coins', 300, null, 'teste');
   assert exists (select 1 from public.ledger where reason = 'teste' and currency = 'coin' and delta = 300), 'grant coins';
   -- nível: confere com a fórmula do jogo
-  assert public.lvl_need(1) = 300 and public.lvl_need(2) = 370 and public.lvl_need(5) = 660, 'lvl_need ' || public.lvl_need(5);
+  assert public.lvl_need(1) = 300 and public.lvl_need(2) = 395 and public.lvl_need(10) = 1515, 'lvl_need ' || public.lvl_need(10);
   raise notice 'TUDO OK';
 end $$;
 -- permissões

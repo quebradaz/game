@@ -7,6 +7,7 @@ Roda a migração num banco vazio que imita o de produção e confere as regras 
 createdb -h <socket> -p 55432 -U postgres qz
 psql ... -d qz -f supabase/tests/base_stub.sql
 psql ... -d qz -f supabase/migrations/v28_8_moedas_nivel_servidor.sql
+psql ... -d qz -f supabase/migrations/v28_8b_curva_nivel.sql
 psql ... -d qz -f supabase/tests/v28_8_moedas_nivel_test.sql   # termina com NOTICE: TUDO OK
 ```
 
