@@ -932,8 +932,8 @@ body.hudEditing #hud *{pointer-events:none!important}
 .skCell.max .lv{color:#ffd84a}
 .skCell.buy .dm{animation:skGlow 1.4s ease-in-out infinite}
 .skCell.buy .nm{color:#ffd84a}
-.skCell.lvl .dm,.skCell.req .dm,.skCell.soon .dm{filter:grayscale(.85) brightness(.6)}
-.skCell.lvl .nm,.skCell.req .nm,.skCell.soon .nm{color:#a59fb4}
+.skCell.lvl .dm,.skCell.req .dm,.skCell.soon .dm,.skCell.wave .dm{filter:grayscale(.85) brightness(.6)}
+.skCell.lvl .nm,.skCell.req .nm,.skCell.soon .nm,.skCell.wave .nm{color:#a59fb4}
 .skCell.soon .dm{background:repeating-linear-gradient(135deg,#17141e 0 6px,#211c2a 6px 12px)}
 .skCell.sel .dm{outline:3px solid #fff;outline-offset:3px}
 .skCell.sel .nm{color:#fff}
@@ -1800,7 +1800,7 @@ const QZ_NOTE='Hordas bem mais leves no celular, gr\xE1fico m\xE9dio em 30 fps e
 const DEV = { on: 0, menu: 0, hit: 0, god: 0, fps: 0, bak: null, H: "e480bf13a472ca2344304c8db63cbb8981a478178805271998a2aa72a7203a71" };
 const CONFIG = {
   // ---- points earned during a match ----
-  pts: { hit: 10, kill: 60, head: 100, knife: 130, plank: 10, plankCapPerBar: 40, double: 2, cap: 2e4 },
+  pts: { hit: 10, kill: 60, head: 100, knife: 130, plank: 10, plankCapPerBar: 40, double: 2, cap: 35e3, capUp: [0.15, 0.25, 0.5] },
   // cap: max cash a player can hold
   // ---- money on the floor: kills drop cash you walk over to collect; it fades away if left behind ----
   drops: { life: 20, fadeFrom: 0.45, bossLife: 40, pickR: 16, magnetR: 30, magnetSpd: 260, mergeR: 18, cap: [40, 28, 20], abMul: 1.5, bruteMul: 2.5, coinMax: 95, noteMax: 450, simPickup: 0.9 },
@@ -1820,7 +1820,7 @@ const CONFIG = {
   // Geladeira do Fiado
   perkPrice: { jug: 2500, speed: 3e3, tap: 2e3, pedreiro: 1500, caldo: 1800, acai: 2200, corre: 1500, dupla: 4e3, rodada: 3500 },
   // v26.6: mesa de upgrade (Pack-a-Punch): arma DOURADA -> DIAMANTE. Preço em R$.
-  pap: { price: 18e3, bossKeep: 1.5 / 1.8 },
+  pap: { price: 18e3, bossKeep: 1.5 / 1.8, ammoMult: 1.6, ammoMin: 3e3, ammoFixed: { ray: 8e3 }, ammoGrow: 1.3 },
   merchantGrowth: 1.3,
   // every repeat purchase of the same item costs x1.3
   // ---- waves ----
@@ -14030,6 +14030,7 @@ function resetWorld(attract) {
   S.goldGot = [];
   S.unlockedNow = 0;
   S.pap = null;
+  S.papAmmo = {};
   S.cgren = [];
   S.cmine = [];
   S.cmort = [];
@@ -16381,7 +16382,11 @@ function promptFor(it) {
     return `${k.name} \xB7 <b>R$${k.price}</b> \xB7 ${k.desc}`;
   }
   if (it.k === "item") return `Pegar <b>${WEAP[it.sel.id].name}</b>`;
-  if (it.k === "pap") return papOk() ? `Mesa de upgrade \xB7 <b>R$${CONFIG.pap.price}</b> \xB7 dourada vira diamante` : papMsg();
+  if (it.k === "pap") {
+    const wa = papAmmoW();
+    if (wa) return papAmmoFull(wa) ? `Muni\xE7\xE3o diamante \xB7 ${WEAP[wa.id].name} j\xE1 est\xE1 cheia` : `Muni\xE7\xE3o diamante ${WEAP[wa.id].name} \xB7 <b>R$${papAmmoPrice(wa)}</b>`;
+    return papOk() ? `Mesa de upgrade \xB7 <b>R$${CONFIG.pap.price}</b> \xB7 dourada vira diamante` : papMsg();
+  }
   if (it.k === "box") {
     return S.box.state === "ready" ? `Pegar <b>${GUNS[S.box.w].name}</b>` : `Geladeira do Fiado \xB7 <b>R$${BOX_PRICE}</b>`;
   }
@@ -16405,11 +16410,29 @@ function actInfo(it) {
     return { icon: g2.id, top: (it.list.length > 1 ? it.list.length + " NO CH\xC3O \xB7 " : "NO CH\xC3O \xB7 ") + RANKS[g2.rk].n + sw, main: "PEGAR " + WEAP[g2.id].name, price: null, rk: g2.rk };
   }
   if (it.k === "pap") {
+    const wa = papAmmoW();
+    if (wa) return papAmmoFull(wa) ? { icon: wa.id, top: "MESA \xB7 MUNI\xC7\xC3O DIAMANTE", main: "MUNI\xC7\xC3O CHEIA", price: null, rk: "diamond" } : { icon: wa.id, top: "MESA \xB7 MUNI\xC7\xC3O DIAMANTE", main: "RECARREGAR " + WEAP[wa.id].name, price: papAmmoPrice(wa), rk: "diamond" };
     const w3 = papOk() ? curW() : null;
     return w3 ? { icon: w3.id, top: "MESA DE UPGRADE \xB7 DOURADA \u2192 DIAMANTE", main: "EVOLUIR " + WEAP[w3.id].name, price: CONFIG.pap.price, rk: "diamond" } : { icon: "crate", top: "MESA DE UPGRADE", main: papMsg().toUpperCase(), price: null };
   }
   if (it.k === "box") return S.box.state === "ready" ? { icon: S.box.w, top: "GELADEIRA \xB7 " + RANKS[S.box.rk].n, main: "PEGAR " + WEAP[S.box.w].name, price: null, rk: S.box.rk } : { icon: "crate", top: "GELADEIRA DO FIADO", main: "ARMA ALEAT\xD3RIA", price: BOX_PRICE };
   return null;
+}
+/** v29.1: com arma diamante na mão a mesa vende munição cheia dela; preço depende da arma e sobe a cada recarga */
+function papAmmoW() {
+  const p = S.player;
+  if (!p || melEq(p)) return null;
+  const w3 = curW();
+  return w3 && w3.rk === "diamond" ? w3 : null;
+}
+function papAmmoPrice(w3) {
+  const P = CONFIG.pap, n2 = (S.papAmmo || {})[w3.id] || 0;
+  const base = P.ammoFixed[w3.id] || Math.max(P.ammoMin, WEAP[w3.id].price * P.ammoMult);
+  return Math.round(base * Math.pow(P.ammoGrow, n2) / 50) * 50;
+}
+function papAmmoFull(w3) {
+  const st2 = wst(w3);
+  return w3.mag >= st2.mag && w3.res >= st2.res;
 }
 function papOk() {
   const p = S.player;
@@ -16465,6 +16488,26 @@ function doInteract(it, held, dt) {
     SFX.buy();
     return true;
   };
+  if (it.k === "pap" && papAmmoW()) {
+    const wa = papAmmoW();
+    if (papAmmoFull(wa)) {
+      SFX.deny();
+      UI.toast("MUNI\xC7\xC3O J\xC1 EST\xC1 CHEIA", RANKS.diamond.c);
+      return;
+    }
+    if (pay(papAmmoPrice(wa))) {
+      const st2 = wst(wa);
+      wa.mag = st2.mag;
+      wa.res = st2.res;
+      S.papAmmo = S.papAmmo || {};
+      S.papAmmo[wa.id] = (S.papAmmo[wa.id] || 0) + 1;
+      S.pap = { until: S.t + 1.2 };
+      SFX.power();
+      UI.toast("MUNI\xC7\xC3O DIAMANTE \xB7 " + WEAP[wa.id].name, RANKS.diamond.c);
+      UI.slots && UI.slots();
+    }
+    return;
+  }
   if (it.k === "pap") {
     if (!papOk()) {
       SFX.deny();
@@ -19684,21 +19727,27 @@ addEventListener("keydown", (e) => {
 function scaleCash(v) {
   return Math.round(v * (periodCfg().ptsMult || 1) * (S.fx.dbl > 0 ? CONFIG.pts.double : 1) / 5) * 5;
 }
+/** v29.1: teto do bolso = CONFIG.pts.cap, +15/25/50% com a habilidade Cofre do barraco */
+function cashMax(lv = metaLvl("cofre")) {
+  const up = CONFIG.pts.capUp[Math.min(CONFIG.pts.capUp.length, lv | 0) - 1] || 0;
+  return Math.round(CONFIG.pts.cap * (1 + up) / 10) * 10;
+}
 function gainCash(v) {
   const p = S.player;
   if (!p || v <= 0) return 0;
-  const got = Math.max(0, Math.min(v, CONFIG.pts.cap - p.cash));
+  const cap = cashMax();
+  const got = Math.max(0, Math.min(v, cap - p.cash));
   p.cash += got;
   if (got < v && !S.capWarn) {
     S.capWarn = 1;
-    UI.toast("LIMITE DE R$" + CONFIG.pts.cap + " \xB7 GASTA A\xCD!", "#ffd84a");
+    UI.toast("LIMITE DE R$" + cap.toLocaleString("pt-BR") + " \xB7 GASTA A\xCD!", "#ffd84a");
   }
-  if (p.cash < CONFIG.pts.cap) S.capWarn = 0;
+  if (p.cash < cap) S.capWarn = 0;
   return got;
 }
 function cashFull() {
   const p = S.player;
-  return !!p && p.cash >= CONFIG.pts.cap;
+  return !!p && p.cash >= cashMax();
 }
 function cashKind(v) {
   const D = CONFIG.drops;
@@ -23039,7 +23088,7 @@ const UI = {
     const cash = p.cash;
     if (L.cash !== cash) {
       $("cashV").textContent = cash;
-      $("cash").classList.toggle("max", cash >= CONFIG.pts.cap);
+      $("cash").classList.toggle("max", cash >= cashMax());
       L.cash = cash;
     }
     if (S.boss && S.boss.seen && S.boss.state !== "dead" && S.zs.includes(S.boss)) UI.bossDraw(S.boss);
@@ -24377,6 +24426,8 @@ const SKILLS = {
   labia: { branch: "grana", name: "L\xE1bia", desc: "Mercante cobra menos", icon: "⚖", pos: { col: 1, row: 1 }, requires: [{ id: "grana", lv: 3 }], lvl: 12, max: () => 3, cost: () => 0, fx: () => `-${Math.round(skUp("labia").fx * 100)}%`, soon: 1 },
   mira: { branch: "armas", name: "Olho de \xE1guia", desc: "Tiro na cabe\xE7a d\xE1 mais dano", icon: "⌖", pos: { col: 2, row: 1 }, requires: [{ id: "recarga", lv: 3 }], lvl: 17, max: () => 3, cost: () => 0, fx: () => `+${Math.round(skUp("mira").fx * 100)}%`, soon: 1 },
   chute: { branch: "obra", name: "P\xE9 de pedreiro", desc: "Chute empurra mais longe", icon: "✵", pos: { col: 3, row: 1 }, requires: [{ id: "tabua", lv: 3 }], lvl: 22, max: () => 3, cost: () => 0, fx: () => `+${Math.round(skUp("chute").fx * 100)}%`, soon: 1 },
+  // v29.1: aumenta o teto do bolso na partida. Efeito não é linear (15 / 25 / 50%), por isso fxAt.
+  cofre: { branch: "grana", name: "Cofre do barraco", desc: "Aumenta o limite de dinheiro no bolso", icon: "▣", pos: { col: 1, row: 2 }, requires: [{ id: "labia", lv: 3 }], lvl: 27, wave: 20, max: () => CONFIG.pts.capUp.length, cost: () => 0, fxAt: (lv) => "R$" + cashMax(lv).toLocaleString("pt-BR"), soon: 1 },
   segunda: { branch: "corpo", name: "Segunda chance", desc: "Levanta uma vez por partida com 35% de vida", icon: "✚", pos: { col: 0, row: 2 }, requires: [{ id: "folego", lv: 3 }], lvl: 32, max: () => 1, cost: () => 0, soon: 1 }
 };
 function skillLvl(id) {
@@ -24393,6 +24444,14 @@ function skillReqOk(id) {
 /** nível do personagem pedido pelo nó (v28.8) */
 function skillLvOk(id) {
   return !SKILLS[id].lvl || (SAVE.d.level | 0) >= SKILLS[id].lvl;
+}
+/** v29.1: onda que o nó pede (melhor onda em qualquer quebrada) */
+function skillBestWave() {
+  const b = SAVE.d && SAVE.d.best || {};
+  return Math.max(0, ...Object.values(b).map((v) => v | 0));
+}
+function skillWaveOk(id) {
+  return !SKILLS[id].wave || skillBestWave() >= SKILLS[id].wave;
 }
 /** nó ainda "em breve": marcado soon e o servidor ainda não tem o custo dele */
 function skillSoon(id) {
@@ -24413,7 +24472,7 @@ function SKILLS_MIGRATE(d) {
 // Responde na hora com false; quando o servidor confirma, aplica o nível e redesenha (onDone).
 function buySkill(id, onDone) {
   const D = SAVE.d, n = SKILLS[id], lv = skillLvl(id);
-  if (!n || skillSoon(id) || lv >= n.max() || !skillReqOk(id) || !skillLvOk(id)) return false;
+  if (!n || skillSoon(id) || lv >= n.max() || !skillReqOk(id) || !skillLvOk(id) || !skillWaveOk(id)) return false;
   if (!ECO.ready) {
     UI.toast && UI.toast(DEV.on ? "MODO DE TESTE: SEM COMPRA" : "ENTRE NA CONTA PARA USAR CHIPS", "#ffd84a");
     return false;
@@ -24439,7 +24498,7 @@ const SKILL_LORE = {
   vida: "Quem cresce no morro aguenta pancada.", grana_n: "Todo mundo guarda um trocado debaixo do colch\xE3o.",
   recarga: "M\xE3o treinada n\xE3o treme na hora H.", tabua: "Laje se bate em mutir\xE3o. Barricada tamb\xE9m.",
   folego: "Subir escadaria todo dia tem suas vantagens.", labia: "Papo bom abre porta e baixa pre\xE7o.",
-  mira: "Um tiro, um podre a menos.", chute: "Chute de pedreiro derruba at\xE9 parede.", segunda: "Cair faz parte. Ficar no ch\xE3o, n\xE3o."
+  mira: "Um tiro, um podre a menos.", cofre: "Dinheiro guardado no tijolo solto da parede. Ningu\xE9m acha.", chute: "Chute de pedreiro derruba at\xE9 parede.", segunda: "Cair faz parte. Ficar no ch\xE3o, n\xE3o."
 };
 let SK_SEL = null, SK_POP = null;
 /** estado de um nó: max | soon | lvl (falta nível do personagem) | req (falta nó anterior) | buy | poor */
@@ -24449,11 +24508,13 @@ function skillState(id) {
   if (skillSoon(id)) return "soon";
   if (!skillLvOk(id)) return "lvl";
   if (!skillReqOk(id)) return "req";
+  if (!skillWaveOk(id)) return "wave";
   return ECO.ready && ECO.chips >= ECO.cost(id, lv + 1) ? "buy" : "poor";
 }
 /** efeito somado com lv níveis, a partir do texto "por nível" do nó (+8% vira +24% no nível 3) */
 function skillFxAt(id, lv) {
   const n = SKILLS[id];
+  if (n.fxAt) return n.fxAt(lv);
   if (!n.fx) return lv > 0 ? "Ligado" : "Desligado";
   if (lv <= 0) return "\u2014";
   return n.fx().replace(/\d+(?:[.,]\d+)?/, (m) => String(Math.round(parseFloat(m.replace(",", ".")) * lv * 10) / 10).replace(".", ","));
@@ -24491,7 +24552,7 @@ function renderSkillTree(R, onChange) {
     cell.style.gridRow = n.pos.row + 2;
     cell.style.setProperty("--bc", br.col);
     cell.dataset.id = id;
-    const lock = st === "lvl" ? "NV " + n.lvl : st === "req" ? "\u{1F512}" : st === "soon" ? "EM BREVE" : "";
+    const lock = st === "lvl" ? "NV " + n.lvl : st === "wave" ? "ONDA " + n.wave : st === "req" ? "\u{1F512}" : st === "soon" ? "EM BREVE" : "";
     const b = el("button", "skN", `<span class="dm"><span class="ic">${n.icon}</span></span><span class="lv">${lv}/${n.max()}</span>${lock ? `<span class="lk">${lock}</span>` : ""}`);
     b.setAttribute("aria-label", `${n.name}, n\xEDvel ${lv} de ${n.max()}`);
     b.onclick = () => {
@@ -24525,13 +24586,14 @@ function renderSkillTree(R, onChange) {
   ids.forEach((k) => (tot += skillLvl(k), totMax += SKILLS[k].max()));
   ib.append(el("div", "skBal", `<span class="chip" title="Chips de tecnologia"><i class="ic chipi" style="background-image:url(${ICON_CHIP})"></i><b class="num">${ECO.ready ? ECO.chips : "\u2014"}</b><small>chips</small></span><span class="chip lvc" title="N\xEDvel do personagem"><small>n\xEDvel</small><b class="num">${D.level | 0}</b></span><span class="chip" title="N\xEDveis comprados na \xE1rvore"><b class="num">${tot}/${totMax}</b><small>pontos</small></span>`));
   ib.append(el("div", "skIH", `<div class="big">${n.icon}</div><div><small>${br.name}</small><b>${n.name}</b></div>`));
-  ib.append(el("p", "skDesc", n.desc + (n.fx ? ` (${n.fx()} por n\xEDvel)` : "")));
+  ib.append(el("p", "skDesc", n.desc + (id === "cofre" ? ` (${CONFIG.pts.capUp.map((u) => "+" + Math.round(u * 100) + "%").join(" / ")} sobre R$${CONFIG.pts.cap.toLocaleString("pt-BR")})` : n.fxAt ? "" : n.fx ? ` (${n.fx()} por n\xEDvel)` : "")));
   const lore = SKILL_LORE[id === "grana" ? "grana_n" : id];
   if (lore) ib.append(el("p", "skLore", "\u201C" + lore + "\u201D"));
   ib.append(el("div", "skFx", lv >= max ? `<div><small>AGORA (M\xC1XIMO)</small><b>${skillFxAt(id, lv)}</b></div>` : `<div><small>AGORA</small><b>${skillFxAt(id, lv)}</b></div><i>\u203A</i><div class="nx"><small>N\xCDVEL ${lv + 1}</small><b>${skillFxAt(id, lv + 1)}</b></div>`));
   ib.append(el("div", "skPips", Array.from({ length: max }, (_, i) => `<i class="${i < lv ? "on" : ""}"></i>`).join("") + `<span>n\xEDvel ${lv} de ${max}</span>`));
   const req = n.requires.map((r) => [skillLvl(r.id) >= r.lv, `${SKILLS[r.id].name} no n\xEDvel ${r.lv}` + (skillLvl(r.id) >= r.lv ? "" : ` (tem ${skillLvl(r.id)})`)]);
   if (n.lvl) req.push([skillLvOk(id), `Personagem no n\xEDvel ${n.lvl}` + (skillLvOk(id) ? "" : ` (est\xE1 no ${D.level | 0})`)]);
+  if (n.wave) req.push([skillWaveOk(id), `Chegar na onda ${n.wave} numa quebrada` + (skillWaveOk(id) ? "" : ` (recorde: ${skillBestWave()})`)]);
   if (req.length && lv < max) {
     const ul = el("ul", "skReq");
     req.forEach(([ok, t]) => ul.append(el("li", ok ? "ok" : "", t)));
@@ -24552,6 +24614,7 @@ function renderSkillTree(R, onChange) {
   else if (st === "soon") buy.textContent = "EM BREVE", buy.disabled = true, hint = "Esse n\xF3 ainda est\xE1 chegando no servidor.";
   else if (st === "lvl") buy.textContent = "N\xCDVEL " + n.lvl, buy.disabled = true, hint = "Suba o personagem jogando partidas.";
   else if (st === "req") buy.textContent = "TRANCADO", buy.disabled = true, hint = "Melhore o n\xF3 de cima primeiro.";
+  else if (st === "wave") buy.textContent = "ONDA " + n.wave, buy.disabled = true, hint = "Sobreviva at\xE9 a onda " + n.wave + " em qualquer quebrada.";
   else {
     buy.innerHTML = `MELHORAR ${chip}${price}`;
     if (st === "poor") {
@@ -26987,7 +27050,7 @@ const CHEST = {
     if (open && k < 1.75) { x.globalAlpha = 1 - (k - 1.5) / 0.25; P(0, 0, W, H, col); x.globalAlpha = 1; }
   }
 };
-const ECO_ERR = { MOEDAS_INSUFICIENTES: "Moedas insuficientes", ITEM_INVALIDO: "Item indisponível", CHIPS_INSUFICIENTES: "Chips insuficientes", ZCOIN_INSUFICIENTE: "Z-Coin insuficiente", JA_TEM: "Você já tem", JA_RESGATADO: "Já pegou esse prêmio", NIVEL_NAO_ALCANCADO: "Nível ainda não alcançado", SEM_PASSE: "Precisa do passe premium", MISSAO_INCOMPLETA: "Missão ainda não completa", NIVEL_MAXIMO: "Já está no máximo", SEM_CAIXA: "Nenhuma caixa para abrir" };
+const ECO_ERR = { MOEDAS_INSUFICIENTES: "Moedas insuficientes", ITEM_INVALIDO: "Item indisponível", CHIPS_INSUFICIENTES: "Chips insuficientes", ZCOIN_INSUFICIENTE: "Z-Coin insuficiente", JA_TEM: "Você já tem", JA_RESGATADO: "Já pegou esse prêmio", NIVEL_NAO_ALCANCADO: "Nível ainda não alcançado", SEM_PASSE: "Precisa do passe premium", MISSAO_INCOMPLETA: "Missão ainda não completa", NIVEL_MAXIMO: "Já está no máximo", SEM_CAIXA: "Nenhuma caixa para abrir", NIVEL_PERSONAGEM: "Personagem ainda sem nível pra isso", ONDA_INSUFICIENTE: "Chegue mais longe nas ondas primeiro", REQUISITO: "Falta melhorar o nó de cima" };
 const ecoErr = (e) => {
   const m = e && e.message || "";
   for (const k in ECO_ERR) if (m.indexOf(k) >= 0) return ECO_ERR[k];
