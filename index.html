@@ -1992,13 +1992,13 @@ const CONFIG = {
     levelMax: 50,
     // o que cada nível libera: [nível, tipo, valor]. tipo: coins (moedas) | item (roupa com unlock.level) | skill (nó da árvore com lvl) | title
     road: [
-      [2, "coins", 150], [3, "item", "lv_bone_cria"], [4, "item", "lv_chinelo_laje"], [5, "title", "Cria da quebrada"],
+      [2, "coins", 150], [3, "item", "lv_bone_cria"], [4, "item", "v29_faixa_treino"], [5, "title", "Cria da quebrada"],
       [6, "item", "lv_bermuda_tactel"], [7, "skill", "folego"], [8, "coins", 250], [9, "item", "lv_regata_bloco"],
       [10, "title", "Sobrevivente"], [11, "item", "lv_bandana_morro"], [12, "skill", "labia"], [13, "item", "lv_tenis_corre"],
       [14, "coins", 350], [15, "title", "Linha de frente"], [16, "item", "lv_camisa_varzea"], [17, "skill", "mira"],
       [18, "coins", 400], [19, "item", "lv_mochila_sobrev"], [20, "title", "Casca grossa"], [21, "item", "lv_cargo_urbana"],
       [22, "skill", "chute"], [23, "coins", 500], [24, "item", "lv_corta_madrugada"], [25, "title", "Terror dos podres"],
-      [26, "item", "lv_coturno_patrulha"], [27, "coins", 600], [28, "item", "lv_cordao_vila"], [29, "coins", 650],
+      [26, "item", "v29_bag_entrega"], [27, "coins", 600], [28, "item", "v29_lenco_jasao"], [29, "coins", 650],
       [30, "title", "Dono do morro"], [31, "item", "lv_capacete_obra"], [32, "skill", "segunda"], [33, "coins", 750],
       [34, "item", "lv_moletom_baile"], [35, "title", "Veterano do apocalipse"], [36, "item", "lv_oculos_solda"], [37, "coins", 850],
       [38, "item", "lv_calca_surrada"], [39, "coins", 900], [40, "title", "Lenda da favela"], [41, "item", "lv_jaqueta_cobra"],
@@ -24643,6 +24643,9 @@ const V285_ITEMS = [["cx_c01","head","bone","Boné cinza","#6a6a72","#e8e4d8",0,
 // v28.9: 100 itens novos (passe, baú, loja Z-Coin). Gerado de tools/patches/v28.9-itens.js
 // [id, slot, tipo, nome, cor base, detalhe, raridade, origem, ponto do acessório, estampa da perna]
 const V289_ITEMS = [["p1_boina_vovo","head","boina","Boina do vovô","#5a5a62","#e8e4d8",0,"passe",0,0],["p1_listrada_orla","chest","listrada","Camiseta listrada da orla","#e8e4d8","#2a4a8a",0,"passe",0,0],["p1_bermuda_camuflada","legs","bermuda","Bermuda camuflada","#5a6a3a","#3a4a22",0,"passe",0,"camo"],["p1_chinelo_brasil","feet","chinelo","Chinelo verde e amarelo","#1a8a3a","#ffd81a",0,"passe",0,0],["p1_medalha_bronze","acc","medalha","Medalha de bronze","#b8702e","#ffd8a0",1,"passe","neck",0],["p1_xadrez_flanela","chest","xadrez","Camisa xadrez de flanela","#8a1e22","#16141c",1,"passe",0,0],["p1_tapa_olho","acc","tapa","Tapa-olho do pirata da laje","#1c1c22","#4a4a52",1,"passe","face",0],["p1_calca_rasgada","legs","calca","Calça rasgada","#3a5a8a","#a8c0e0",1,"passe",0,"rasgada"],["p1_taco_madeira","acc","taco","Taco de madeira","#a8702e","#5a3a1e",1,"passe","back",0],["p1_abada_bloco","chest","abada","Abadá do bloco","#ffd81a","#c0262a",1,"passe",0,0],["p1_cangaceiro_couro","head","cangaceiro","Chapéu de cangaceiro","#7a4a2a","#ffd84a",1,"passe",0,0],["p1_bota_lama","feet","bota","Bota de lama","#4a3a2a","#2a2018",0,"passe",0,0],["p1_gas_surrada","acc","gas","Máscara de gás surrada","#4a5a3a","#7ab0c8",1,"passe","face",0],["p1_prancha_isopor","acc","prancha","Prancha de isopor","#f4f0e4","#2ab0ff",1,"passe","back",0],["pp_bone_hell","head","bone","Boné Hell de Janeiro","#16141c","#ff3a1a",2,"passe",0,0],["pp_caveira_morro","chest","caveira","Camiseta caveira do morro","#16141c","#e8e4d8",2,"passe",0,0],["pp_tenis_brasa","feet","tenis","Tênis brasa","#2a0a0a","#ff6a1a",2,"passe",0,0],["pp_visor_neon","acc","visor","Visor neon","#1a1c24","#3effa8",2,"passe","face",0],["pp_calca_camo_noite","legs","calca","Calça camuflada noturna","#1e2230","#3a4258",2,"passe",0,"camo"],["pp_boina_vermelha","head","boina","Boina vermelha","#a8141c","#ffd84a",2,"passe",0,0],["pp_bomber_vinho","chest","bomber","Jaqueta bomber vinho","#5a1420","#ffd84a",2,"passe",0,0],["pp_medalha_prata","acc","medalha","Medalha de prata","#c8ccd8","#5a8aba",2,"passe","neck",0],["pp_xadrez_neon","chest","xadrez","Camisa xadrez neon","#1a1626","#ff3d8b",2,"passe",0,0],["pp_bermuda_listras","legs","bermuda","Bermuda de listras","#16141c","#ff3d8b",2,"passe",0,"listra2"],["pp_taco_prego","acc","taco","Taco com pregos","#6a4a2a","#c8ccd8",2,"passe","back",0],["pp_caveira_m","acc","caveira_m","Máscara caveira","#e8e4d8","#16141c",2,"passe","face",0],["pp_chuteira_neon","feet","chuteira","Chuteira neon","#16141c","#3effa8",2,"passe",0,0],["pp_abada_hell","chest","abada","Abadá Hell de Janeiro","#ff3a1a","#16141c",2,"passe",0,0],["pp_cartola_malandro","head","cartola","Cartola do malandro","#16141c","#c0262a",2,"passe",0,0],["pp_violao_roda","acc","violao","Violão da roda de samba","#a8682a","#16141c",2,"passe","back",0],["pp_cargo_camo","legs","cargo","Cargo camuflada urbana","#4a4c54","#2a2a30",2,"passe",0,"camo"],["pp_chifres_hell","head","chifres","Chifres do Hell","#c0262a","#ffd84a",3,"passe",0,0],["pp_listrada_neon","chest","listrada","Camiseta listrada neon","#16141c","#1ec8e8",2,"passe",0,0],["pp_bota_cangaco","feet","bota","Bota de cangaço","#5a3a1e","#ffd84a",2,"passe",0,0],["pp_gas_neon","acc","gas","Máscara de gás neon","#16141c","#3effa8",2,"passe","face",0],["pp_prancha_fogo","acc","prancha","Prancha de fogo","#ff6a1a","#16141c",2,"passe","back",0],["pp_cangaceiro_prata","head","cangaceiro","Chapéu de cangaceiro prata","#3a2418","#c8ccd8",2,"passe",0,0],["pp_bomber_neon","chest","bomber","Bomber neon","#1a1626","#3ee6ff",2,"passe",0,0],["pp_calca_rasgada_preta","legs","calca","Calça rasgada preta","#1e1c24","#5a5a64",2,"passe",0,"rasgada"],["pp_tapa_ouro","acc","tapa","Tapa-olho de ouro","#16141c","#d8a820",2,"passe","face",0],["pp_coroa_lata","head","coroa","Coroa de lata","#a8acb8","#c0262a",2,"passe",0,0],["pp_asas_hell","acc","asas","Asas do Hell","#2a0a10","#ff3a1a",4,"passe","back",0],["bx_c01","head","boina","Boina cáqui","#8a7e52","#e8e4d8",0,"caixa",0,0],["bx_c02","chest","listrada","Camiseta listrada marinho","#22305a","#e8e4d8",0,"caixa",0,0],["bx_c03","chest","xadrez","Camisa xadrez marrom","#6a4a30","#c8b890",0,"caixa",0,0],["bx_c04","legs","calca","Calça camuflada oliva","#5a6a32","#3e4a22",0,"caixa",0,"camo"],["bx_c05","legs","bermuda","Bermuda rasgada jeans","#4a6a9a","#a8c0e0",0,"caixa",0,"rasgada"],["bx_c06","acc","taco","Taco de beisebol","#c8a07a","#6a4a30",0,"caixa","back",0],["bx_c07","acc","medalha","Medalha de lata","#8a8a92","#c0262a",0,"caixa","neck",0],["bx_c08","acc","tapa","Tapa-olho preto","#1c1c22","#4a4a52",0,"caixa","face",0],["bx_c09","chest","abada","Abadá azul","#2a6ab0","#e8e4d8",0,"caixa",0,0],["bx_c10","feet","tenis","Tênis de lona","#c0262a","#e8e4d8",0,"caixa",0,0],["bx_r01","head","cangaceiro","Chapéu de cangaceiro vermelho","#8a1e22","#ffd84a",2,"caixa",0,0],["bx_r02","head","cartola","Cartola roxa","#5a2a8a","#ffd84a",2,"caixa",0,0],["bx_r03","chest","bomber","Bomber laranja de resgate","#ff6a1a","#16141c",2,"caixa",0,0],["bx_r04","chest","caveira","Camiseta caveira neon","#16141c","#3effa8",2,"caixa",0,0],["bx_r05","acc","gas","Máscara de gás amarela","#c8a020","#7ab0c8",2,"caixa","face",0],["bx_r06","acc","visor","Visor vermelho","#16141c","#ff3a2a",2,"caixa","face",0],["bx_r07","acc","prancha","Prancha do Arpoador","#2ab0ff","#ffd81a",2,"caixa","back",0],["bx_r08","acc","violao","Violão de pagode","#6a3a1e","#ffd84a",2,"caixa","back",0],["bx_r09","legs","cargo","Cargo de listra dupla","#16141c","#ffd81a",2,"caixa",0,"listra2"],["bx_r10","head","boina","Boina militar","#3e5a30","#c0262a",2,"caixa",0,0],["bx_l01","head","coroa","Coroa do Rei do Morro","#d8a820","#c0262a",4,"caixa",0,0],["bx_l02","head","aureola","Auréola do Cristo","#ffe070","#ffffff",4,"caixa",0,0],["bx_l03","acc","asas","Asas de anjo","#f4f0e4","#ffd84a",4,"caixa","back",0],["bx_l04","head","chifres","Chifres de obsidiana","#1e1428","#a84aff",4,"caixa",0,0],["bx_l05","acc","violao","Violão de ouro","#d8a820","#16141c",4,"caixa","back",0],["bx_l06","chest","bomber","Bomber galáxia","#2a0a5a","#ff5ab8",4,"caixa",0,0],["bx_l07","chest","camuflada","Camuflada radioativa","#1a3a1a","#5aff1a",4,"caixa",0,0],["bx_l08","acc","gas","Máscara de gás do apocalipse","#2a0010","#ff3a2a",4,"caixa","face",0],["bx_l09","acc","prancha","Prancha de diamante","#9ff4ff","#ffffff",4,"caixa","back",0],["bx_l10","head","cartola","Cartola da Lapa","#f4f0e4","#c0262a",4,"caixa",0,0],["zc_boina_neon","head","boina","Boina neon","#ff3d8b","#ffffff",2,"loja",0,0],["zc_listrada_ouro","chest","listrada","Camiseta listrada ouro e preto","#16141c","#d8a820",2,"loja",0,0],["zc_xadrez_real","chest","xadrez","Camisa xadrez real","#1a3ad8","#ffd84a",2,"loja",0,0],["zc_tapa_neon","acc","tapa","Tapa-olho neon","#16141c","#1ec8e8",2,"loja","face",0],["zc_medalha_ouro","acc","medalha","Medalha de ouro","#d8a820","#ffffff",2,"loja","neck",0],["zc_calca_camo_neve","legs","calca","Calça camuflada neve","#e8ecf0","#8a9aa8",2,"loja",0,"camo"],["zc_taco_neon","acc","taco","Taco neon","#16141c","#ff3d8b",2,"loja","back",0],["zc_abada_neon","chest","abada","Abadá neon","#9aff1a","#16141c",2,"loja",0,0],["zc_tenis_cromado","feet","tenis","Tênis cromado","#e0e4ec","#5a6a8a",2,"loja",0,0],["zc_bermuda_rasgada_rosa","legs","bermuda","Bermuda rasgada rosa","#ff5ab8","#ffffff",2,"loja",0,"rasgada"],["zc_coroa_diamante","head","coroa","Coroa de diamante","#9ff4ff","#ff3d8b",4,"loja",0,0],["zc_aureola_neon","head","aureola","Auréola neon","#3effa8","#ffffff",4,"loja",0,0],["zc_chifres_ouro","head","chifres","Chifres de ouro","#d8a820","#ffffff",4,"loja",0,0],["zc_cangaceiro_ouro","head","cangaceiro","Cangaceiro de ouro","#d8a820","#16141c",4,"loja",0,0],["zc_cartola_neon","head","cartola","Cartola neon","#0a0a14","#3effa8",4,"loja",0,0],["zc_visor_ouro","acc","visor","Visor de ouro","#d8a820","#ff3a1a",4,"loja","face",0],["zc_gas_ouro","acc","gas","Máscara de gás de ouro","#d8a820","#9ff4ff",4,"loja","face",0],["zc_caveira_ouro","acc","caveira_m","Máscara caveira de ouro","#d8a820","#16141c",4,"loja","face",0],["zc_prancha_ouro","acc","prancha","Prancha de ouro","#d8a820","#ffffff",4,"loja","back",0],["zc_violao_neon","acc","violao","Violão neon","#0a0a14","#ff1ad8",4,"loja","back",0],["zc_taco_ouro","acc","taco","Taco de ouro","#d8a820","#16141c",4,"loja","back",0],["zc_bomber_ouro","chest","bomber","Bomber de ouro","#d8a820","#16141c",4,"loja",0,0],["zc_camuflada_lava","chest","camuflada","Camuflada lava","#3a0a0a","#ff4a0a",4,"loja",0,0],["zc_calca_camo_ouro","legs","calca","Calça camuflada de ouro","#16141c","#d8a820",4,"loja",0,"camo"],["zc_asas_fenix","acc","asas","Asas da fênix","#ff6a1a","#ffd84a",4,"loja","back",0],["zc_asas_demonio","acc","asas","Asas do demônio","#16141c","#c0262a",4,"loja","back",0],["zc_coroa_fogo","head","coroa","Coroa de fogo","#ff4a0a","#ffe070",4,"loja",0,0],["zc_aureola_ouro","head","aureola","Auréola dourada","#d8a820","#fff0a0",4,"loja",0,0]];
+// v29: 12 itens repetidos trocados por peças novas (tools/patches/v29-itens-repetidos.js)
+// [excluído, gêmeo, id novo, slot, tipo, nome, base, detalhe, raridade, origem, ponto, extra]
+const V29_SWAP = [["bx_c08","p1_tapa_olho","v29_oculos_y2k","acc","y2k","Óculos Y2K fumê","#c86a9a","#4a2a5a",0,"caixa","face",{}],["z_bone_ouro","cx_l01","v29_durag_roxo","head","durag","Durag de cetim roxo","#6a2aa8","#c08aff",2,"loja",0,{"z":200}],["cx_r21","cx_r14","v29_basquete_10","chest","basquete","Regata de basquete 10","#1e3ab0","#ffd84a",2,"caixa",0,{}],["lv_coturno_patrulha","coturno","v29_bag_entrega","acc","bag","Bag de entregador","#c0262a","#ffd84a",3,"nivel","back",{"lv":26}],["p1_bota_lama","coturno","v29_pipa_rabiola","acc","pipa","Pipa com rabiola","#ffd81a","#1a8a3a",0,"passe","back",{"lv":29,"tr":"free"}],["s1_cordao_prata","corrente_prata","v29_camera_live","acc","camera","Câmera de live no peito","#1e1c24","#ff3a3a",2,"passe","neck",{"lv":12,"tr":"free"}],["lv_cordao_vila","corrente_prata","v29_lenco_jasao","acc","lenco","Lenço de fuga do Jasão","#c0262a","#f4ecd0",3,"nivel","face",{"lv":28}],["lv_chinelo_laje","p1_chinelo_brasil","v29_faixa_treino","head","faixa","Faixa de treino da laje","#e8e4d8","#1a8a3a",3,"nivel",0,{"lv":4}],["bone_verde","lv_bone_cria","v29_bolsa_transversal","acc","transversal","Bolsa transversal do corre","#34343c","#ffd84a",0,"moedas","neck",{"price":150}],["zc_asas_demonio","pp_asas_hell","v29_jetpack_reveillon","acc","jetpack","Jetpack do Réveillon","#c8ccd8","#ff8a1a",4,"loja","back",{"z":900}],["zc_bomber_ouro","s1_jaqueta_ouro","v29_camisa_neon_beach","chest","sunset","Camisa Neon Beach","#ff3d8b","#ffb01a",4,"loja",0,{"z":600}],["z_bone_diamante","cx_l02","v29_mascara_goleiro","acc","hoquei","Máscara do goleiro do lago","#ecece6","#c0262a",4,"loja","face",{"z":600}]];
 const LOOK = (function () {
   // ---------- paletas de aparência (base, sombra, realce) ----------
   // as paletas vêm do rig (índice 0 = o Marcus de sempre); a tela mostra a pele do mais claro pro mais escuro
@@ -24780,6 +24783,19 @@ const LOOK = (function () {
     if (q[2] === "bomber") x.in = [q[5], shade(q[5], -0.4)];
     ITEMS[q[0]] = I(q[1], q[2], q[3], 0, q[6], [b, shade(b, -0.4), shade(b, 0.28)], x);
   });
+  // v29: quem tinha um item repetido fica com o gêmeo e com a peça nova (ver sanitize)
+  const TWIN = {};
+  V29_SWAP.forEach((q) => {
+    const b = q[6], o = q[11], x = { d: q[7] };
+    if (q[9] === "nivel") x.unlock = { level: o.lv };
+    else if (q[9] !== "moedas") x.unlock = { src: q[9] };
+    if (q[10]) x.spot = q[10];
+    if (q[3] === "head") x.hideHair = 1;
+    if (q[4] === "faixa") x.keepHair = 1;
+    ITEMS[q[2]] = I(q[3], q[4], q[5], o.price || 0, q[8], [b, shade(b, -0.4), shade(b, 0.28)], x);
+    delete ITEMS[q[0]];
+    TWIN[q[0]] = [q[1], q[2]];
+  });
   for (const k in ITEMS) ITEMS[k].id = k;
   const KITS = {
     kit_carioca: { name: "Kit Carioca", items: ["regata_branca", "bermuda", "chinelo", "oculos_escuro", "bone_azul"] },
@@ -24823,6 +24839,8 @@ const LOOK = (function () {
     L.hairColor = clampI(L.hairColor, HAIR_COLS.length, L0.hairColor);
     L.body = L.body === 1 ? 1 : 0;
     const first = !Array.isArray(d.inv);
+    if (!first) d.inv = d.inv.reduce((a, k) => a.concat(TWIN[k] || [k]), []);
+    if (d.eq && typeof d.eq === "object") for (const s in d.eq) if (TWIN[d.eq[s]]) d.eq[s] = TWIN[d.eq[s]][0];
     let inv = first ? [] : d.inv.filter((k) => typeof k === "string" && ITEMS[k]);
     FREE.forEach((k) => { if (inv.indexOf(k) < 0) inv.push(k); });
     // migração das skins antigas (recolor) para itens de peito
@@ -25032,6 +25050,53 @@ const LOOK = (function () {
       if (y < top + 4) return x % 2 ? "h" : "l";
       return x % 3 === 1 ? "H" : "h"; })]
   };
+  // v29: peças novas (troca dos repetidos)
+  Object.assign(STYLE, { basquete: "tank", sunset: "shirt" });
+  const DIG = { 1: [".w.", "ww.", ".w.", ".w.", "www"], 0: ["www", "w.w", "w.w", "w.w", "www"] };
+  Object.assign(CHEST_DECOR, {
+    // número 10 no peito e acabamento nas cavas
+    basquete: (R, it) => { const d = R.c(it.def.d), w = R.c("#ffffff"); return (u, v) => {
+      const y = Math.floor(17 - u), x = Math.floor(v + 3.5);
+      if (y >= 0 && y < 5 && x >= 0 && x < 7 && x !== 3) { const g = DIG[x < 3 ? 1 : 0][y][x < 3 ? x : x - 4]; if (g === "w") return d; }
+      return u > 19.2 ? w : 0; }; },
+    // degradê de pôr do sol (rosa em cima, laranja embaixo) com coqueiros escuros
+    sunset: (R, it) => { const b = R.c(it.def.d), m = R.c(mix(it.pal.base, it.def.d, 0.5)), k = R.c("#3a0a4a"), t = R.c("#ffe070"); return (u, v) => {
+      const U = Math.floor(u), V = Math.floor(v + 60) - 60;
+      const palm = (cv, cu) => { const dv = V - cv, du = U - cu; if (du < 0 && du > -10 && dv === Math.round(du * 0.15)) return 1; if (du === 0 && Math.abs(dv) <= 3 || du === 1 && Math.abs(dv) === 2 || du === -1 && Math.abs(dv) === 3) return 1; return 0; };
+      if (palm(2, 11) || palm(-4, 9)) return k;
+      if (U === 15 && V > -2 && V < 3 || U === 16 && V > -1 && V < 2) return t;
+      return u < 6 ? b : u < 12 ? m : 0; }; }
+  });
+  Object.assign(NHAT, {
+    durag: [0, -2, ["....hhhhhh...", "..hhllllhhh..", ".hhlhhhhhhhh.", "hhhhhhhhhhhhh", "hhhhhhhhhhhhh", "hhhhhdddddddd", "hhhH.........", "hHH..........", "dhd..........", "d..d.........", "d...d........"]],
+    faixa: [0, 2, ["hhhhhhhhhhhhh", "dddddddddhddd", "H............", "hH...........", ".H..........."]]
+  });
+  Object.assign(NFACE, {
+    y2k: [0, 4, ["HHHHHH.hhhhh", "......hvVvvh", ".......hhhh."]],
+    lenco: [0, 6, ["dd....hhhhhh", ".dhhhhhhhhhh", "..hhhwhhhwhh", "..hhhhhhhhhh", "...Hhhwhhhh.", "......hhhh..", "........h..."]],
+    hoquei: [0, 0, ["......hhhh..", ".....hhhhhh.", "HHHHHhdhhdhh", "HHHHHhdhhdhh", ".....hkkhhkk", ".....hhhhhhh", ".....hdhhhdh", ".....hhkhkhh", ".....hdhhdhh", ".....hhkhkhh", "......hhhhh.", ".......HHH.."]]
+  });
+  Object.assign(NTORSO, {
+    // bag de entregador: caixa térmica nas costas com faixa e logo
+    bag: [26, -14, grid(10, 13, (x, y) => { if (y === 0 || x === 0) return "l"; if (x === 9 || y === 12) return "H"; if (y === 4 || y === 5) return "d"; if (y === 8 && x > 2 && x < 7) return "w"; return "h"; })],
+    // pipa (losango) presa nas costas, com a rabiola caindo
+    pipa: [40, -16, grid(14, 26, (x, y) => {
+      const cx = 7, cy = 6, dx = Math.abs(x - cx), dy = Math.abs(y - cy);
+      if (y <= 12 && dx + dy <= 6) { if (x === cx || y === cy) return "k"; return x < cx ? (y < cy ? "l" : "h") : y < cy ? "h" : "H"; }
+      if (y > 12) { const tx = Math.round(cx + Math.sin((y - 12) * 0.55) * 2.2); if (x === tx) return y % 3 === 0 ? "w" : "d"; }
+      return 0; })],
+    // jetpack: dois tanques e chama
+    jetpack: [32, -13, grid(9, 21, (x, y) => {
+      if (y < 13) { const t = x < 4 ? x : x > 4 ? x - 5 : -1; if (t < 0) return y > 2 && y < 10 ? "k" : 0; if (y === 0 && (t === 0 || t === 3)) return 0; return t === 0 ? "l" : t === 3 ? "H" : y === 3 ? "d" : "h"; }
+      if (y === 13) return x === 4 ? 0 : "k";
+      const f = y - 14, side = x < 4 ? 1.5 : x > 4 ? 6.5 : -9, dx = Math.abs(x - side);
+      if (dx <= 1.6 - f * 0.2) return f < 2 ? "w" : f < 4 ? "d" : "D";
+      return 0; })],
+    // câmera de live presa no peito, com luz de gravando
+    camera: [20, -1, ["d......", ".d.....", "..d....", "...hhhh", "...hkkh", "...hkVh", "...Hhhr", "..d....", ".d....."]],
+    // bolsa transversal: alça na diagonal e bolsinha na frente do peito
+    transversal: [22, -2, ["d.......", ".d......", "..d.....", "...d....", "..hhhhh.", "..hlhhh.", "..hhwhh.", "..HHHHH.", ".d......", "d......."]]
+  });
   function rigNew(def, it) {
     const k = it.kind;
     if (def.slot === "hat" && NHAT[k]) { const h = NHAT[k]; def.layers.hat = function (R, A, e) { rigOnHead(R, A, h[2], nPal(R, e), h[0], h[1], G_.hat, true); }; if (it.keepHair) def.keepHair = 1; }
@@ -25622,7 +25687,7 @@ const LOOK = (function () {
   function checkUnlocks() {
     const d = SAVE.d, before = (d.inv || []).slice();
     sanitize(d);
-    if (typeof ECO !== "undefined" && ECO.items) for (const k of ECO.items) if (ITEMS[k] && d.inv.indexOf(k) < 0) d.inv.push(k);
+    if (typeof ECO !== "undefined" && ECO.items) for (const k0 of ECO.items) for (const k of TWIN[k0] || [k0]) if (ITEMS[k] && d.inv.indexOf(k) < 0) d.inv.push(k);
     const fresh = d.inv.filter((k) => before.indexOf(k) < 0 && ITEMS[k].unlock);
     if (fresh.length) SAVE.save();
     if (fresh.length && typeof LOOT !== "undefined") LOOT.items(fresh);
