@@ -40,6 +40,63 @@ html,body{height:100%;background:var(--bg);color:var(--ink);overflow:hidden;font
 body.playing #qzVer{display:none}
 
 #qzUpd{position:fixed;left:50%;top:calc(var(--sat) + 4px);transform:translateX(-50%);z-index:9000;display:flex;align-items:center;gap:10px;padding:8px 10px 8px 14px;background:#1f5a28;border:2px solid #7dff6a;border-radius:8px;color:#fff;font:700 12px/1.2 var(--fs),sans-serif;box-shadow:0 4px 0 rgba(0,0,0,.5)}
+/* ==== NOTIFICAÇÕES (v29): sino + gaveta + aviso deslizante. Classes com prefixo nt (a .pop global é do dinheiro) ==== */
+#ntBell{position:absolute;right:max(12px,var(--sar));top:calc(max(10px,var(--sat)) + 80px);width:46px;height:40px;padding:0;display:grid;place-items:center;background:rgba(10,8,16,.82);border:2px solid #000;box-shadow:inset 0 0 0 1px #4a4458,3px 3px 0 rgba(0,0,0,.5);cursor:pointer;zoom:var(--ui)}
+#ntBell svg{width:26px;height:26px;image-rendering:pixelated}
+#ntBell.on svg{animation:ntRing 4s ease-in-out infinite;transform-origin:50% 8%}
+#ntBell i{position:absolute;right:-7px;top:-7px;min-width:19px;height:19px;padding:0 4px;box-sizing:border-box;display:grid;place-items:center;font:800 11px/1 var(--fs);font-style:normal;color:#fff;background:#e0283a;border:2px solid #000;border-radius:10px}
+#ntBell i.hidden{display:none}
+@media (max-height:500px){#ntBell{zoom:calc(.8*var(--ui))}}
+@keyframes ntRing{0%,84%,100%{transform:rotate(0)}87%{transform:rotate(16deg)}90%{transform:rotate(-14deg)}93%{transform:rotate(9deg)}96%{transform:rotate(-5deg)}}
+#ntScr{position:fixed;inset:0;z-index:45;background:rgba(4,2,8,.6);display:flex;justify-content:flex-end;font-family:var(--fs);color:#e9e4d8}
+#ntScr.hidden{display:none}
+.ntPanel{position:relative;width:min(460px,96vw);height:100%;box-sizing:border-box;display:flex;flex-direction:column;background:linear-gradient(#1d1826,#120f18);border-left:3px solid #000;box-shadow:inset 3px 0 0 #3a3446,-8px 0 24px rgba(0,0,0,.6);padding:max(8px,var(--sat)) max(10px,var(--sar)) max(8px,var(--sab)) 12px;animation:ntIn .22s ease-out}
+@keyframes ntIn{from{transform:translateX(40px);opacity:0}}
+.ntHead{display:flex;align-items:center;gap:10px}
+.ntHead b{font-family:var(--fz);font-weight:400;font-size:26px;letter-spacing:2px;color:#ffd84a;text-shadow:2px 2px 0 #000;line-height:1}
+.ntHead small{display:block;font:600 12px/1.2 var(--fs);color:#a59fb4;letter-spacing:0}
+.ntHead .ntX{margin-left:auto;width:38px;height:38px;font:800 18px/1 var(--fs);color:#e9e4d8;background:#2a2433;border:2px solid #000;box-shadow:inset 0 0 0 1px #4a4458;cursor:pointer}
+.ntTabs{display:flex;gap:5px;margin:8px 0 6px;overflow-x:auto;scrollbar-width:none;flex:0 0 auto}
+.ntTabs::-webkit-scrollbar{display:none}
+.ntTabs button{flex:0 0 auto;font:800 12px/1 var(--fs);letter-spacing:.5px;padding:7px 9px;color:#bdb6cc;background:#221d2b;border:2px solid #000;box-shadow:inset 0 0 0 1px #3a3446;cursor:pointer}
+.ntTabs button.on{color:#1a0d00;background:#ffd84a;box-shadow:inset 0 -3px 0 #b8861a}
+.ntTabs button em{font-style:normal;margin-left:4px;padding:1px 5px;border-radius:8px;background:#e0283a;color:#fff;font-size:10px}
+.ntList{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;display:flex;flex-direction:column;gap:6px;padding:2px 2px 8px 0}
+.ntDay{font:800 11px/1 var(--fs);letter-spacing:1.5px;color:#7d768c;margin:6px 0 0}
+.ntRow{position:relative;display:grid;grid-template-columns:54px 1fr auto;gap:10px;align-items:center;padding:8px 10px 8px 8px;background:#1a1622;border:2px solid #000;box-shadow:inset 0 0 0 1px #2e2838;contain:layout paint}
+.ntRow.nw{background:#221c2c;box-shadow:inset 3px 0 0 #ffd84a,inset 0 0 0 1px #3a3446}
+.ntRow.nr2{box-shadow:inset 3px 0 0 #c46cff,inset 0 0 0 1px #3a3446}
+.ntRow.nr3{box-shadow:inset 3px 0 0 #ffb82e,inset 0 0 0 1px #5a4a18;background:linear-gradient(90deg,rgba(255,184,46,.08),transparent 60%),#1a1622}
+.ntIc{position:relative;width:54px;height:54px;display:grid;place-items:center;background:#0f0c14;border:2px solid #000;overflow:hidden;isolation:isolate}
+.ntIc canvas,.ntIc img,.ntIc .em{position:relative;z-index:1;max-width:46px;max-height:46px;image-rendering:pixelated}
+.ntIc .em{font-size:26px;line-height:1}
+/* a aura da roupa vem do LOOK.thumb (patch v29-aura.js); aqui só a moldura na cor da raridade */
+.ntIc.nr2{border-color:#4a2370}.ntIc.nr3{border-color:#5a3e06}
+.ntTx{min-width:0}
+.ntTx b{display:block;font:800 14px/1.25 var(--fs);color:#f2ede2}
+.ntTx p{margin:2px 0 0;font:500 13px/1.3 var(--fs);color:#bdb6cc;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ntTx .rr{display:inline-block;margin:0 0 3px;padding:2px 5px;font:800 10px/1 var(--fs);letter-spacing:1px;color:#000;background:#c46cff}
+.ntRow.nr3 .ntTx .rr{background:#ffb82e}
+.ntTx time{display:block;margin-top:3px;font:600 11px/1 var(--fs);color:#7d768c}
+.ntGo{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.ntGo button{font:800 12px/1 var(--fs);letter-spacing:.5px;padding:9px 11px;color:#1a0d00;background:#ffd84a;border:2px solid #000;box-shadow:inset 0 -3px 0 #b8861a;cursor:pointer;white-space:nowrap}
+.ntGo button.alt{color:#e9e4d8;background:#2a2433;box-shadow:inset 0 0 0 1px #4a4458}
+.ntGo .ok{font:800 12px/1 var(--fs);color:#7dff6a}
+.ntEmpty{margin:auto;max-width:300px;text-align:center;font:500 14px/1.45 var(--fs);color:#a59fb4;padding:20px 0}
+.ntEmpty svg{width:52px;height:52px;display:block;margin:0 auto 10px;opacity:.45;image-rendering:pixelated}
+.ntFoot{display:flex;gap:6px;padding-top:6px;border-top:1px solid #2e2838;flex:0 0 auto}
+.ntFoot button{flex:1;font:800 12px/1 var(--fs);padding:9px 6px;color:#bdb6cc;background:#221d2b;border:2px solid #000;box-shadow:inset 0 0 0 1px #3a3446;cursor:pointer}
+#ntPop{position:fixed;left:50%;top:calc(var(--sat) + 8px);z-index:46;width:max-content;max-width:min(440px,90vw);transform:translate(-50%,-140%);transition:transform .28s cubic-bezier(.2,.9,.3,1.2);display:grid;grid-template-columns:42px 1fr;gap:10px;align-items:center;padding:6px 14px 6px 6px;background:#1d1826;border:2px solid #000;box-shadow:inset 0 0 0 1px #4a4458,inset 0 -3px 0 #ffd84a,4px 4px 0 rgba(0,0,0,.5);font-family:var(--fs);color:#f2ede2;cursor:pointer}
+#ntPop.in{transform:translate(-50%,0)}
+#ntPop.nr2{box-shadow:inset 0 0 0 1px #4a4458,inset 0 -3px 0 #c46cff,0 0 18px rgba(196,108,255,.45),4px 4px 0 rgba(0,0,0,.5)}
+#ntPop.nr3{box-shadow:inset 0 0 0 1px #5a4a18,inset 0 -3px 0 #ffb82e,0 0 22px rgba(255,184,46,.5),4px 4px 0 rgba(0,0,0,.5)}
+#ntPop .ntIc{width:42px;height:42px}
+#ntPop .ntIc canvas,#ntPop .ntIc img{max-width:36px;max-height:36px}
+#ntPop .ntIc .em{font-size:20px}
+#ntPop b{display:block;font:800 13px/1.2 var(--fs)}
+#ntPop p{margin:1px 0 0;font:500 12px/1.25 var(--fs);color:#bdb6cc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60vw}
+@media (max-height:440px){.ntHead b{font-size:22px}.ntTabs{margin:6px 0 4px}.ntTabs button{padding:6px 8px}.ntList{gap:5px}.ntTx b{font-size:13px}.ntTx p{font-size:12px}.ntTx time{margin-top:2px}.ntGo button{padding:8px 9px}.ntRow{grid-template-columns:46px 1fr auto;padding:5px 8px 5px 6px;gap:8px}.ntIc{width:46px;height:46px}.ntIc canvas,.ntIc img{max-width:40px;max-height:40px}}
+@media (prefers-reduced-motion:reduce){#ntBell.on svg,.ntPanel{animation:none!important}#ntPop{transition:none}}
 #qzUpd.hidden{display:none}#qzUpd span{opacity:.85}#qzUpd button{font:800 13px/1 var(--fs),sans-serif;padding:8px 12px;background:#ffd84a;color:#1a0d00;border:2px solid #000;border-radius:6px;cursor:pointer}
 :root{--strip:calc(54px + var(--sab))}
 body.playing #gameWrap{height:calc(100% - var(--strip))}
@@ -1133,6 +1190,62 @@ body.hudEditing #hud *{pointer-events:none!important}
 .fbKinds{display:flex;gap:6px;flex-wrap:wrap}
 #fbText{width:100%;box-sizing:border-box;min-height:110px;resize:vertical;background:#0e0c14;color:#fff;border:2px solid var(--line);border-radius:8px;padding:8px;font:14px/1.4 system-ui,sans-serif}
 #fbMsg{min-height:18px}
+/* ==== ITENS RECEBIDOS (v29): cartões antes do relatório de fim de partida ==== */
+#lootFx{position:fixed;inset:0;z-index:58;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,3vh,22px);padding:max(10px,var(--sat)) max(12px,var(--sar)) max(10px,var(--sab)) max(12px,var(--sal));box-sizing:border-box;background:radial-gradient(ellipse at 50% 55%,rgba(40,26,64,.94),rgba(0,0,0,.97) 72%);cursor:pointer;touch-action:manipulation;user-select:none;-webkit-user-select:none;overflow:hidden}
+#lootFx.hidden{display:none}
+#lootFx.out{animation:ltOut .32s ease-in forwards}
+#lootFx.shake{animation:ltShake .42s linear}
+.ltHead{text-align:center;animation:ltHead .5s cubic-bezier(.2,1.5,.4,1) both}
+.ltHead b{display:block;font-family:var(--fz);font-weight:400;font-size:clamp(26px,7vh,52px);letter-spacing:3px;color:#ffd84a;text-shadow:3px 3px 0 #000,0 0 18px rgba(255,216,74,.35);line-height:1}
+.ltHead small{display:block;margin-top:4px;font:600 clamp(12px,2.6vh,15px)/1.3 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#a59fb4}
+.ltRow{display:flex;flex-wrap:wrap;justify-content:center;align-items:stretch;gap:clamp(8px,2.2vh,16px);max-width:min(1100px,100%);perspective:700px}
+.ltCard{--rc:#e9e4d8;--cw:clamp(104px,17vh,148px);position:relative;width:var(--cw);min-height:calc(var(--cw)*1.32);box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;padding:8px 6px 9px;background:linear-gradient(#221d2c,#15121b);border:3px solid #000;box-shadow:inset 0 0 0 2px #3a3446,inset 0 4px 0 var(--rc),4px 4px 0 rgba(0,0,0,.55);animation:ltIn .5s cubic-bezier(.2,1.5,.4,1) both;transform-style:preserve-3d}
+.ltCard.t2,.ltCard.t3{box-shadow:inset 0 0 0 2px var(--rc),inset 0 4px 0 var(--rc),0 0 18px color-mix(in srgb,var(--rc) 55%,transparent),4px 4px 0 rgba(0,0,0,.55)}
+.ltCard.t3{--cw:clamp(118px,20vh,172px)}
+.ltCard .ltBack{position:absolute;inset:-3px;display:grid;place-items:center;border:3px solid #000;background:repeating-linear-gradient(135deg,#231c30 0 8px,#1a1524 8px 16px);box-shadow:inset 0 0 0 2px var(--rc);font-family:var(--fz);font-size:calc(var(--cw)*.42);color:var(--rc);text-shadow:0 0 14px var(--rc),3px 3px 0 #000;z-index:3;backface-visibility:hidden}
+.ltCard.charge{animation:ltCharge .7s linear both}
+.ltCard.charge .ltBack{animation:ltGlow .7s ease-in both}
+.ltCard.flip{animation:ltFlip .42s cubic-bezier(.2,1.4,.4,1) both}
+.ltCard.flip .ltBack{animation:ltBackOff .21s linear forwards}
+.ltCard:not(.charge):not(.flip) .ltBack{display:none}
+.ltRays{position:absolute;left:50%;top:42%;width:calc(var(--cw)*2.3);aspect-ratio:1;translate:-50% -50%;z-index:-1;pointer-events:none;border-radius:50%;background:repeating-conic-gradient(from 0deg,color-mix(in srgb,var(--rc) 55%,transparent) 0 9deg,transparent 9deg 24deg);-webkit-mask:radial-gradient(circle,#000 18%,transparent 68%);mask:radial-gradient(circle,#000 18%,transparent 68%);opacity:0;animation:ltRays 7s linear infinite,ltFade .5s .05s ease-out forwards}
+.ltIc{flex:1 1 auto;display:grid;place-items:center;width:100%;min-height:calc(var(--cw)*.62)}
+.ltIc img,.ltIc canvas{width:calc(var(--cw)*.56);height:calc(var(--cw)*.56);object-fit:contain;image-rendering:pixelated}
+.ltCard.t2 .ltIc img,.ltCard.t2 .ltIc canvas,.ltCard.t3 .ltIc img,.ltCard.t3 .ltIc canvas{filter:drop-shadow(0 0 8px var(--rc)) drop-shadow(0 0 3px var(--rc))}
+.ltIc canvas.map{width:calc(var(--cw)*.9);height:calc(var(--cw)*.52);border:2px solid #000;box-shadow:0 0 0 1px var(--rc);image-rendering:auto}
+.ltIc .gl.sy{font-family:system-ui,sans-serif;font-size:calc(var(--cw)*.4)}
+.ltIc .gl{font-family:var(--fz);font-size:calc(var(--cw)*.36);line-height:1;color:var(--rc);text-shadow:3px 3px 0 #000,0 0 12px color-mix(in srgb,var(--rc) 50%,transparent)}
+.ltV{font-family:var(--fz);font-weight:400;font-size:calc(var(--cw)*.2);line-height:1;color:#fff;text-shadow:2px 2px 0 #000;white-space:nowrap}
+.ltN{font:800 clamp(11px,2.3vh,14px)/1.15 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#e9e4d8;text-align:center;max-width:100%;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.ltR{font:900 clamp(10px,1.9vh,12px)/1.1 system-ui,sans-serif;letter-spacing:1px;text-align:center;color:var(--rc);text-shadow:0 0 8px var(--rc),1px 1px 0 #000}
+.ltCard.t1 .ltR{color:#a59fb4;text-shadow:1px 1px 0 #000}
+.ltSp{position:absolute;left:50%;top:42%;width:6px;height:6px;margin:-3px;background:var(--rc);box-shadow:0 0 6px var(--rc);pointer-events:none;z-index:4;animation:ltSp .9s ease-out forwards}
+.ltFlash{position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle,var(--rc),transparent 70%);opacity:0;animation:ltFlash .55s ease-out forwards;z-index:-1}
+.ltFoot{display:flex;flex-direction:column;align-items:center;gap:6px;min-height:58px}
+.ltFoot .btn{opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s;pointer-events:none}
+#lootFx.done .ltFoot .btn{opacity:1;transform:none;pointer-events:auto;animation:ltPulse 1.6s ease-in-out .4s infinite}
+.ltFoot small{font:600 12px/1.2 system-ui,sans-serif;color:#7a7488}
+#lootFx.done .ltFoot small{visibility:hidden}
+.ltWait{font:600 13px/1.2 system-ui,sans-serif;color:#a59fb4}
+.ltWait::after{content:"";display:inline-block;width:1.2em;text-align:left;animation:ltDots 1s steps(4) infinite}
+#lootFx.lo .ltRays,#lootFx.lo .ltSp{display:none}
+/* celular deitado: uma fileira só, com rolagem lateral; o cartão novo rola pra vista */
+@media (max-height:500px){#lootFx{gap:6px}.ltRow{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;overflow-y:visible;width:100%;max-width:100%;padding:26px 8px 18px;scroll-snap-type:x proximity;scrollbar-width:none}.ltRow::-webkit-scrollbar{display:none}.ltRow>.ltCard:first-child{margin-left:auto}.ltRow>.ltCard:last-child{margin-right:auto}.ltCard{flex:0 0 auto;scroll-snap-align:center;--cw:clamp(96px,30vh,124px)}.ltCard.t3{--cw:clamp(104px,33vh,134px)}.ltHead b{font-size:clamp(22px,8vh,34px)}.ltFoot{min-height:46px}}
+@keyframes ltHead{from{transform:scale(.4) translateY(-20px);opacity:0}}
+@keyframes ltIn{0%{transform:translateY(46px) rotateY(80deg) scale(.6);opacity:0}100%{transform:none;opacity:1}}
+@keyframes ltCharge{0%{transform:scale(.6);opacity:0}15%{transform:scale(1);opacity:1}30%,100%{transform:translateX(0)}35%{transform:translateX(-2px) rotate(-1deg)}45%{transform:translateX(3px) rotate(1.5deg)}55%{transform:translateX(-3px) rotate(-2deg)}65%{transform:translateX(4px) rotate(2deg) scale(1.03)}75%{transform:translateX(-4px) rotate(-2.5deg) scale(1.05)}85%{transform:translateX(4px) rotate(3deg) scale(1.07)}95%{transform:translateX(-3px) scale(1.08)}}
+@keyframes ltGlow{to{box-shadow:inset 0 0 0 2px var(--rc),0 0 26px var(--rc);filter:brightness(1.5)}}
+@keyframes ltFlip{0%{transform:rotateY(90deg) scale(1.08)}60%{transform:rotateY(-10deg) scale(1.12)}100%{transform:none}}
+@keyframes ltBackOff{to{opacity:0}}
+@keyframes ltRays{to{rotate:360deg}}
+@keyframes ltFade{to{opacity:1}}
+@keyframes ltSp{0%{transform:none;opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.3);opacity:0}}
+@keyframes ltFlash{0%{opacity:.55}100%{opacity:0}}
+@keyframes ltPulse{0%,100%{box-shadow:0 0 0 rgba(255,216,74,0)}50%{box-shadow:0 0 16px rgba(255,216,74,.7)}}
+@keyframes ltShake{0%,100%{transform:none}20%{transform:translate(-5px,2px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-4px,3px)}80%{transform:translate(3px,-2px)}}
+@keyframes ltOut{to{opacity:0;transform:scale(1.04)}}
+@keyframes ltDots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
+@media (prefers-reduced-motion:reduce){#lootFx *,#lootFx{animation-duration:.01s!important;animation-iteration-count:1!important}.ltRays,.ltSp{display:none}}
 #chestFx{position:fixed;inset:0;z-index:60;background:radial-gradient(ellipse at 50% 60%,#1e1432,#000 75%);display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer;touch-action:manipulation}
 #chestFx.hidden{display:none}
 #chestFx canvas{width:min(92vw,128vh);height:auto;image-rendering:pixelated;aspect-ratio:16/10}
@@ -1358,6 +1471,7 @@ window.qzLoadStep=function(v,t){clearInterval(window.__qlT);f.style.width=v+'%';
   <div class="tMarcus"><canvas id="tAvatar" width="40" height="40"></canvas><div class="tmTx"><b class="yo" id="tName">VOCÊ</b><span class="lvl yo">NIVEL <i id="tLvl">1</i></span><div class="xp"><i id="tXp"></i></div><p>Recorde: onda <b id="tBest">0</b> · Mortos: <b id="tKills2">0</b></p></div></div>
   <button id="bHelp" class="yo">AJUDA</button>
   <button id="bFeed" class="yo">FEEDBACK</button>
+  <button id="ntBell" aria-label="Notificações"><svg viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true"><path fill="#000" d="M6 1h4v1h2v1h1v6h1v2h1v2H1v-2h1V9h1V3h1V2h2z"/><path fill="#ffd84a" d="M6 2h4v1h2v6h1v2h1v1H2v-1h1V9h1V3h2z"/><path fill="#fff4b8" d="M5 4h1v4H5z"/><path fill="#b8861a" d="M11 4h1v5h1v2h-2z"/><path fill="#000" d="M6 13h4v1H9v1H7v-1H6z"/><path fill="#ffd84a" d="M7 13h2v1H7z"/></svg><i class="hidden" id="ntBadge">0</i></button>
   <div class="tNow"><small class="yo">AGORA NA QUEBRADA</small><b id="tPeriod" class="yo">NOITE</b></div>
 </div>
 
@@ -1508,6 +1622,13 @@ window.qzLoadStep=function(v,t){clearInterval(window.__qlT);f.style.width=v+'%';
 </div>
 
 <div id="qzVer"></div>
+<div id="ntScr" class="hidden" role="dialog" aria-label="Notificações"><div class="ntPanel">
+  <div class="ntHead"><div><b>NOTIFICAÇÕES</b><small id="ntSub">Tudo o que chegou pra você</small></div><button class="ntX" id="ntClose" aria-label="Fechar">✕</button></div>
+  <div class="ntTabs" id="ntTabs"></div>
+  <div class="ntList" id="ntList"></div>
+  <div class="ntFoot"><button id="ntReadAll">MARCAR TUDO COMO LIDO</button><button id="ntClear">APAGAR AS LIDAS</button></div>
+</div></div>
+<div id="ntPop" aria-live="polite"></div>
 <div id="qzUpd" class="hidden"><b>VERSÃO NOVA DISPONÍVEL</b><span id="qzUpdTx"></span><button id="qzUpdGo">ATUALIZAR AGORA</button></div>
 <div id="settings" class="screen shadeFull hidden">
   <div class="panel wide" style="text-align:center">
@@ -1609,6 +1730,8 @@ window.qzLoadStep=function(v,t){clearInterval(window.__qlT);f.style.width=v+'%';
 </div>
 
 </div>
+
+<div id="lootFx" class="hidden" role="dialog" aria-label="Itens recebidos"><div class="ltHead"><b class="yo">ITENS RECEBIDOS</b><small id="ltSub"></small></div><div class="ltRow" id="ltRow"></div><div class="ltFoot"><span class="ltWait hidden" id="ltWait">conferindo com o servidor</span><button class="btn yo" id="ltGo">VER RELATORIO</button><small>toque para pular</small></div></div>
 
 <div id="rotate"><div class="ph"></div><p>GIRA O CELULAR</p><small>Quebrada Z é jogado com o celular deitado.</small></div>
 
@@ -13878,6 +14001,7 @@ function resetWorld(attract) {
   S.slowT = 0;
   if (typeof UI !== "undefined" && UI.bossHide) UI.bossHide(true);
   S.stats = { kills: 0, head: 0, melee: 0, doors: 0, special: 0, boss: 0, shots: 0, hitShots: 0, crits: 0, dmg: 0, bestHit: 0, spent: 0, picked: 0, lost: 0, bestRound: 0, hurt: 0, t: 0, wk: {} };
+  S.loot = [];
   S.shopOpen = false;
   S.stall = null;
   S.roundKills = 0;
@@ -22539,7 +22663,7 @@ const UI = {
   last: {},
   show(id) {
     for (const s of ["title", "campaign", "select", "how", "pause", "over", "settings", "roulette", "profile", "mshop", "sim", "creator", "login", "nameScr", "rankScr", "ecoScr", "feedScr", "friendScr"]) $(s).classList.toggle("hidden", s !== id);
-    if (id === "title") TITLE.refresh();
+    if (id === "title") { TITLE.refresh(); try { NOTIF.badge(); } catch (e) {} }
     if (S.mode === "menu" || S.mode === "boot") TITLE.start();
   },
   // round emblem: redrawn when the round changes, pulses red on boss rounds
@@ -23475,15 +23599,24 @@ const UI = {
     D.kills += S.stats.kills;
     D.matches++;
     D.bestWave = Math.max(D.bestWave, S.round);
+    // v29: ITENS RECEBIDOS por cima do relatório. Com conta, moedas/XP/nível vêm do servidor (runMeta)
+    LOOT.open(!S.lab);
+    if (!srv) { LOOT.add("coins", coins); LOOT.add("xp", xp); }
+    (S.loot || []).forEach((l) => LOOT.add(l.k, l.a));
+    if (S.lab) LOOT.done();
     if (!S.lab) NET.endRun({ wave: S.round, kills: S.stats.kills, shots: S.stats.shots, hits: S.stats.hitShots, bosses: S.stats.boss || 0, won: win, heads: S.stats.head, night: S.period === "noite" }).then((r) => {
       if (srv) ECO.runMeta(r);
-      if (!r || !r.ok) return;
-      ECO.refresh();
+      if (!r || !r.ok) return LOOT.done();
+      LOOT.add("pass", r.pass_xp | 0);
+      if (r.box) LOOT.add("box", 1);
+      // roupas liberadas pelo nível do servidor aparecem no refresh (LOOK.checkUnlocks avisa o LOOT)
+      ECO.refresh().then(() => LOOT.done(), () => LOOT.done());
       const um = $("unlockMsg");
       if (um) um.textContent = (um.textContent ? um.textContent + " · " : "") + "+" + r.pass_xp + " XP de passe" + (r.box ? " · ganhou uma CAIXA (abra em PASSE › CAIXAS)" : "");
     });
     // com conta o servidor sobe o nível e paga as moedas (ECO.runMeta); sem conta, a conta é local
     const lvR = srv ? { ups: 0, msg: [] } : LEVEL.gain(D, xp), ups = lvR.ups;
+    if (ups) LOOT.add("lvl", D.level, { sub: lvR.msg.join(" · ") });
     SAVE.save();
     $("sRound").textContent = S.round;
     $("sKills").textContent = S.stats.kills;
@@ -23506,6 +23639,7 @@ const UI = {
     $("ovXpTx").textContent = (ups ? `Subiu pro n\xEDvel ${D.level}! ` : "") + (D.level >= LEVEL.max() ? "N\xEDvel m\xE1ximo" : `${D.xp} / ${lvlNeed(D.level)} XP`);
     const mi = MAPS.findIndex((x) => x.id === m.id);
     const ord = campMaps(curCamp), oi = ord.indexOf(mi), nx = oi >= 0 && oi < ord.length - 1 ? MAPS[ord[oi + 1]] : null;
+    if (nx && (win || S.unlockedNow) && !wasWon) LOOT.add("map", 1, { id: nx.id, sub: nx.name });
     $("unlockMsg").textContent = !nx ? win ? "Campanha HELL DE JANEIRO: \xFAltima quebrada vencida!" : "" : (win || S.unlockedNow) && !wasWon ? `Nova quebrada liberada: ${nx.name}` : !mapWon(m.id) && !SAVE.d.unlockAll && !(SAVE.d.legacy && SAVE.d.legacy[nx.id]) ? `Ven\xE7a o chefe da onda ${CONFIG.boss.unlock} aqui pra liberar ${nx.name}` : "";
     try {
       const nw = LOOK.checkUnlocks(), um = $("unlockMsg");
@@ -25306,6 +25440,7 @@ const LOOK = (function () {
     if (typeof ECO !== "undefined" && ECO.items) for (const k of ECO.items) if (ITEMS[k] && d.inv.indexOf(k) < 0) d.inv.push(k);
     const fresh = d.inv.filter((k) => before.indexOf(k) < 0 && ITEMS[k].unlock);
     if (fresh.length) SAVE.save();
+    if (fresh.length && typeof LOOT !== "undefined") LOOT.items(fresh);
     return fresh.map((k) => ITEMS[k].name);
   }
   return { BODIES, bodyName, ITEMS, KITS, OUTFITS, SLOTS, SKIN_TONES, EYES, HAIR_NAMES, HAIR_COLS, sanitize, canEquip, equipInto, kitPrice, apply, drawPreview, open, wire, shopGrid, checkUnlocks, rigLook, eqItems, defLook, defEq, thumb, thumbInfo, REGION, RSLOT };
@@ -25953,6 +26088,7 @@ const FRIENDS = {
     FRIENDS.setBadge(rec.length);
   },
   setBadge(n) {
+    try { NOTIF.friends(FRIENDS.list); } catch (e) {}
     const e = $("fdBadge");
     e.textContent = n > 9 ? "9+" : n;
     e.classList.toggle("hidden", !n);
@@ -26022,6 +26158,8 @@ const ECO = {
     if (!r) return add("Sem conexão com o servidor: moedas e XP desta partida não contaram");
     if (!r.ok) return add("Partida recusada pelo servidor (" + (r.reason || "?") + "): sem moedas e XP");
     const D = SAVE.d, lv0 = D.level;
+    LOOT.add("coins", r.coins | 0, { set: 1 });
+    LOOT.add("xp", r.char_xp | 0, { set: 1 });
     this.mirror(r.wallet_coins, r.level, r.xp);
     $("sCoins").textContent = "+" + (r.coins | 0);
     $("sXp").textContent = "+" + (r.char_xp | 0);
@@ -26034,7 +26172,9 @@ const ECO = {
     if (typeof LEVEL !== "undefined" && D.level > lv0) {
       const msg = LEVEL.pay(D, lv0, true);
       SAVE.save();
+      LOOT.add("lvl", D.level, { sub: msg.join(" · ") });
       if (msg.length) add("Nível novo: " + msg.join(", "));
+      try { NOTIF.push({ id: "lv:" + D.level, k: "lvl", t: "Subiu pro nível " + D.level + "!", b: msg.length ? "Liberou: " + msg.join(", ") : "Seu personagem está mais forte.", ic: "lvl" }); } catch (e) {}
     }
   },
   // pacotes de Z-Coin: venda pelo link de checkout da InfinitePay (crédito manual pelo administrador).
@@ -26072,6 +26212,7 @@ const ECO = {
       }
       this.paint();
       if (!$("ecoScr").classList.contains("hidden")) this.show(this.tab);
+      try { NOTIF.eco(d); } catch (e) {}
       return d;
     }).catch(() => {
       this.ready = 0;
@@ -26092,13 +26233,17 @@ const ECO = {
     const x = z ? z.x : S.player.x, y = z ? z.y - 40 : G0 - 40;
     NET.rpc("boss_drop", { p_run: NET.st.run, p_boss: kind }).then((r) => {
       if (r.chip) {
+        (S.loot = S.loot || []).push({ k: "chip", a: 1 });
         this.chips++;
         UI.toast && UI.toast("+1 CHIP DE TECNOLOGIA", "#3ee6c8");
+        try { NOTIF.push({ id: "dr:c:" + NET.st.run + ":" + kind, k: "drop", t: "O chefe largou um chip", b: "+1 chip de tecnologia", ic: "chip", r: 2 }); } catch (e) {}
         S.dyn.push({ x, y, r: 70, c: "#3ee6c8", i: 1, life: 1.2 });
       }
       if (r.zcoin) {
+        (S.loot = S.loot || []).push({ k: "zcoin", a: r.zcoin });
         this.zcoin += r.zcoin;
         setTimeout(() => UI.toast && UI.toast("+" + r.zcoin + " Z-COIN", "#c86aff"), 900);
+        try { NOTIF.push({ id: "dr:z:" + NET.st.run + ":" + kind, k: "drop", t: "O chefe largou Z-Coin", b: "+" + r.zcoin + " Z-Coin", ic: "zc", r: 3 }); } catch (e) {}
       }
       this.paint();
     }).catch(() => {
@@ -26241,7 +26386,10 @@ const ECO = {
     el.querySelectorAll("canvas[data-th]").forEach((c) => LOOK.thumb(c, [c.dataset.th], { full: !!c.dataset.full }));
   },
   act(b) {
-    const a = b.dataset.act, done = (r) => this.got(r).then(() => this.show());
+    const a = b.dataset.act, done = (r) => {
+      try { NOTIF.acted(a, b, r); } catch (e) {}
+      return this.got(r).then(() => this.show());
+    };
     const fail = (e) => {
       b.disabled = false;
       UI.toast && UI.toast(ecoErr(e), "#ff5a5a");
@@ -26253,6 +26401,7 @@ const ECO = {
     else if (a === "item") NET.rpc("buy_item", { p_item: b.dataset.id }).then(done, fail);
     else if (a === "box") NET.rpc("next_box", {}).then((id) => id ? NET.rpc("open_box", { p_box: id }) : Promise.reject(new Error("SEM_CAIXA"))).then((r) => {
       CHEST.play(r, this.prize(r.kind, r.amount, r.item));
+      try { NOTIF.acted("box", b, r); } catch (e) {}
       return this.got(r).then(() => this.show("box"));
     }, fail);
     else if (a === "pack") {
@@ -26263,6 +26412,198 @@ const ECO = {
   }
 };
 // v28.5: baú que treme, abre e solta feixes de luz da cor da raridade (branco comum, roxo raro, dourado lendário)
+// v29: tela ITENS RECEBIDOS antes do relatório de fim de partida (ver tools/patches/v29-itens-recebidos.js)
+const LOOT = {
+  // cores de raridade: as mesmas da aura v29 (raro/exclusivo roxo, lendário ouro)
+  RC: { 1: "#e9e4d8", 2: "rgb(196,108,255)", 3: "rgb(255,184,46)" },
+  RN: { 1: "COMUM", 2: "RARO", 3: "LENDÁRIO" },
+  on: 0, q: [], cards: {}, pend: 0, busy: 0, all: 0, tm: 0,
+  el: () => document.getElementById("lootFx"),
+  // abre por cima do relatório. pend: ainda espera a resposta do servidor
+  open(pend) {
+    const el = this.el();
+    clearTimeout(this.tm); clearTimeout(this.safe);
+    this.on = 1; this.t0 = performance.now(); this.q = []; this.cards = {}; this.pend = !!pend; this.busy = 0; this.all = 0; this.n = 0;
+    $("ltRow").innerHTML = "";
+    $("ltSub").textContent = "";
+    el.className = typeof QUAL !== "undefined" && QUAL.tier >= 2 ? "lo" : "";
+    $("ltWait").classList.toggle("hidden", !this.pend);
+    // o servidor pode não responder: depois de 5 s a fila fecha com o que tiver
+    if (this.pend) this.safe = setTimeout(() => this.done(), 5000);
+    this.tm = setTimeout(() => this.next(), 520);
+  },
+  /** soma um prêmio. k: coins|xp|lvl|pass|box|chip|zcoin|item|map. a: quantidade/valor, o: extras */
+  add(k, a, o) {
+    if (!this.on) return;
+    o = o || {};
+    const key = k === "item" || k === "map" ? k + ":" + o.id : k, c = this.cards[key];
+    // já mostrado: só atualiza o número (ex.: moedas do servidor no lugar da conta local)
+    if (c) {
+      if (o.set || k === "lvl") c.a = a; else if (k !== "item" && k !== "map") c.a += a;
+      if (o.sub) c.sub = o.sub;
+      if (c.el) this.fill(c);
+      return;
+    }
+    if ((k === "coins" || k === "xp" || k === "pass" || k === "chip" || k === "zcoin" || k === "box") && !(a > 0)) return;
+    const it = k === "item" ? LOOK.ITEMS[o.id] : null;
+    const t = it ? (it.rar >= 4 ? 3 : it.rar >= 2 ? 2 : 1) : k === "zcoin" || k === "chip" || k === "map" ? 2 : k === "lvl" ? 2 : 1;
+    const card = { k, a, t, id: o.id, sub: o.sub || "", ord: this.n++ };
+    this.cards[key] = card;
+    this.q.push(card);
+    // comuns primeiro, depois raros, lendários por último
+    this.q.sort((x, y) => x.t - y.t || x.ord - y.ord);
+    if (!this.busy && !this.tm) this.next();
+  },
+  items(ids) {
+    (ids || []).forEach((id) => LOOK.ITEMS[id] && this.add("item", 1, { id }));
+  },
+  // o servidor respondeu (ou desistiu): sem mais espera
+  done() {
+    clearTimeout(this.safe);
+    this.pend = 0;
+    $("ltWait").classList.add("hidden");
+    if (!this.busy && !this.tm) this.next();
+  },
+  next() {
+    this.tm = 0;
+    if (!this.on) return;
+    // esperando o servidor (até 1,8 s): assim a fila sai em ordem, comuns antes dos raros
+    if (this.pend && !this.all && performance.now() - this.t0 < 1800) { this.tm = setTimeout(() => this.next(), 120); return; }
+    const c = this.q.shift();
+    if (!c) {
+      this.busy = 0;
+      if (!this.pend) this.finish();
+      return;
+    }
+    this.busy = 1;
+    this.el().classList.remove("done");
+    const fast = this.all || (typeof REDUCED !== "undefined" && REDUCED.matches);
+    const el = this.card(c), row = $("ltRow");
+    row.append(el);
+    if (row.scrollWidth > row.clientWidth) try { el.scrollIntoView({ behavior: fast ? "auto" : "smooth", inline: "center", block: "nearest" }); } catch (e) {}
+    if (c.t >= 2 && !fast) {
+      // raro/lendário: verso tremendo e brilhando, depois vira
+      el.classList.add("charge");
+      try { SFX.whoosh(); } catch (e) {}
+      this.tm = setTimeout(() => {
+        el.classList.remove("charge");
+        el.classList.add("flip");
+        this.burst(el, c);
+        this.count(c);
+        this.tm = setTimeout(() => this.next(), c.t >= 3 ? 950 : 650);
+      }, 720);
+    } else {
+      if (!fast) try { SFX.swap(); } catch (e) {}
+      if (c.t >= 2) this.burst(el, c, 1);
+      this.count(c, fast);
+      this.tm = setTimeout(() => this.next(), fast ? 60 : 380);
+    }
+  },
+  card(c) {
+    const el = document.createElement("div"), col = this.RC[c.t];
+    el.className = "ltCard t" + c.t;
+    el.style.setProperty("--rc", c.k === "coins" ? "#ffd84a" : c.k === "xp" || c.k === "lvl" ? "#7dff6a" : c.k === "pass" ? "#3ee6c8" : c.k === "map" ? "#ff9a3a" : col);
+    el.innerHTML = (c.t >= 2 ? '<div class="ltRays"></div><div class="ltBack">?</div>' : "") + '<div class="ltIc"></div><b class="ltV"></b><span class="ltN"></span><small class="ltR"></small>';
+    const ic = el.querySelector(".ltIc"), img = (src) => { const im = new Image(); im.alt = ""; im.src = src; ic.append(im); }, gl = (t, sy) => { const b = document.createElement("span"); b.className = "gl" + (sy ? " sy" : ""); b.textContent = t; ic.append(b); };
+    if (c.k === "coins") img(ICON_GOLD);
+    else if (c.k === "zcoin") img(ICON_ZC);
+    else if (c.k === "chip") img(ICON_CHIP);
+    else if (c.k === "box") img(this.boxIcon());
+    else if (c.k === "xp") gl("XP");
+    else if (c.k === "pass") gl("★", 1);
+    else if (c.k === "lvl") gl("▲", 1);
+    else if (c.k === "item") { const cv = document.createElement("canvas"); try { LOOK.thumb(cv, [c.id]); } catch (e) {} ic.append(cv); }
+    else if (c.k === "map") {
+      try { const mi = MAPS.findIndex((m) => m.id === c.id), cv = scenePreview(mi, 192, 108); cv.className = "map"; ic.append(cv); } catch (e) { gl("⌂"); }
+    }
+    c.el = el;
+    this.fill(c, 1);
+    return el;
+  },
+  // textos do cartão; v0: número começa em zero (vai contar)
+  fill(c, v0) {
+    const el = c.el, V = el.querySelector(".ltV"), N = el.querySelector(".ltN"), R = el.querySelector(".ltR");
+    const nm = { coins: "MOEDAS", xp: "XP DE NÍVEL", pass: "XP DO PASSE", box: c.a > 1 ? "CAIXAS" : "CAIXA", chip: c.a > 1 ? "CHIPS DE TECNOLOGIA" : "CHIP DE TECNOLOGIA", zcoin: "Z-COIN" }[c.k];
+    if (c.k === "lvl") { V.textContent = "NÍVEL " + c.a; N.textContent = c.sub || "Subiu de nível!"; R.textContent = "NÍVEL NOVO"; }
+    else if (c.k === "item") { const it = LOOK.ITEMS[c.id]; V.textContent = ""; N.textContent = it ? it.name : c.id; R.textContent = this.RN[c.t]; }
+    else if (c.k === "map") { V.textContent = ""; N.textContent = c.sub; R.textContent = "QUEBRADA NOVA"; }
+    else { V.textContent = c.k === "box" ? (c.a > 1 ? "x" + c.a : "") : "+" + (v0 && !c.shown && c.a >= 4 ? 0 : c.a); N.textContent = nm; R.textContent = c.t >= 2 ? this.RN[c.t] : c.k === "box" ? "ABRA NO PASSE" : ""; }
+    V.style.display = V.textContent ? "" : "none";
+  },
+  // número contando de 0 até o valor
+  count(c, fast) {
+    const V = c.el.querySelector(".ltV"), pre = "+";
+    if (!/^(coins|xp|pass|chip|zcoin)$/.test(c.k) || fast || c.a < 4) { c.shown = 1; this.fill(c); return; }
+    const t0 = performance.now(), dur = Math.min(900, 300 + c.a / 6);
+    const step = () => {
+      if (!this.on) return;
+      const k = Math.min(1, (performance.now() - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      V.textContent = pre + Math.round(c.a * e);
+      if (k < 1 && !this.all) requestAnimationFrame(step); else { c.shown = 1; this.fill(c); }
+    };
+    requestAnimationFrame(step);
+  },
+  burst(el, c, quiet) {
+    if (!quiet) try { (c.t >= 3 ? SFX.perk : SFX.buy)(); } catch (e) {}
+    const lo = typeof QUAL !== "undefined" && QUAL.tier >= 2, n = lo ? 0 : c.t >= 3 ? 22 : 12;
+    for (let i = 0; i < n; i++) {
+      const p = document.createElement("i"), a = Math.random() * Math.PI * 2, d = 50 + Math.random() * (c.t >= 3 ? 110 : 70);
+      p.className = "ltSp";
+      p.style.setProperty("--dx", Math.cos(a) * d + "px");
+      p.style.setProperty("--dy", Math.sin(a) * d - 20 + "px");
+      p.style.animationDelay = Math.random() * 0.12 + "s";
+      el.append(p);
+      setTimeout(() => p.remove(), 1200);
+    }
+    if (!quiet && c.t >= 3) {
+      const f = document.createElement("div"), fx = this.el();
+      f.className = "ltFlash";
+      f.style.setProperty("--rc", this.RC[3]);
+      fx.append(f);
+      setTimeout(() => f.remove(), 700);
+      fx.classList.remove("shake"); void fx.offsetWidth; fx.classList.add("shake");
+    }
+  },
+  finish() {
+    const el = this.el();
+    if (!$("ltRow").children.length) return this.close(); // nada pra mostrar
+    el.classList.add("done");
+    const n = $("ltRow").children.length, best = Math.max(0, ...Object.values(this.cards).map((c) => c.t));
+    $("ltSub").textContent = n + (n > 1 ? " prêmios" : " prêmio") + (best >= 3 ? " · tem LENDÁRIO!" : best >= 2 && Object.values(this.cards).some((c) => c.k === "item" && c.t >= 2) ? " · tem roupa RARA!" : "");
+  },
+  // toque: 1º mostra tudo de uma vez; 2º fecha e mostra o relatório
+  tap() {
+    if (!this.on) return;
+    const el = this.el();
+    if (el.classList.contains("done")) return this.close();
+    this.all = 1;
+    clearTimeout(this.tm); this.tm = 0;
+    $("ltRow").querySelectorAll(".charge,.flip").forEach((e) => e.classList.remove("charge", "flip"));
+    Object.values(this.cards).forEach((c) => { if (c.el) { c.shown = 1; this.fill(c); } });
+    while (this.q.length) { this.next(); clearTimeout(this.tm); this.tm = 0; }
+    this.busy = 0;
+    if (!this.pend) this.finish();
+  },
+  close() {
+    if (!this.on) return;
+    const el = this.el();
+    this.on = 0;
+    clearTimeout(this.tm); clearTimeout(this.safe); this.tm = 0;
+    el.classList.add("out");
+    setTimeout(() => { if (!this.on) el.className = "hidden"; }, 320);
+    try { SFX.swap(); } catch (e) {}
+  },
+  // baú de madeira em pixel art (igual ao das caixas grátis)
+  boxIcon() {
+    return this._box || (this._box = pixIcon(["............", "..aaaaaaaa..", ".abbbbbbbba.", ".acbbbbbbca.", ".aaaaddaaaa.", ".acbbdebbca.", ".abbbddbbba.", ".acbbbbbbca.", ".abbbbbbbba.", ".acbbbbbbca.", "..aaaaaaaa..", "............"], { a: "#0a0608", b: "#7a4a24", c: "#8a8478", d: "#d8a820", e: "#2a1a08" }));
+  }
+};
+$("lootFx").onclick = (e) => { if (e.target.id === "ltGo") { e.stopPropagation(); LOOT.close(); } else LOOT.tap(); };
+addEventListener("keydown", (e) => {
+  if (!LOOT.on || !["Enter", "Space", "Escape", "NumpadEnter"].includes(e.code)) return;
+  e.preventDefault(); e.stopImmediatePropagation();
+  if (e.code === "Escape") LOOT.close(); else LOOT.tap();
+}, true);
 const CHEST = {
   C: ["#ffffff", "#ffffff", "#b04aff", "#ffc21a"],
   N: ["", "COMUM", "RARO", "LENDÁRIO"],
@@ -26400,6 +26741,265 @@ $("bEco").onclick = () => {
   ECO.refresh();
 };
 $("bEcoBack").onclick = () => UI.show("title");
+// ===== NOTIFICAÇÕES (v29): caixa única de tudo o que acontece com a conta. Vive no aparelho, uma lista por conta.
+// Fontes: get_friends (pedidos/aceites), get_economy (passe, missões, caixas, evento), respostas de compra e
+// resgate, drops de chefe, nível novo e versão nova. "seen" guarda os ids que já viraram notificação para nunca
+// repetir, mesmo depois que a lista apaga as antigas.
+const NOTIF = {
+  max: 80, list: [], seen: [], meta: {}, key: null, tab: "all", popQ: [], popT: 0,
+  CAT: { fr: "fr", fra: "fr", pass: "pz", mis: "pz", box: "pz", drop: "pz", lvl: "pz", buy: "lj", bpass: "lj", open: "pz", evt: "av", upd: "av", hi: "av" },
+  TABS: [["all", "TUDO"], ["pz", "PRÊMIOS"], ["fr", "AMIGOS"], ["lj", "COMPRAS"], ["av", "AVISOS"]],
+  RN: ["", "", "RARO", "LENDÁRIO"],
+  esc: (t) => String(t == null ? "" : t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]),
+  // a conta muda (entrar/sair): troca de lista
+  sync() {
+    const k = "qz_notif_" + (NET.logged && NET.st.name ? NET.st.name.toLowerCase() : "_");
+    if (k === this.key) return;
+    this.key = k;
+    let o = null;
+    try { o = JSON.parse(localStorage.getItem(k) || "null"); } catch (e) {}
+    this.list = o && o.l || []; this.seen = o && o.s || []; this.meta = o && o.m || {};
+    if (!o) this.push({ id: "hi", k: "hi", t: "Chegou a caixa de notificações", b: "Pedidos de amizade, prêmios do passe, compras e novidades ficam guardados aqui.", ic: "bell" }, 1);
+  },
+  save() {
+    if (this.seen.length > 400) this.seen = this.seen.slice(-300);
+    try { localStorage.setItem(this.key, JSON.stringify({ l: this.list, s: this.seen, m: this.meta })); } catch (e) {}
+  },
+  has(id) { return this.seen.indexOf(id) >= 0; },
+  // o = { id, k (tipo), t (título), b (texto), ic ("item"|"coin"|"chip"|"zc"|"fr"|...), it (id da roupa), r (2 raro, 3 lendário), go, arg }
+  push(o, quiet) {
+    this.sync();
+    if (this.has(o.id)) return false;
+    this.seen.push(o.id);
+    o.ts = o.ts || Date.now();
+    o.nw = 1;
+    this.list.unshift(o);
+    // apaga as mais velhas já lidas primeiro
+    while (this.list.length > this.max) {
+      let i = this.list.length - 1;
+      while (i > 0 && this.list[i].nw) i--;
+      this.list.splice(i, 1);
+    }
+    this.save();
+    this.badge();
+    if (this.open) this.draw();
+    else if (!quiet) this.pop(o);
+    return true;
+  },
+  // a ação da notificação já foi feita (prêmio pego, pedido respondido): some o botão
+  done(id, txt) {
+    this.sync();
+    const n = this.list.find((x) => x.id === id);
+    if (!n || n.ok) return;
+    n.ok = txt || "feito";
+    this.save();
+    if (this.open) this.draw();
+  },
+  unread() { this.sync(); return this.list.filter((n) => n.nw).length; },
+  badge() {
+    const n = this.unread(), e = $("ntBadge");
+    e.textContent = n > 9 ? "9+" : n;
+    e.classList.toggle("hidden", !n);
+    $("ntBell").classList.toggle("on", !!n);
+    $("ntBell").setAttribute("aria-label", n ? "Notificações: " + n + " novas" : "Notificações");
+  },
+  icon(n, cls) {
+    const r = n.r >= 2 ? " nr" + n.r : "";
+    let a;
+    if (n.it && LOOK.ITEMS[n.it]) a = '<canvas data-nt="' + this.esc(n.it) + '"></canvas>';
+    else if (n.ic === "coin" || n.ic === "zc" || n.ic === "chip") a = '<img alt="" src="' + (n.ic === "zc" ? ICON_ZC : n.ic === "chip" ? ICON_CHIP : ICON_GOLD) + '">';
+    else a = '<span class="em">' + ({ fr: "🤝", fra: "🤝", lvl: "⭐", upd: "⬆️", evt: "🔥", mis: "🎯", box: "📦", pass: "🎟️", bell: "🔔" }[n.ic] || "🔔") + "</span>";
+    return '<div class="ntIc' + r + (cls || "") + '">' + a + "</div>";
+  },
+  paintThumbs(el) {
+    el.querySelectorAll("canvas[data-nt]").forEach((c) => { try { LOOK.thumb(c, [c.dataset.nt]); } catch (e) {} });
+  },
+  ago(ts) {
+    const m = Math.floor((Date.now() - ts) / 6e4);
+    if (m < 1) return "agora";
+    if (m < 60) return "há " + m + " min";
+    const h = Math.floor(m / 60);
+    if (h < 24) return "há " + h + " h";
+    return new Date(ts).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }) + " às " + new Date(ts).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  },
+  day(ts) {
+    const d0 = new Date(); d0.setHours(0, 0, 0, 0);
+    return ts >= +d0 ? "HOJE" : ts >= +d0 - 864e5 ? "ONTEM" : "ANTES";
+  },
+  btn(n) {
+    if (n.ok) return '<span class="ok">✓ ' + this.esc(n.ok) + "</span>";
+    const L = { pass: "PEGAR", mis: "PEGAR", box: "ABRIR", fr: "RESPONDER", fra: "VER", upd: "ATUALIZAR", evt: "VER", buy: "VESTIR", open: "VESTIR", bpass: "VER" }[n.go ? n.k : ""];
+    return L ? '<button data-go="' + this.esc(n.id) + '"' + (n.k === "fra" || n.k === "evt" || n.k === "bpass" ? ' class="alt"' : "") + ">" + L + "</button>" : "";
+  },
+  draw() {
+    this.sync();
+    const L = this.list, isNw = (n) => n.nw || this.fresh && this.fresh.indexOf(n.id) >= 0, cnt = (c) => L.filter((n) => isNw(n) && (c === "all" || this.CAT[n.k] === c)).length;
+    $("ntTabs").innerHTML = this.TABS.map(([c, t]) => { const k = cnt(c); return '<button data-t="' + c + '"' + (c === this.tab ? ' class="on"' : "") + ">" + t + (k ? "<em>" + k + "</em>" : "") + "</button>"; }).join("");
+    const show = L.filter((n) => this.tab === "all" || this.CAT[n.k] === this.tab);
+    const nw = cnt("all");
+    $("ntSub").textContent = nw ? (nw === 1 ? "1 nova" : nw + " novas") : "Tudo lido";
+    if (!show.length) {
+      $("ntList").innerHTML = '<div class="ntEmpty">' + "<svg viewBox=\"0 0 16 16\" shape-rendering=\"crispEdges\" aria-hidden=\"true\"><path fill=\"#000\" d=\"M6 1h4v1h2v1h1v6h1v2h1v2H1v-2h1V9h1V3h1V2h2z\"/><path fill=\"#ffd84a\" d=\"M6 2h4v1h2v6h1v2h1v1H2v-1h1V9h1V3h2z\"/><path fill=\"#fff4b8\" d=\"M5 4h1v4H5z\"/><path fill=\"#b8861a\" d=\"M11 4h1v5h1v2h-2z\"/><path fill=\"#000\" d=\"M6 13h4v1H9v1H7v-1H6z\"/><path fill=\"#ffd84a\" d=\"M7 13h2v1H7z\"/></svg>" + (this.tab === "all" ? "Nada por aqui ainda. Jogue, chame os amigos e suba o passe: o que chegar aparece aqui." : "Nada nesta aba por enquanto.") + "</div>";
+      return;
+    }
+    let h = "", last = "";
+    for (const n of show) {
+      const d = this.day(n.ts);
+      if (d !== last) { h += '<div class="ntDay">' + d + "</div>"; last = d; }
+      h += '<div class="ntRow' + (isNw(n) ? " nw" : "") + (n.r >= 2 ? " nr" + n.r : "") + '">' + this.icon(n) + '<div class="ntTx">' + (n.r >= 2 ? '<span class="rr">' + this.RN[n.r] + "</span>" : "") + "<b>" + this.esc(n.t) + "</b>" + (n.b ? "<p>" + this.esc(n.b) + "</p>" : "") + "<time>" + this.ago(n.ts) + '</time></div><div class="ntGo">' + this.btn(n) + "</div></div>";
+    }
+    $("ntList").innerHTML = h;
+    this.paintThumbs($("ntList"));
+  },
+  show() {
+    this.sync();
+    this.open = 1;
+    this.tab = "all";
+    this.fresh = this.list.filter((n) => n.nw).map((n) => n.id);
+    $("ntScr").classList.remove("hidden");
+    $("ntPop").classList.remove("in");
+    this.draw();
+    $("ntList").scrollTop = 0;
+    SFX.swap && SFX.swap();
+    // abriu a caixa: tudo o que estava na tela conta como lido, mas o destaque fica até fechar
+    this.list.forEach((n) => n.nw = 0);
+    this.save();
+    this.badge();
+    if (NET.logged) { try { FRIENDS.badge(); } catch (e) {} }
+  },
+  hide() {
+    this.open = 0;
+    this.fresh = null;
+    $("ntScr").classList.add("hidden");
+    this.badge();
+  },
+  // aviso deslizante: só fora da partida, um por vez
+  pop(n) {
+    if (S.mode === "play" || S.mode === "pause") return;
+    this.popQ.push(n);
+    if (!this.popT) this.popNext();
+  },
+  popNext() {
+    const n = this.popQ.shift(), el = $("ntPop");
+    if (!n) { this.popT = 0; return; }
+    el.className = n.r >= 2 ? "nr" + n.r : "";
+    el.innerHTML = this.icon(n) + "<div><b>" + this.esc(n.t) + "</b>" + (n.b ? "<p>" + this.esc(n.b) + "</p>" : "") + "</div>";
+    this.paintThumbs(el);
+    void el.offsetWidth;
+    el.classList.add("in");
+    this.popT = setTimeout(() => { el.classList.remove("in"); this.popT = setTimeout(() => this.popNext(), 320); }, 3200);
+  },
+  // ---------- fontes ----------
+  friends(L) {
+    if (!NET.logged || !L) return;
+    this.sync();
+    const rec = L.filter((f) => f.kind === "recebido").map((f) => f.name), am = L.filter((f) => f.kind === "amigo").map((f) => f.name), env = L.filter((f) => f.kind === "enviado").map((f) => f.name);
+    rec.forEach((nm) => this.push({ id: "fr:" + nm, k: "fr", t: nm + " quer ser seu amigo", b: "Aceite para disputar o ranking entre amigos.", ic: "fr", go: 1 }));
+    // pedido respondido em outro lugar: tira o botão e deixa o id livre para um pedido novo no futuro
+    this.list.forEach((n) => {
+      if (n.k !== "fr" || n.ok) return;
+      const nm = n.id.slice(3);
+      if (rec.indexOf(nm) < 0) { n.ok = am.indexOf(nm) >= 0 ? "agora são amigos" : "respondido"; this.seen = this.seen.filter((x) => x !== n.id); n.id += ":" + n.ts; }
+    });
+    // quem eu chamei e agora é amigo: aceitou
+    (this.meta.sent || []).forEach((nm) => { if (am.indexOf(nm) >= 0) this.push({ id: "fra:" + nm + ":" + Date.now(), k: "fra", t: nm + " aceitou seu pedido", b: "Vocês agora são amigos. Vejam quem aguenta mais no RANKING > AMIGOS.", ic: "fra", go: 1 }); });
+    this.meta.sent = env;
+    this.save();
+  },
+  eco(d) {
+    if (!d) return;
+    this.sync();
+    const P = d.pass;
+    if (P && P.rewards) {
+      const lv = Math.min(P.levels, Math.floor(P.xp / P.xp_per)), fresh = [];
+      P.rewards.forEach((r) => {
+        const id = "ps:" + P.name + ":" + r.l + ":" + r.t, st = ECO.passState(P, lv, r.l, r.t);
+        if (st === "can" && !this.has(id)) fresh.push([id, r]);
+        if (st === "done") this.done(id, "pego");
+      });
+      const mk = ([id, r]) => {
+        const it = r.k === "item" ? LOOK.ITEMS[r.i] : null, tier = CHEST.tier({ kind: r.k, item: r.i });
+        return { id, k: "pass", t: "Prêmio do passe liberado", b: "Nível " + r.l + (r.t === "prem" ? " ★ premium" : "") + ": " + ECO.prize(r.k, r.a, r.i), it: it ? r.i : null, ic: r.k === "coins" ? "coin" : r.k === "zcoin" ? "zc" : r.k === "chip" ? "chip" : "pass", r: it && tier >= 2 ? tier : 0, go: 1, arg: r.l + ":" + r.t };
+      };
+      // muitos de uma vez (primeira abertura): um resumo + só os raros/lendários separados
+      if (fresh.length > 3) {
+        const big = fresh.filter(([, r]) => r.k === "item" && CHEST.tier({ kind: r.k, item: r.i }) >= 2);
+        fresh.forEach(([id]) => this.seen.push(id));
+        this.push({ id: "psn:" + P.name + ":" + lv, k: "pass", t: fresh.length + " prêmios do passe esperando", b: "Do nível " + fresh[0][1].l + " ao " + fresh[fresh.length - 1][1].l + ". Pegue antes da temporada acabar.", ic: "pass", go: 1, arg: fresh[0][1].l + ":" + fresh[0][1].t });
+        big.forEach((x) => { this.seen = this.seen.filter((y) => y !== x[0]); this.push(mk(x), 1); });
+      } else fresh.forEach((x) => this.push(mk(x)));
+    }
+    (d.missions || []).forEach((m) => {
+      const id = "ms:" + this.week() + ":" + m.slot + ":" + m.text;
+      if (m.progress >= m.target && !m.claimed) this.push({ id, k: "mis", t: "Missão completa", b: m.text + " · " + m.coins + " moedas + " + m.xp + " XP" + (m.zcoin ? " + " + m.zcoin + " Z-Coin" : ""), ic: "mis", go: 1 });
+      if (m.claimed) this.done(id, "pego");
+    });
+    const bx = d.boxes | 0, was = this.meta.boxes;
+    if (was != null && bx > was) this.push({ id: "bx:" + Date.now(), k: "box", t: bx - was === 1 ? "Caixa nova!" : bx - was + " caixas novas!", b: "Você tem " + bx + (bx === 1 ? " caixa fechada." : " caixas fechadas."), ic: "box", go: 1 });
+    if (!bx) this.list.forEach((n) => { if (n.k === "box" && !n.ok) n.ok = "aberta"; });
+    this.meta.boxes = bx;
+    if (d.event && new Date(d.event.ends) > Date.now()) this.push({ id: "ev:" + d.event.name + ":" + d.event.ends, k: "evt", t: "Evento: " + d.event.name, b: "XP do passe x" + d.event.mult + " até " + new Date(d.event.ends).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) + ".", ic: "evt", go: 1 });
+    this.save();
+  },
+  week() {
+    const t = new Date(Date.now() - 3 * 36e5);
+    t.setHours(0, 0, 0, 0);
+    t.setDate(t.getDate() - (t.getDay() + 6) % 7);
+    return t.toISOString().slice(0, 10);
+  },
+  acted(a, b, r) {
+    const now = Date.now();
+    if (a === "claim") {
+      const P = ECO.data && ECO.data.pass, l = +b.dataset.l, t = b.dataset.t, rw = P && (P.rewards || []).find((x) => x.l === l && x.t === t);
+      if (P) this.done("ps:" + P.name + ":" + l + ":" + t, "pego");
+      if (rw) {
+        const it = rw.k === "item" ? LOOK.ITEMS[rw.i] : null, tier = CHEST.tier({ kind: rw.k, item: rw.i });
+        this.push({ id: "pc:" + now, k: it ? "open" : "pass", t: "Você pegou: " + ECO.prize(rw.k, rw.a, rw.i), b: "Passe, nível " + l + (t === "prem" ? " ★ premium" : "") + (it ? ". Já está no seu guarda-roupa." : "."), it: it ? rw.i : null, ic: rw.k === "zcoin" ? "zc" : rw.k === "chip" ? "chip" : "coin", r: it && tier >= 2 ? tier : 0, go: it ? 1 : 0 });
+      }
+    } else if (a === "mis") {
+      this.list.forEach((n) => { if (n.k === "mis" && !n.ok && n.id.indexOf("ms:" + this.week() + ":" + b.dataset.s + ":") === 0) n.ok = "pego"; });
+      this.push({ id: "mc:" + now, k: "mis", t: "Missão paga", b: r && r.coins ? "+" + r.coins + " moedas" + (r.zcoin ? " + " + r.zcoin + " Z-Coin" : "") : "Prêmio na conta.", ic: "mis" }, 1);
+    } else if (a === "item") {
+      const id = b.dataset.id, it = LOOK.ITEMS[id], tier = CHEST.tier({ kind: "item", item: id });
+      this.push({ id: "by:" + id + ":" + now, k: "buy", t: "Compra aprovada: " + ECO.name(id), b: "Já está no seu guarda-roupa.", it: it ? id : null, ic: "zc", r: tier >= 2 ? tier : 0, go: it ? 1 : 0 });
+    } else if (a === "buypass") {
+      this.push({ id: "bp:" + now, k: "bpass", t: "Passe premium ativado", b: "A trilha ★ premium está liberada. Pegue os prêmios dos níveis que você já tem.", ic: "pass", r: 3, go: 1 });
+    } else if (a === "box" && r) {
+      const it = r.kind === "item" ? LOOK.ITEMS[r.item] : null, tier = CHEST.tier(r);
+      this.push({ id: "bo:" + now, k: it ? "open" : "box", t: "Saiu da caixa: " + ECO.prize(r.kind, r.amount, r.item), b: it ? "Roupa nova no guarda-roupa." : "Já está na sua conta.", it: it ? r.item : null, ic: r.kind === "zcoin" ? "zc" : r.kind === "chip" ? "chip" : "coin", r: tier >= 2 ? tier : 0, go: it ? 1 : 0 }, 1);
+    }
+  },
+  // ---------- o botão de cada notificação ----------
+  go(id) {
+    const n = this.list.find((x) => x.id === id);
+    if (!n) return;
+    this.hide();
+    SFX.swap && SFX.swap();
+    if (n.k === "pass" || n.k === "bpass" || n.k === "evt" || n.k === "mis" || n.k === "box") {
+      UI.show("ecoScr");
+      if (n.arg) ECO.sel = n.arg;
+      ECO.show(n.k === "mis" ? "mis" : n.k === "box" ? "box" : "pass");
+      ECO.refresh();
+    } else if (n.k === "fr" || n.k === "fra") FRIENDS.show();
+    else if (n.k === "upd") { const b = $("qzUpdGo"); b && b.onclick ? b.click() : location.reload(); }
+    else if (n.k === "buy" || n.k === "open") { UI.show("title"); $("bChar").click(); }
+  }
+};
+$("ntBell").onclick = () => NOTIF.show();
+$("ntClose").onclick = () => NOTIF.hide();
+$("ntScr").onclick = (e) => { if (e.target.id === "ntScr") NOTIF.hide(); };
+$("ntTabs").onclick = (e) => { const b = e.target.closest("button[data-t]"); if (b) { NOTIF.tab = b.dataset.t; NOTIF.draw(); } };
+$("ntList").onclick = (e) => { const b = e.target.closest("button[data-go]"); if (b) NOTIF.go(b.dataset.go); };
+$("ntReadAll").onclick = () => { NOTIF.fresh = null; NOTIF.list.forEach((n) => n.nw = 0); NOTIF.save(); NOTIF.draw(); NOTIF.badge(); };
+$("ntClear").onclick = () => { NOTIF.list = NOTIF.list.filter((n) => n.nw || NOTIF.fresh && NOTIF.fresh.indexOf(n.id) >= 0); NOTIF.save(); NOTIF.draw(); NOTIF.badge(); };
+$("ntPop").onclick = () => { clearTimeout(NOTIF.popT); NOTIF.popT = 0; NOTIF.popQ = []; $("ntPop").classList.remove("in"); NOTIF.show(); };
+addEventListener("keydown", (e) => { if (NOTIF.open && e.key === "Escape") { e.stopPropagation(); NOTIF.hide(); } }, true);
+// na tela inicial, confere pedidos de amizade a cada 90 s (leve: uma chamada) enquanto o app está aberto na frente
+setInterval(() => {
+  if (!NET.logged || DEV.on || document.hidden || $("title").classList.contains("hidden")) return;
+  try { FRIENDS.badge(); } catch (e) {}
+}, 9e4);
+NOTIF.badge();
 ECO.paint();
 let helpBack = "title";
 function showHelp(back) {
@@ -27669,6 +28269,7 @@ function qzCheckUpdate() {
     if (!m || m[1] === QZ_VERSION) return;
     $("qzUpdTx").textContent = "v" + QZ_VERSION + " \u2192 v" + m[1] + (nt ? " \xB7 " + nt[1] : "");
     $("qzUpd").classList.remove("hidden");
+    try { NOTIF.push({ id: "up:" + m[1], k: "upd", t: "Versão nova: v" + m[1], b: nt ? nt[1] : "Atualize para pegar as novidades.", ic: "upd", go: "upd" }); } catch (e) {}
     $("qzUpdGo").onclick = () => qzReload(m[1]);
   }).catch(() => {
   });
