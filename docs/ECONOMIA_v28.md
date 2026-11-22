@@ -21,10 +21,12 @@ Três moedas. Chip e Z-Coin ficam no servidor (Supabase): o jogo só mostra o sa
 
 | Pacote | Z-Coin | Preço |
 |---|---|---|
-| Punhado | 100 | R$ 4,90 |
-| Saco | 300 + 30 de bônus | R$ 12,90 |
-| Mochila | 650 + 100 de bônus | R$ 24,90 |
-| Cofre | 1.400 + 300 de bônus | R$ 49,90 |
+| Punhado | 300 | R$ 4,90 |
+| Saco | 600 + 100 de bônus | R$ 20,00 |
+| Mochila de dinheiro | 900 + 150 de bônus | R$ 35,00 |
+| Cofre | 1.200 + 200 de bônus | R$ 65,00 |
+
+(Valores de 2026-11-22, v29.5. O preço que vale é o da tabela `zc_packs` no Supabase.)
 
 - **De graça jogando:** chefe tem 10% de chance de soltar 5 Z-Coin (mesmo sorteio do chip, no servidor); missões semanais dão até 30 Z-Coin por semana; o passe grátis dá 200 por temporada.
 - **Gastos:** passe premium 600 Z-Coin; roupa rara 200; roupa lendária 600; conjunto lendário da temporada 900.
