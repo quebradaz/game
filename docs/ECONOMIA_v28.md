@@ -46,7 +46,8 @@ Três moedas. Chip e Z-Coin ficam no servidor (Supabase): o jogo só mostra o sa
 
 ## Caixas de recompensa (aprovado)
 
-- **Só grátis:** nenhuma caixa é vendida, nem por dinheiro nem por Z-Coin.
+- **Grátis (baú de madeira):** completar um mapa dá 1 baú com sorteio.
+- **À venda por Z-Coin (v28.10, preços chutados):** baú raro 150 Z (sempre roupa rara que você não tem, até 5 por dia) e baú lendário de ouro 600 Z (sempre lendária que você não tem, até 2 por dia). Modo padrão "à mostra": a roupa aparece antes de pagar, sem sorteio pago. Ver `supabase/migrations/v28_10_baus.sql`.
 - **Como ganha:** completar um mapa (vencer a onda 20) dá 1 caixa. O sorteio é feito no servidor.
 - **Conteúdo e chances (mostradas na tela antes de abrir):**
 
