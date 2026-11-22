@@ -981,6 +981,7 @@ body.hudEditing #hud *{pointer-events:none!important}
 .bpCol{flex:0 0 92px;scroll-snap-align:center;display:grid;grid-template-rows:22px 1fr 1fr;gap:6px}
 .bpN{position:relative;display:flex;align-items:center;justify-content:center;font-family:var(--fy);font-size:14px;color:var(--mute);background:#2a2638;border:1px solid #000;overflow:hidden}
 .bpN i{position:absolute;left:0;top:0;bottom:0;background:#3e9a2a}.bpN span{position:relative;text-shadow:1px 1px 0 #000}
+.bpDay{margin-top:5px;font-size:11px;color:var(--mute)}.bpDay .ecPb{height:4px;margin-top:2px}.bpDay .ecPb i{background:#4ad0ff}.bpDay.full span{color:#ffb84a}.bpDay.full .ecPb i{background:#ffb84a}
 .bpCol.on .bpN{color:#fff}.bpCol.on .bpN i{width:100%}
 .bpCol.nx .bpN{color:#fff;box-shadow:0 0 0 2px var(--gold)}
 .bpCard{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:2px;padding:6px 4px 4px;min-height:108px;border:2px solid #000;background:#1a1624;box-shadow:inset 0 0 0 1px var(--bc,#3a3446);cursor:pointer;font-size:11px;color:var(--ink)}
@@ -23088,7 +23089,7 @@ const UI = {
       if (!r || !r.ok) return;
       ECO.refresh();
       const um = $("unlockMsg");
-      if (um) um.textContent = (um.textContent ? um.textContent + " · " : "") + "+" + r.pass_xp + " XP de passe" + (r.box ? " · ganhou uma CAIXA (abra em PASSE › CAIXAS)" : "");
+      if (um) um.textContent = (um.textContent ? um.textContent + " · " : "") + "+" + r.pass_xp + " XP de passe" + (r.pass_base > r.pass_xp ? " (limite do dia: metade)" : "") + (r.box ? " · ganhou uma CAIXA (abra em PASSE › CAIXAS)" : "");
     });
     // com conta o servidor sobe o nível e paga as moedas (ECO.runMeta); sem conta, a conta é local
     const lvR = srv ? { ups: 0, msg: [] } : LEVEL.gain(D, xp), ups = lvR.ups;
@@ -25583,12 +25584,29 @@ const ECO = {
     if (r.k === "item" && LOOK.ITEMS[r.i]) return '<canvas data-th="' + r.i + '"' + (big ? ' data-full="1"' : "") + "></canvas>";
     return '<img alt="" src="' + (r.k === "zcoin" ? ICON_ZC : r.k === "chip" ? ICON_CHIP : ICON_GOLD) + '">';
   },
+  nf(n) { return Math.round(n).toLocaleString("pt-BR"); },
+  // v29: XP total para chegar ao nível l, e nível/progresso atuais
+  passAt(P, l) {
+    l = Math.max(0, l);
+    return P.xp_per * l + (P.xp_step || 0) * l * (l - 1) / 2;
+  },
+  passLv(P) {
+    let lv = 0;
+    while (lv < P.levels && this.passAt(P, lv + 1) <= P.xp) lv++;
+    const base = this.passAt(P, lv), need = lv >= P.levels ? 0 : this.passAt(P, lv + 1) - base;
+    return { lv, inLv: P.xp - base, need };
+  },
+  passDay(P) {
+    if (!P.day_full) return "";
+    const d = Math.min(P.day_xp || 0, P.day_full), full = d >= P.day_full;
+    return '<div class="bpDay' + (full ? " full" : "") + '"><span>Hoje: ' + this.nf(d) + " / " + this.nf(P.day_full) + " XP de partida" + (full ? " · agora conta metade, volta amanhã" : "") + '</span><div class="ecPb"><i style="width:' + d / P.day_full * 100 + '%"></i></div></div>';
+  },
   passState(P, lv, l, t) {
     const done = (t === "free" ? P.free : P.prem).indexOf(l) >= 0;
     return done ? "done" : lv < l ? "lock" : t === "prem" && !P.premium ? "need" : "can";
   },
   passView(B, P, evH, esc) {
-    const lv = Math.min(P.levels, Math.floor(P.xp / P.xp_per)), inLv = P.xp % P.xp_per, ends = new Date(P.ends), max = lv >= P.levels;
+    const PL = this.passLv(P), lv = PL.lv, inLv = PL.inLv, need = PL.need, ends = new Date(P.ends), max = lv >= P.levels;
     const old = B.querySelector(".bpTrack"), keep = old ? old.scrollLeft : null, byL = {};
     (P.rewards || []).forEach((r) => (byL[r.l] = byL[r.l] || {})[r.t] = r);
     const tier = (r) => CHEST.tier({ kind: r.k, item: r.i });
@@ -25605,7 +25623,7 @@ const ECO = {
       }
       this.sel = pick || nextItem || next || "1:free";
     }
-    let h = evH + '<div class="bpHead"><div class="bpLv"><small>NÍVEL</small><b class="num">' + lv + '</b></div><div class="bpXp"><b>' + (max ? "Passe completo!" : "Rumo ao nível " + (lv + 1) + " de " + P.levels) + "</b><small>" + (max ? P.levels + " de " + P.levels : inLv + " / " + P.xp_per + " XP") + " · termina em " + ends.toLocaleDateString("pt-BR") + '</small><div class="ecPb"><i style="width:' + (max ? 100 : inLv / P.xp_per * 100) + '%"></i></div></div>' + (P.premium ? '<b class="bpPrem">★ PREMIUM</b>' : '<button class="btn yo" data-act="buypass">PREMIUM · ' + P.price + " Z</button>") + "</div>";
+    let h = evH + '<div class="bpHead"><div class="bpLv"><small>NÍVEL</small><b class="num">' + lv + '</b></div><div class="bpXp"><b>' + (max ? "Passe completo!" : "Rumo ao nível " + (lv + 1) + " de " + P.levels) + "</b><small>" + (max ? P.levels + " de " + P.levels : this.nf(inLv) + " / " + this.nf(need) + " XP") + " · termina em " + ends.toLocaleDateString("pt-BR") + '</small><div class="ecPb"><i style="width:' + (max ? 100 : inLv / need * 100) + '%"></i></div>' + this.passDay(P) + "</div>" + (P.premium ? '<b class="bpPrem">★ PREMIUM</b>' : '<button class="btn yo" data-act="buypass">PREMIUM · ' + P.price + " Z</button>") + "</div>";
     h += '<div class="bpMain"><div class="bpPrev" id="bpPrev"></div><div class="bpRail"><div class="bpTags"><span></span><span>GRÁTIS</span><span class="p">★ PREMIUM</span></div><div><div class="bpTrack" id="bpTrack">';
     for (let l = 1; l <= P.levels; l++) {
       const R = byL[l] || {}, cell = (t) => {
@@ -25614,10 +25632,10 @@ const ECO = {
         const st = this.passState(P, lv, l, t);
         return '<div class="bpCard ' + t + " " + st + " r" + tier(r) + (this.sel === l + ":" + t ? " sel" : "") + '" data-l="' + l + '" data-t="' + t + '"><div class="ico">' + this.passIco(r) + '</div><span class="am">' + esc(this.prize(r.k, r.a, r.i)) + "</span>" + (st === "can" ? '<button class="btn yo" data-act="claim" data-l="' + l + '" data-t="' + t + '">PEGAR</button>' : '<span class="st">' + (st === "done" ? "PEGO" : st === "need" ? "★ PREMIUM" : "🔒 NÍVEL " + l) + "</span>") + "</div>";
       };
-      h += '<div class="bpCol' + (l <= lv ? " on" : l === lv + 1 ? " nx" : "") + '" data-l="' + l + '"><div class="bpN"><i style="width:' + (l === lv + 1 ? inLv / P.xp_per * 100 : 0) + '%"></i><span>' + l + "</span></div>" + cell("free") + cell("prem") + "</div>";
+      h += '<div class="bpCol' + (l <= lv ? " on" : l === lv + 1 ? " nx" : "") + '" data-l="' + l + '"><div class="bpN"><i style="width:' + (l === lv + 1 ? inLv / need * 100 : 0) + '%"></i><span>' + l + "</span></div>" + cell("free") + cell("prem") + "</div>";
     }
     h += '</div><div class="bpNav"><button class="btn alt" data-bp="-1" aria-label="Voltar níveis">‹</button><button class="btn alt" data-bp="0">MEU NÍVEL</button><button class="btn alt" data-bp="1" aria-label="Avançar níveis">›</button></div></div></div></div>';
-    h += '<p class="ecNote">XP de passe por partida: onda × 20 + abates + 200 por chefe. Missões dão mais. Toque num prêmio para ver.</p>';
+    h += '<p class="ecNote">' + (P.match ? "Partida: onda × " + P.match.wave + " + abates ÷ " + P.match.kill_div + " + " + P.match.boss + " por chefe · " + this.nf(P.day_full) + " XP por dia inteiros, depois metade · missões dão mais." : "XP de passe por partida: onda × 20 + abates + 200 por chefe. Missões dão mais. Toque num prêmio para ver.") + "</p>";
     B.innerHTML = h;
     const tr = $("bpTrack"), center = (l, smooth) => {
       const c = tr.querySelector('.bpCol[data-l="' + l + '"]');
@@ -25658,7 +25676,7 @@ const ECO = {
     const st = this.passState(P, lv, l, t), it = r.k === "item" ? LOOK.ITEMS[r.i] : null, tr = CHEST.tier({ kind: r.k, item: r.i });
     const RN = ["comum", "incomum", "raro", "exclusivo", "lendário"];
     const tag = it ? "ROUPA · " + (RN[it.rar] || "").toUpperCase() : r.k === "zcoin" ? "Z-COIN" : r.k === "chip" ? "CHIP DE TECNOLOGIA" : "MOEDAS";
-    const why = st === "done" ? "Você já pegou." : st === "can" ? "Liberado! Pegue agora." : st === "need" ? "Nível liberado. Precisa do passe premium." : "Falta " + Math.max(0, l * P.xp_per - P.xp) + " XP para o nível " + l + ".";
+    const why = st === "done" ? "Você já pegou." : st === "can" ? "Liberado! Pegue agora." : st === "need" ? "Nível liberado. Precisa do passe premium." : "Falta " + this.nf(Math.max(0, this.passAt(P, l) - P.xp)) + " XP para o nível " + l + ".";
     el.className = "bpPrev r" + tr;
     el.innerHTML = '<div class="art">' + this.passIco(r, 1) + '</div><div><span class="tg">' + tag + '</span><div class="nm">' + esc(this.prize(r.k, r.a, r.i)) + '</div><div class="sb">Nível ' + l + " · trilha " + (t === "prem" ? "★ premium" : "grátis") + '</div><div class="sb">' + why + "</div>" + (st === "can" ? '<button class="btn yo" data-act="claim" data-l="' + l + '" data-t="' + t + '">PEGAR</button>' : "") + "</div>";
     el.querySelectorAll("canvas[data-th]").forEach((c) => LOOK.thumb(c, [c.dataset.th], { full: !!c.dataset.full }));
