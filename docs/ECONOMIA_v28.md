@@ -39,7 +39,7 @@ Três moedas. Chip e Z-Coin ficam no servidor (Supabase): o jogo só mostra o sa
 ## Passe de batalha
 
 - Temporada de 8 semanas, 40 níveis, 1.000 XP por nível.
-- XP de passe por partida: onda × 20 + abates × 1 + 200 por chefe (partida média ≈ 400 XP). Com missões, um jogador frequente fecha os 40 níveis em umas 6 semanas.
+- XP de passe por partida (v29): onda × 12 + abates ÷ 5 (até 40 por onda) + 80 por chefe; vitória típica ≈ 640. Os primeiros 2.000 XP de partida do dia contam inteiros, o resto pela metade. Missões dão 1.000 a 2.000. Cada nível custa 1.000 + 100 × (nível − 1) (o 40 custa 4.900; passe inteiro 118.000). Quem joga ~3 partidas por dia e faz as missões fecha na semana 7 de 8; 1 partida por dia chega perto do nível 20. Ver `supabase/migrations/v29_passe_dificil.sql`.
 - **Trilha grátis:** a cada 2 níveis, moedas; nos níveis 10, 20, 30 e 40, 1 chip e 50 Z-Coin; 2 roupas raras da temporada.
 - **Trilha premium (600 Z-Coin):** um prêmio por nível — 6 roupas raras e 3 lendárias exclusivas da temporada, 1 conjunto lendário no nível 40, 5 chips no total e 700 Z-Coin no total (quem completa recupera mais do que pagou, o que faz comprar o passe seguinte).
 - Tudo que cada nível dá aparece antes, na tela do passe.
