@@ -42,15 +42,29 @@ Nenhuma tabela é lida ou escrita direto pelo jogo; tudo passa por funções (ex
 
 Tabelas: `wallets`, `ledger` (livro de toda entrada e saída de chip e Z-Coin), `boss_rolls`, `skill_costs`, `skill_levels`, `shop_items`, `items_owned`, `mission_pool`, `mission_week`, `mission_progress`, `seasons`, `pass_rewards`, `pass_progress`, `boxes`.
 
-### Creditar Z-Coin de uma compra pela InfinitePay
+### Venda de Z-Coin pelo checkout da InfinitePay (v29, migração `migrations/v29_zcoin_checkout.sql`)
 
-No painel do Supabase, em SQL Editor:
+Crédito automático. O jogo nunca credita nada: ele só pede o link e depois pergunta o resultado.
+
+1. O jogador toca COMPRAR. O jogo chama a Edge Function `zcoin-checkout` (`action: "create"`), que abre um pedido em `zc_orders` com o preço de `zc_packs`, cria o link na InfinitePay (`POST /links`, `order_nsu` = id do pedido) e devolve o endereço.
+2. O jogo abre a página da InfinitePay (cartão ou Pix). Ao aprovar, a InfinitePay manda o jogador de volta para `GAME_URL?zcpay=1&order_nsu=...&transaction_nsu=...&slug=...`.
+3. A InfinitePay avisa `zcoin-webhook`, e o jogo, ao voltar, chama `zcoin-checkout` com `action: "confirm"`. Nos dois casos o servidor pergunta à InfinitePay (`POST /payment_check`) e só credita se ela disser `paid: true` e o valor for o do pedido. `zc_order_pay` credita uma vez só (pedido travado, `transaction_nsu` único) e lança no `ledger` como `compra InfinitePay`, `ref = ip:<transaction_nsu>`.
+4. O jogo mostra "COMPRA APROVADA". Se o jogador fechar o app antes, o pedido fica guardado no aparelho por 24 h e o jogo confere de novo ao abrir; o webhook credita mesmo que o jogo nunca volte.
+
+Configuração: `INFINITEPAY_HANDLE` (padrão `norduk`) e `GAME_URL` (padrão o GitHub Pages) têm valor no código e podem ser sobrepostos em Edge Functions > Secrets; `INFINITEPAY_API_KEY` só se a conta exigir. O token do endereço do webhook é derivado da chave de serviço. Deploy: `zcoin-checkout` com verify_jwt, `zcoin-webhook` sem verify_jwt; no deploy pelo painel/MCP, `_shared/infinitepay.ts` vai junto como `infinitepay.ts` (import `./infinitepay.ts`). Publicadas em 2026-11-22 (versão 1).
+
+Pedidos de hoje:
+
+```sql
+select created_at, paid_at, status, pack_id, price_cents, paid_amount, capture_method, transaction_nsu, fail_reason
+from public.zc_orders order by created_at desc limit 50;
+```
+
+Testes num Postgres local: `tests/integration/zcoin/run.sh`. Crédito manual continua possível (reembolso, suporte):
 
 ```sql
 select public.admin_credit_zcoin('NomeDoPersonagem', 330, 'infinitepay 12345');
 ```
-
-O terceiro valor é o identificador do pagamento: o mesmo pagamento não é creditado duas vezes. Nenhum jogador consegue chamar essa função.
 
 ## Feedback dos jogadores (v28.5)
 
