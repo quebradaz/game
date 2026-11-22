@@ -132,3 +132,14 @@ Tabela `friendships` (um par por linha, `user_low < user_high`, estado `pending`
 - `get_friends_leaderboard(p_map)`: ranking do mapa só entre você e seus amigos (mesmo critério do ranking geral).
 
 Limites em `friend_limits()`: 100 amigos, 20 pedidos esperando resposta, 30 pedidos por dia, 7 dias de espera para pedir de novo a quem recusou. Testes num Postgres local: `tests/integration/amigos/run.sh`.
+
+## CRM dos jogadores (migração `v29_5_crm`, página `/crm`)
+
+Página em `crm/index.html`, publicada em https://quebradaz.github.io/game/crm/. Login com a mesma conta Google do jogo; só entra quem está em `crm_admins`. Quem decide é o banco: toda função `crm_*` confere `auth.uid()` e para com `SEM_ACESSO`. As tabelas `crm_admins`, `crm_leads`, `crm_events` e `crm_audit` têm RLS sem política (ninguém lê direto).
+
+- Funil: um gatilho em `zc_orders` cria o lead quando o jogador abre o checkout de Z-Coin, move para "Comprou" no pagamento aprovado e para "Comprou de novo" na segunda compra. Boas-vindas, VIP e Desistiu são movidos à mão. Tudo vai para o histórico (`crm_events`).
+- Funções: `crm_me`, `crm_resumo`, `crm_jogadores(busca, ordem, limite, offset)`, `crm_jogador(id)`, `crm_leads_lista`, `crm_lead`, `crm_lead_etapa`, `crm_lead_nota`, `crm_lead_retorno`, `crm_apagar_jogador(id, confirmacao)`.
+- Apagar perfil: exige digitar o nome do jogador; apaga de `auth.users` (o resto sai em cascata, como na Edge Function `delete-account`), anonimiza o lead mantendo os valores e grava em `crm_audit`. Não apaga admin nem a própria conta.
+- Dar acesso (não fica no repositório): `insert into public.crm_admins (user_id) select id from auth.users where email = '<e-mail>';`
+- O endereço `https://quebradaz.github.io/game/crm/` precisa estar em Authentication > URL Configuration > Redirect URLs para o login do Google voltar para o CRM.
+- Teste local: `sh tests/integration/crm/run.sh`.
