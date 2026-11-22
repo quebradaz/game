@@ -1,4 +1,4 @@
-// v29.4.1: tiro na cabeça certinho. Antes a cabeça era uma faixa fixa no alto de uma caixa parada (ZT.head px a partir
+// v29.5.1: tiro na cabeça certinho. Antes a cabeça era uma faixa fixa no alto de uma caixa parada (ZT.head px a partir
 // do topo, 70% da largura, centrada no pé): não acompanhava a animação. O zumbi curvado ou correndo tinha a cabeça
 // fora da faixa, o tiro no ombro contava como cabeça, e no rastejante e no cachorro a cabeça (na frente, embaixo)
 // ficava fora da caixa inteira: não dava para acertar.
@@ -6,7 +6,7 @@
 // tools/hitbox/gerar-cabecas.js) e é posta no mundo como o sprite é desenhado (pé, lado, escala). O tiro acerta a
 // caixa do corpo OU a da cabeça; se entra pelo corpo, anda pelo sprite até o primeiro pixel desenhado e só é
 // cabeça se esse pixel for da cabeça (tiro de baixo para cima que atravessa as pernas não vira headshot).
-// Uso: node tools/patches/v29.4.1-hitbox-cabeca.js index.html
+// Uso: node tools/patches/v29.5.1-hitbox-cabeca.js index.html
 const fs = require('fs'), path = require('path');
 const F = process.argv[2];
 let s = fs.readFileSync(F, 'utf8');
@@ -27,7 +27,7 @@ rep(`function drawZ0(c, z) {
   else if (z.anim === "Hurt") fr = Math.min(s.n - 1, z.at | 0);
   else if (z.anim === "Jump") fr = Math.min(s.n - 2, Math.max(2, z.at | 0));
   else fr = (z.at * (s.sub || 1) | 0) % s.n;
-`, `// v29.4.1: animação e quadro que o zumbi mostra agora (o tiro usa o mesmo quadro que está desenhado)
+`, `// v29.5.1: animação e quadro que o zumbi mostra agora (o tiro usa o mesmo quadro que está desenhado)
 function zFrame(z) {
   const key = z.type + "_" + z.anim, s = SHEETS[key] || SHEETS[z.type + "_Walk"];
   let fr;
@@ -49,7 +49,7 @@ rep(`function zBox(z) {
 }`, `function zBox(z) {
   return [z.x - z.w / 2, z.y - zH(z), z.x + z.w / 2, z.y];
 }
-// v29.4.1: cabeça de cada quadro, em pixels do sprite (virado para a direita): ZHEAD.tam[tipo] = [larg, alt],
+// v29.5.1: cabeça de cada quadro, em pixels do sprite (virado para a direita): ZHEAD.tam[tipo] = [larg, alt],
 // ZHEAD.q[animação] = [x0, y0, x0, y0, ...] um par por quadro. Gerado por tools/hitbox/gerar-cabecas.js.
 const ZHEAD = ${JSON.stringify(CAB)};
 // retângulo da cabeça no mundo [x0, y0, x1, y1], igual ao que está desenhado (pé em z.x/z.y, lado, escala)
@@ -121,7 +121,7 @@ rep(`      const b = zBox(z), t = rayBox(mx, my, dx, dy, b[0], b[1], b[2], b[3])
 rep(`      hurtZ(z, dmg, head, "gun", dx, mx + dx * t, hy);`, `      hurtZ(z, dmg, head, "gun", dx, mx + dx * ht, hy);`);
 
 // 4) ajustes no CONFIG (margem em volta da cabeça e altura do capacete)
-rep(`const ZT = {`, `// v29.4.1: cabeça dos zumbis (pixels do sprite): margem em volta, quanto o capacete (obra/moto) sobe a cabeça e até que\n// distância da cabeça o que está na mesma altura (cabelo, mochila) não segura o tiro
+rep(`const ZT = {`, `// v29.5.1: cabeça dos zumbis (pixels do sprite): margem em volta, quanto o capacete (obra/moto) sobe a cabeça e até que\n// distância da cabeça o que está na mesma altura (cabelo, mochila) não segura o tiro
 CONFIG.hitbox = { headPad: 1, helmet: 4, near: 8 };
 const ZT = {`);
 
@@ -169,12 +169,12 @@ rep(`    const tx2 = z.x, ty = z.y - zH(z) * 0.62, d = Math.hypot(tx2 - sx, ty -
       }
     }`);
 
-rep(`const QZ_VERSION='29.4';`, `const QZ_VERSION='29.4.1';`);
+rep(`const QZ_VERSION='29.5';`, `const QZ_VERSION='29.5.1';`);
 s = s.replace(/const QZ_NOTE='[^']*';/, `const QZ_NOTE='Tiro na cabeça certinho: a cabeça dos zumbis acompanha a animação';`);
 fs.writeFileSync(F, s);
 
 const SW = path.join(path.dirname(F), 'sw.js');
 let w = fs.readFileSync(SW, 'utf8');
-if (!w.includes('const CACHE = "qz-v29.4";')) throw new Error('sw CACHE');
-fs.writeFileSync(SW, w.replace('const CACHE = "qz-v29.4";', 'const CACHE = "qz-v29.4.1";'));
+if (!w.includes('const CACHE = "qz-v29.5";')) throw new Error('sw CACHE');
+fs.writeFileSync(SW, w.replace('const CACHE = "qz-v29.5";', 'const CACHE = "qz-v29.5.1";'));
 console.log('ok');
