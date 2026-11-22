@@ -1,7 +1,7 @@
 /* Quebrada Z. Todos os direitos reservados.
    Service worker: guarda o jogo no aparelho. Sempre tenta a rede primeiro (o GitHub responde 304 se nada mudou,
    sem baixar de novo); sem internet, abre a última versão guardada. Só arquivos deste endereço. */
-const CACHE = "qz-v29.1";
+const CACHE = "qz-v29.2";
 const BASE = ["./", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png", "./audio/trilha.mp3", "./audio/ambiente.mp3"];
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(BASE)).catch(() => {}).then(() => self.skipWaiting()));
