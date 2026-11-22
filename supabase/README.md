@@ -78,6 +78,20 @@ select created_at, kind, body, ver, device from public.feedback order by id desc
 
 Lendário 4% (roupa 3%, 25 Z-Coin 1%), raro 14% (roupa 11%, chip 3%), comum 82% (roupa 45%, moedas 37%). Itens das caixas: `shop_items.kind = 'box'`, lista em `tools/patches/v28.5-itens.js`.
 
+## Baús à venda (v28.10, migração `migrations/v28_10_baus.sql`)
+
+- `get_chest_shop()`: os baús à venda, preço, modo, a roupa do dia (modo à mostra), quantas faltam e compras de hoje.
+- `buy_chest(tier, item)`: cobra a Z-Coin e entrega uma roupa de `shop_items.kind = 'box'` da raridade do baú (2 raro, 3 lendário) que o jogador não tem. Erros: `OFERTA_MUDOU` (nada cobrado), `LIMITE_BAU_DIA`, `TUDO_COLETADO`, `ZCOIN_INSUFICIENTE`, `BAU_INVALIDO`. A compra fica em `boxes` (`source = 'loja'`, coluna `tier`) e no `ledger`.
+- Preço, limite por dia, liga/desliga e modo ficam em `chest_shop`. Exemplo:
+
+```sql
+update public.chest_shop set price_z = 500 where tier = 3;           -- preço
+update public.chest_shop set reveal = false where tier in (2, 3);    -- sorteio (caixa de recompensa paga: ver ECA Digital)
+update public.chest_shop set active = false;                         -- tira os baús da loja
+```
+
+Testes num Postgres local: `supabase/tests/v28_10_baus_test.sql` (depois de `base_stub.sql` e `v28_8_moedas_nivel_servidor.sql`).
+
 ## Painel e eventos (v28.6)
 
 Painel dos últimos 14 dias no SQL Editor:

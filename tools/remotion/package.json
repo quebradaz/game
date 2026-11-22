@@ -1,0 +1,22 @@
+{
+  "name": "quebrada-z-remotion",
+  "private": true,
+  "description": "Estúdio de vídeo do Quebrada Z (Remotion): fundo animado do menu e outros visuais. Não vai para o jogo; só o vídeo renderizado vai.",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render:menu": "node render-menu.mjs"
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.545",
+    "@remotion/cli": "4.0.545",
+    "@remotion/media-utils": "4.0.545",
+    "@remotion/renderer": "4.0.545",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.545"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.8",
+    "typescript": "5.8.3"
+  }
+}

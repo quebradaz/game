@@ -66,8 +66,8 @@ rep('    else if (a === "pack") {\n' +
   '    }\n');
 
 // ----- erros do servidor
-rep('SEM_CAIXA: "Nenhuma caixa para abrir" };',
-  'SEM_CAIXA: "Nenhuma caixa para abrir", PACOTE_INVALIDO: "Pacote indisponível", MUITOS_PEDIDOS: "Muitas compras abertas. Espere um pouco.", CHECKOUT_FALHOU: "O pagamento não abriu. Tente de novo.", SEM_NOME: "Escolha o nome do personagem primeiro" };');
+rep('const ECO_ERR = { ',
+  'const ECO_ERR = { PACOTE_INVALIDO: "Pacote indisponível", MUITOS_PEDIDOS: "Muitas compras abertas. Espere um pouco.", CHECKOUT_FALHOU: "O pagamento não abriu. Tente de novo.", SEM_NOME: "Escolha o nome do personagem primeiro", ');
 
 // ----- ZPAY: abre o checkout, guarda o pedido e, na volta, pergunta ao servidor até ele confirmar
 rep('\nECO.paint();\nlet helpBack',
@@ -132,6 +132,7 @@ rep('\nECO.paint();\nlet helpBack',
   '    SFX.buy && SFX.buy();\n' +
   '    this.ov("ok", "COMPRA APROVADA!", "+" + (z || "") + " Z-Coin na sua conta. Valeu por apoiar o Quebrada Z!");\n' +
   '    ECO.refresh();\n' +
+  '    try { typeof NOTIF !== "undefined" && NOTIF.push({ id: "zc:" + Date.now(), k: "drop", t: "Compra aprovada", b: "+" + (z || "") + " Z-Coin na sua conta", ic: "zc", r: 3 }); } catch (e) {}\n' +
   '  },\n' +
   '  bad(back) {\n' +
   '    this.busy = 0; this.put(null);\n' +
