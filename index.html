@@ -958,6 +958,15 @@ body.hudEditing #hud *{pointer-events:none!important}
 .ecLv.got{opacity:.55}.ecLv .pr{font-size:12px}.ecLv button,.ecRow button{min-height:32px;padding:4px 10px}
 .ecOdds{display:grid;grid-template-columns:1fr auto;gap:4px 12px;max-width:360px;margin:8px auto}
 .ecNote{color:var(--mute);font-size:12px;margin:8px 0}
+#zpOv{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;background:rgba(6,4,12,.82);padding:16px}
+#zpOv.hidden{display:none}
+#zpOv .zpBox{width:min(420px,100%);box-sizing:border-box;text-align:center;padding:18px 16px;background:linear-gradient(#221b31,#141019);border:2px solid #000;box-shadow:inset 0 0 0 2px #5b3a8a,0 0 40px rgba(176,74,255,.35);border-radius:10px}
+#zpOv .zpIco{width:72px;height:72px;margin:0 auto 8px;image-rendering:pixelated;background-size:100% 100%}
+#zpOv.ok .zpIco{animation:zpPulse 1.2s ease-in-out infinite}@keyframes zpPulse{50%{filter:drop-shadow(0 0 14px #c86aff) brightness(1.2)}}
+#zpOv .zpT{font-family:var(--fy);font-size:20px;color:#fff;letter-spacing:1px;margin-bottom:6px}#zpOv.ok .zpT{color:#c86aff}
+#zpOv .zpS{font-family:system-ui,sans-serif;font-size:14px;line-height:1.35;color:#d9d3e6;margin-bottom:12px}
+#zpOv .zpSpin{display:inline-block;width:10px;height:10px;margin:0 3px;background:#c86aff;animation:hplow .5s steps(2) infinite alternate}
+#zpOv .zpSpin:nth-child(2){animation-delay:.15s}#zpOv .zpSpin:nth-child(3){animation-delay:.3s}
 /* v28.8: passe visual (trilha lateral com prêmios) */
 .bpHead{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:4px 2px 10px;border-bottom:1px solid #2a2638}
 .bpLv{display:flex;flex-direction:column;align-items:center;justify-content:center;width:62px;height:62px;border:2px solid #000;background:radial-gradient(circle at 50% 35%,#3a2a08,#140d00);box-shadow:inset 0 0 0 2px var(--gold),0 0 14px rgba(255,201,60,.35);line-height:1}
@@ -1296,6 +1305,7 @@ window.qzLoadStep=function(v,t){clearInterval(window.__qlT);f.style.width=v+'%';
     <button class="btn alt hidden" id="bNameBack">VOLTAR</button>
   </div>
 </div>
+<div id="zpOv" class="hidden" role="dialog" aria-live="polite"><div class="zpBox"><div class="zpIco ic zc"></div><div class="zpT" id="zpT"></div><div class="zpS" id="zpS"></div><div id="zpWait"><i class="zpSpin"></i><i class="zpSpin"></i><i class="zpSpin"></i></div><button class="btn yo hidden" id="zpOk">OK</button></div></div>
 <div id="ecoScr" class="screen shadeFull hidden">
   <div class="rkWrap">
   <div class="selHead"><div class="h2 yo"><small id="ecSeason">TEMPORADA</small>PASSE E LOJA</div><button class="btn alt yo" id="bEcoBack">VOLTAR</button></div>
@@ -22027,6 +22037,9 @@ const NET = (() => {
       if (DEV.on || !ses || !id) return Promise.resolve(null);
       return rpc("submit_run", { p_run: id, p_wave: o.wave | 0, p_kills: o.kills | 0, p_seconds: Math.round((performance.now() - st.t0) / 1e3), p_shots: o.shots | 0, p_hits: o.hits | 0, p_bosses: o.bosses | 0, p_won: !!o.won, p_heads: o.heads | 0, p_night: !!o.night }).catch(() => null);
     },
+    fn(name, body) {
+      return call("/functions/v1/" + name, { method: "POST", body: body || {} });
+    },
     deleteAccount() {
       return fresh().then(() => fetch(URL + "/functions/v1/delete-account", { method: "POST", headers: hdr(true) })).then((r) => {
         if (!r.ok) throw fail("FALHOU", r.status);
@@ -25460,10 +25473,10 @@ const ECO = {
       if (msg.length) add("Nível novo: " + msg.join(", "));
     }
   },
-  // pacotes de Z-Coin: venda pelo link de checkout da InfinitePay (crédito manual pelo administrador).
-  // link: o endereço do checkout; enquanto for null, o botão mostra "em breve".
-  packs: [{ n: "Punhado", z: 100, b: 0, p: "R$ 4,90" }, { n: "Saco", z: 300, b: 30, p: "R$ 12,90" }, { n: "Mochila", z: 650, b: 100, p: "R$ 24,90" }, { n: "Cofre", z: 1400, b: 300, p: "R$ 49,90" }],
-  link: null,
+  // pacotes de Z-Coin: checkout integrado da InfinitePay (cartão ou Pix), crédito automático no servidor.
+  // O preço que vale é o da tabela zc_packs; o daqui é só o que aparece na tela.
+  packs: [{ id: "punhado", n: "Punhado", z: 100, b: 0, p: "R$ 4,90" }, { id: "saco", n: "Saco", z: 300, b: 30, p: "R$ 12,90" }, { id: "mochila", n: "Mochila", z: 650, b: 100, p: "R$ 24,90" }, { id: "cofre", n: "Cofre", z: 1400, b: 300, p: "R$ 49,90" }],
+  payOn: true,
   // a venda por link externo não pode aparecer no app Android da Play Store (Google Play Billing obrigatório)
   storeApp: /QuebradaZApp/i.test(navigator.userAgent),
   cost(id, lv) {
@@ -25569,8 +25582,8 @@ const ECO = {
     } else if (this.tab === "box") {
       B.innerHTML = '<div class="ecRow"><div><b>Caixas fechadas: ' + d.boxes + "</b><small>Você ganha uma caixa grátis cada vez que completa um mapa (vence a onda 20). Caixas não são vendidas.</small></div>" + (d.boxes > 0 ? '<button class="btn yo" data-act="box">ABRIR</button>' : "<span></span>") + '</div><p id="ecBoxRes" class="ecNote"></p><div class="ecOdds"><b>Chances de cada caixa</b><span></span><span style="color:#ffc21a">Roupa lendária que você não tem</span><b>0,5%</b><span style="color:#c86aff">25 Z-Coin</span><b>1%</b><span style="color:#c86aff">Roupa rara que você não tem</span><b>11%</b><span style="color:#c86aff">1 chip de tecnologia</span><b>3%</b><span>Roupa comum que você não tem</span><b>45%</b><span>200 a 600 moedas</span><b>39,5%</b></div><p class="ecNote">São 50 roupas de cada raridade. Roupa lendária só sai do baú ou da loja Z-Coin. Se você já tiver todas de uma raridade, vem o prêmio dela no lugar (moedas, chip ou Z-Coin). Skins de arma entram numa atualização futura.</p>';
     } else {
-      let h = '<p class="ecNote">Seu código para a compra: <b>' + esc(NET.st.name || "") + "</b>. Informe esse nome no pagamento; a Z-Coin entra na conta quando o pagamento for confirmado.</p>";
-      if (!this.storeApp) this.packs.forEach((p, i) => h += '<div class="ecRow"><div><b>' + p.n + " · " + p.z + (p.b ? " + " + p.b + " de bônus" : "") + " Z-Coin</b><small>" + p.p + ' no Pix</small></div><button class="btn alt" data-act="pack" data-i="' + i + '">' + (this.link ? "COMPRAR" : "EM BREVE") + "</button></div>");
+      let h = this.storeApp ? "" : '<p class="ecNote">O pagamento abre na página segura da InfinitePay (cartão ou Pix). Quando aprovar, você volta pro jogo e a Z-Coin entra sozinha na conta.</p>';
+      if (!this.storeApp) this.packs.forEach((p, i) => h += '<div class="ecRow"><div><b>' + p.n + " · " + p.z + (p.b ? " + " + p.b + " de bônus" : "") + " Z-Coin</b><small>" + p.p + ' · cartão ou Pix</small></div><button class="btn yo" data-act="pack" data-i="' + i + '">' + (this.payOn ? "COMPRAR" : "EM BREVE") + "</button></div>");
       (d.shop || []).forEach((it) => {
         const own = this.items.indexOf(it.id) >= 0 || (d.items || []).indexOf(it.id) >= 0;
         h += '<div class="ecRow"><div><b>' + esc(this.name(it.id)) + "</b><small>" + (it.kind === "pack" ? "Jaqueta zumbi (lendária) + jaqueta neon + moletom roxo + 50 Z-Coin" : it.rarity >= 3 ? "Lendária" : "Rara") + "</small></div>" + (own ? "<b>✓ SUA</b>" : '<button class="btn yo" data-act="item" data-id="' + it.id + '">' + it.price + " Z</button>") + "</div>";
@@ -25679,9 +25692,9 @@ const ECO = {
       return this.got(r).then(() => this.show("box"));
     }, fail);
     else if (a === "pack") {
-      b.disabled = false;
-      if (this.link) window.open(this.link, "_blank", "noopener");
-      else UI.toast && UI.toast("VENDA DE Z-COIN EM BREVE", "#c86aff");
+      const p = this.packs[+b.dataset.i];
+      if (!this.payOn || !p) { b.disabled = false; UI.toast && UI.toast("VENDA DE Z-COIN EM BREVE", "#c86aff"); return; }
+      ZPAY.buy(p).catch((e) => fail(e));
     }
   }
 };
@@ -25802,7 +25815,7 @@ const CHEST = {
     if (open && k < 1.75) { x.globalAlpha = 1 - (k - 1.5) / 0.25; P(0, 0, W, H, col); x.globalAlpha = 1; }
   }
 };
-const ECO_ERR = { MOEDAS_INSUFICIENTES: "Moedas insuficientes", ITEM_INVALIDO: "Item indisponível", CHIPS_INSUFICIENTES: "Chips insuficientes", ZCOIN_INSUFICIENTE: "Z-Coin insuficiente", JA_TEM: "Você já tem", JA_RESGATADO: "Já pegou esse prêmio", NIVEL_NAO_ALCANCADO: "Nível ainda não alcançado", SEM_PASSE: "Precisa do passe premium", MISSAO_INCOMPLETA: "Missão ainda não completa", NIVEL_MAXIMO: "Já está no máximo", SEM_CAIXA: "Nenhuma caixa para abrir" };
+const ECO_ERR = { MOEDAS_INSUFICIENTES: "Moedas insuficientes", ITEM_INVALIDO: "Item indisponível", CHIPS_INSUFICIENTES: "Chips insuficientes", ZCOIN_INSUFICIENTE: "Z-Coin insuficiente", JA_TEM: "Você já tem", JA_RESGATADO: "Já pegou esse prêmio", NIVEL_NAO_ALCANCADO: "Nível ainda não alcançado", SEM_PASSE: "Precisa do passe premium", MISSAO_INCOMPLETA: "Missão ainda não completa", NIVEL_MAXIMO: "Já está no máximo", SEM_CAIXA: "Nenhuma caixa para abrir", PACOTE_INVALIDO: "Pacote indisponível", MUITOS_PEDIDOS: "Muitas compras abertas. Espere um pouco.", CHECKOUT_FALHOU: "O pagamento não abriu. Tente de novo.", SEM_NOME: "Escolha o nome do personagem primeiro" };
 const ecoErr = (e) => {
   const m = e && e.message || "";
   for (const k in ECO_ERR) if (m.indexOf(k) >= 0) return ECO_ERR[k];
@@ -25824,6 +25837,79 @@ $("bEco").onclick = () => {
 };
 $("bEcoBack").onclick = () => UI.show("title");
 ECO.paint();
+const ZPAY = {
+  LS: "qz_zc_order",
+  busy: 0,
+  get() { try { const o = JSON.parse(localStorage.getItem(this.LS) || "null"); return o && Date.now() - o.t < 864e5 ? o : null; } catch (e) { return null; } },
+  put(o) { try { o ? localStorage.setItem(this.LS, JSON.stringify(o)) : localStorage.removeItem(this.LS); } catch (e) {} },
+  ov(state, title, sub) {
+    const el = $("zpOv");
+    el.className = state ? state : "hidden";
+    $("zpT").textContent = title || ""; $("zpS").textContent = sub || "";
+    $("zpWait").classList.toggle("hidden", state !== "wait");
+    $("zpOk").classList.toggle("hidden", state === "wait");
+  },
+  buy(p) {
+    if (!NET.logged) return Promise.reject(new Error("SEM_LOGIN"));
+    this.ov("wait", "ABRINDO O PAGAMENTO", p.n + " · " + (p.z + p.b) + " Z-Coin · " + p.p);
+    return NET.fn("zcoin-checkout", { action: "create", pack: p.id }).then((r) => {
+      if (!r || !r.url || !/^https:\/\/([a-z0-9-]+\.)*infinitepay\.io\//i.test(r.url)) throw new Error("CHECKOUT_FALHOU");
+      this.put({ order: r.order, z: r.zcoin, t: Date.now() });
+      location.href = r.url;
+    }, (e) => { this.ov(0); throw e; });
+  },
+  // volta do checkout: ?zcpay=1&order_nsu=...&transaction_nsu=...&slug=...&receipt_url=...
+  fromUrl() {
+    const q = new URLSearchParams(location.search);
+    if (!q.has("zcpay")) return null;
+    const r = { order: q.get("order_nsu") || "", tx: q.get("transaction_nsu") || "", slug: q.get("slug") || "", receipt: q.get("receipt_url") || "" };
+    ["zcpay", "order_nsu", "transaction_nsu", "slug", "receipt_url", "capture_method"].forEach((k) => q.delete(k));
+    try { history.replaceState(null, "", location.pathname + (q.toString() ? "?" + q : "") + location.hash); } catch (e) {}
+    return r;
+  },
+  check(back) {
+    const pend = this.get();
+    const order = back && back.order || pend && pend.order;
+    if (!order || this.busy || !NET.logged) return;
+    if (pend && back && back.order && pend.order !== back.order) this.put(null);
+    this.busy = 1;
+    const z = pend && pend.z;
+    if (back) this.ov("wait", "CONFIRMANDO SUA COMPRA", "Estamos conferindo o pagamento com a InfinitePay. Não feche o jogo.");
+    const body = { action: "confirm", order, transaction_nsu: back && back.tx || void 0, slug: back && back.slug || void 0, receipt_url: back && back.receipt || void 0 };
+    const t0 = Date.now();
+    const step = () => NET.fn("zcoin-checkout", body).then((r) => {
+      const st = r && r.status;
+      if (st === "paid") return this.paid(r.zcoin || z);
+      if (st === "failed" || st === "unknown" || st === "invalid") return this.bad(back);
+      // ainda pendente: o aviso da InfinitePay pode demorar alguns segundos
+      const age = Date.now() - t0;
+      if (back && age < 18e4) return new Promise((ok) => setTimeout(ok, age < 3e4 ? 3e3 : 8e3)).then(step);
+      this.busy = 0;
+      if (back) this.ov("info", "PAGAMENTO EM ANÁLISE", "A InfinitePay ainda não aprovou. Assim que aprovar, a Z-Coin entra sozinha na sua conta e o jogo avisa.");
+    }, () => {
+      this.busy = 0;
+      if (back) this.ov("info", "SEM CONEXÃO", "Não deu para conferir agora. Quando a internet voltar, o jogo confere de novo sozinho.");
+    });
+    step();
+  },
+  paid(z) {
+    this.busy = 0; this.put(null);
+    SFX.buy && SFX.buy();
+    this.ov("ok", "COMPRA APROVADA!", "+" + (z || "") + " Z-Coin na sua conta. Valeu por apoiar o Quebrada Z!");
+    ECO.refresh();
+  },
+  bad(back) {
+    this.busy = 0; this.put(null);
+    if (back) this.ov("info", "COMPRA NÃO CONFIRMADA", "O pagamento não foi aprovado ou não bate com o pedido. Se o dinheiro saiu, fale com a gente em Ajustes › Feedback com o comprovante.");
+  }
+};
+$("zpOk").onclick = () => { ZPAY.ov(0); UI.show("title"); };
+document.querySelectorAll("#zpOv .ic.zc").forEach((e) => e.style.backgroundImage = `url(${ICON_ZC})`);
+{
+  const back = ZPAY.fromUrl();
+  setTimeout(() => ZPAY.check(back), back ? 300 : 2500);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) ZPAY.check(null); });
+}
 let helpBack = "title";
 function showHelp(back) {
   helpBack = back;
