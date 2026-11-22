@@ -73,4 +73,4 @@ Passe e pacote da temporada têm conteúdo fixo, mostrado antes. Chip não é ve
 
 ## O que fica para a fase E
 
-Anúncios, venda pela loja do Android (Google Play Billing), crédito automático pelo webhook da InfinitePay.
+Anúncios, venda pela loja do Android (Google Play Billing), crédito automático pelo webhook da InfinitePay (feito na v29, ver `supabase/README.md`).
