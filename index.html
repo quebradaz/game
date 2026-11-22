@@ -1152,6 +1152,16 @@ body.hudEditing #hud *{pointer-events:none!important}
 .selHead .h2 small{letter-spacing:2px;text-shadow:0 0 8px rgba(125,255,58,.5),2px 2px 0 #000}
 .panel h3,.overT{text-shadow:2px 2px 0 rgba(255,255,255,.18);letter-spacing:2px}
 .skBr{letter-spacing:3px;text-shadow:0 0 6px currentColor}
+/* v29: escolha de personagem na criação */
+.lkBody{align-items:flex-start}
+.lkBodyB{display:flex;gap:10px;flex-wrap:wrap}
+.lkBodyC{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 10px 6px;background:#1f1b27;border:2px solid #000;box-shadow:inset 0 0 0 1px #3a3446;cursor:pointer;color:#bdb6cc}
+.lkBodyC canvas{width:80px;height:80px;image-rendering:pixelated;background:radial-gradient(circle at 50% 40%,#3a3446,#1a1622 75%)}
+.lkBodyC b{font-family:var(--fz);font-weight:400;font-size:20px;letter-spacing:2px;line-height:1}
+.lkBodyC.on{background:#2e2838;box-shadow:inset 0 0 0 2px #ffd84a,0 0 10px rgba(255,216,74,.35);color:#ffd84a}
+.lkNote.lkWarn{color:#ffd84a}
+.lkFixed{color:#bdb6cc}
+@media (max-height:440px){.lkBodyC canvas{width:60px;height:60px}.lkBodyC{padding:2px 8px 4px}}
 </style>
 </head>
 <body>
@@ -11240,6 +11250,24 @@ const RIG_HEAD = [
   "..ssssS....."
 ];
 const RIG_HEAD_PV = [4, 15];
+/* v29: cabeça da Duda — queixo e mandíbula mais finos, pescoço mais fino; l = boca */
+const RIG_HEAD_F = [
+  "............",
+  "..ssssssss..",
+  "..sssssssss.",
+  ".ssssssssss.",
+  ".ssssssssss.",
+  ".ssssssssss.",
+  ".ssssssssss.",
+  ".sSssssssss.",
+  "..sssssssSs.",
+  "..sssssssss.",
+  "..ssSssssm..",
+  "...ssSssss..",
+  "...ssSSs....",
+  "...ssS......",
+  "...sssS....."
+];
 /* hair styles: rows in head-template coords (+ offset ox,oy). h base, H shade, l light. Built lazily from fn() when given. */
 const HAIR_STYLES = [
   { name: "Curto", rows: [
@@ -11299,6 +11327,56 @@ const HAIR_STYLES = [
     return 0;
   }, box: [-1, 0, 12, 16] }
 ];
+/* v29: cabelos compridos (servem pros dois; a Duda começa com um deles). base = curto de cima, o resto cai atrás */
+(function() {
+  const base = (x, y) => { const r = HAIR_STYLES[0].rows; return y >= 0 && y < r.length && x >= 0 && x < 12 && r[y][x] !== "." ? r[y][x] : 0; };
+  HAIR_STYLES.push(
+    { name: "Longo", long: 1, fn: function(x, y) {
+      const b = base(x, y);
+      if (b) return b;
+      if (y >= 1 && y <= 3 && x >= 2 && x <= 9) return y === 1 && x > 5 ? "l" : "h";
+      if (x >= -2 && x <= 2 && y >= 2 && y <= 21 - (x + 2)) return x === -2 ? "H" : (x + y) % 5 === 0 ? "l" : x === 2 && y > 9 ? "H" : "h";
+      return 0;
+    }, box: [-2, 0, 12, 22] },
+    { name: "Rabo de cavalo", long: 1, fn: function(x, y) {
+      const b = base(x, y);
+      if (b) return b;
+      if (y >= 1 && y <= 2 && x >= 2 && x <= 9) return x > 5 ? "l" : "h";
+      if (x === 0 && y >= 2 && y <= 3) return "d";
+      const c = -2.2 + Math.sin((y - 3) * 0.32) * 0.8, w = y < 6 ? 1.6 : y < 14 ? 1.3 : 0.8;
+      if (y >= 2 && y <= 17 && Math.abs(x - c) <= w) return x < c - 0.4 ? "H" : y % 4 === 1 ? "l" : "h";
+      return 0;
+    }, box: [-4, 0, 14, 18] },
+    { name: "Coque", fn: function(x, y) {
+      const b = base(x, y);
+      if (b) return b;
+      if (y >= 1 && y <= 2 && x >= 2 && x <= 9) return x > 5 ? "l" : "h";
+      const d = Math.hypot((x - 1.5) / 2.8, (y + 1) / 2.6);
+      if (d <= 1) return d > 0.7 ? "H" : (x + y) % 3 === 0 ? "l" : "h";
+      return 0;
+    }, box: [-2, -4, 12, 12] },
+    { name: "Cacheado", long: 1, fn: function(x, y) {
+      const dx = x - 4, dy = y - 3, top = Math.hypot(dx / 8, dy / 6.4) <= 1 && !(x >= 6 && y >= 4) && !(x >= 9 && y >= 2);
+      const back = x >= -4 && x <= 3 && y >= 3 && y <= 18 - Math.max(0, x) * 1.5 && !(y > 15 && (x + y) % 3 === 0);
+      if (!top && !back) return 0;
+      if (y > 8 && x > 3) return 0;
+      return (x * 5 + y * 3) % 7 === 0 ? "l" : (x * 3 + y * 5) % 6 === 0 || x < -3 ? "H" : "h";
+    }, box: [-4, -4, 16, 23] },
+    { name: "Chanel", long: 1, fn: function(x, y) {
+      const b = base(x, y);
+      if (b) return b;
+      if (y >= 1 && y <= 3 && x >= 2 && x <= 10) return y === 1 && x > 5 ? "l" : x === 10 ? "H" : "h";
+      if (x >= -1 && x <= 3 && y >= 2 && y <= 12) return x === -1 || y === 12 ? "H" : "h";
+      return 0;
+    }, box: [-1, 0, 12, 13] }
+  );
+})();
+/* com boné: cabelo comprido continua caindo atrás, só some o que ficaria por cima/por fora da aba */
+function rigHairUnderLong(st) {
+  if (st.under) return st.under;
+  const r = rigHairRows(st), rows = r.rows.map((row, j) => j + r.oy < 4 ? ".".repeat(row.length) : row);
+  return st.under = { name: st.name, rows, ox: r.ox, oy: r.oy };
+}
 function rigHairRows(st) {
   if (st.rows) {
     if (!st.ox) st.ox = st.oy = 0;
@@ -11455,8 +11533,10 @@ const RIG_LAYERS = {
   pelvis: function(R, A, it, look) {
     const p = it ? it.pal : look.skinP, b = R.c(p.base), s = R.c(p.shade), P = A.pelvis;
     R.begin(G_.pelvis);
-    R.area(P.x, P.y, P.a, -6.6, -2, 7.6, 5.6, function(lx, ly) {
-      if (ly > 3.5 && Math.abs(lx - 0.5) > 5.5 - (ly - 3.5) * 1.5) return 0;
+    const fem = look.body === 1;
+    R.area(P.x, P.y, P.a, fem ? -8 : -6.6, -2, 7.6, 5.6, function(lx, ly) {
+      if (fem && lx < -6.6 && Math.hypot((lx + 6.6) / 1.5, (ly - 1.6) / 2.8) > 1) return 0;
+      if (ly > 3.5 && Math.abs(lx - (fem ? 0 : 0.5)) > (fem ? 6.6 : 5.5) - (ly - 3.5) * 1.5) return 0;
       return lx < -4.5 ? s : b;
     });
     R.end(true, 1 << G_.legF | 1 << G_.legF2);
@@ -11464,7 +11544,7 @@ const RIG_LAYERS = {
   chest: function(R, A, it, look) {
     const st = it ? it.def.style : "bare", p = it ? it.pal : look.skinP, P = A.pelvis, br = A.br;
     const B = R.c(p.base), Sd = R.c(p.shade), Lt = R.c(p.light), Cr = R.c(p.crease || p.shade), In = R.c(p.in || p.base), InD = R.c(p.inD || p.shade);
-    const sk = R.c(look.skinP.base), skS = R.c(look.skinP.shade), top = 23 + br, hood = st === "hoodie";
+    const sk = R.c(look.skinP.base), skS = R.c(look.skinP.shade), top = 23 + br, hood = st === "hoodie", fem = look.body === 1;
     A.beltSpan = st === "jacket" ? [0, 0] : [-8, 9];
     R.begin(G_.chest);
     R.area(P.x, P.y, P.a, -11, -top - (hood ? 3 : 0), 12, 0, function(lx, ly) {
@@ -11472,6 +11552,13 @@ const RIG_LAYERS = {
       let bk = k <= 20.6 ? -8.6 : k <= 21.6 ? -7.6 : k <= 22.6 ? -5.6 : -3.6;
       let fr = k < 3 ? 10.6 : k < 6 ? 9.6 : k < 12 ? 8.6 : k < 19 ? 7.6 : k < 21 ? 6.6 : k < 22 ? 5.6 : 3.6;
       if (st !== "jacket") fr = Math.min(fr, k < 6 ? 8.6 : fr);
+      if (fem) {
+        if (k >= 11.5 && k < 19) fr = 7.6 + (k < 13 ? 1 : k < 17.5 ? 2 : 1);
+        else if (k >= 4 && k < 11.5) fr -= 1;
+        else if (k < 4) fr -= 0.6;
+        if (k >= 6 && k < 13) bk += 1;
+        if (k > 20.6) bk += 0.6;
+      }
       if (hood && k > 17 && v < -3) bk = -9.6 - (k > 23 ? (k - 23) * 2 : 0);
       if (v < bk || v > fr || u > (hood && v < -3 ? top + 2.6 : top)) return 0;
       if (st === "bare") return v < bk + 1.6 ? skS : B;
@@ -11493,6 +11580,7 @@ const RIG_LAYERS = {
         if (k > 19 && (v < -3.5 || v > 4.6)) return v < bk + 1.4 ? skS : sk;
         if (k > 21.4 && v > -3.6 && v < 4.6) return k > 22.4 ? 0 : sk;
       }
+      if (fem && k >= 11.5 && k < 12.6 && v > 6.2) return Sd;
       if (hood && k > 17 && v < -5.5) return v < bk + 1.4 ? Sd : B;
       if (hood && k > 4 && k < 9 && v > 1 && v < 7) return k < 5 || v < 2 ? Sd : B;
       if (v < bk + 1.4) return Sd;
@@ -11523,15 +11611,17 @@ const RIG_LAYERS = {
   head: function(R, A, it, look) {
     const sp = look.skinP, pal = { s: R.c(sp.base), S: R.c(sp.shade), l: R.c(sp.light) };
     R.begin(G_.head);
-    R.spr(RIG_HEAD, pal, A.neck.x, A.neck.y, RIG_HEAD_PV[0], RIG_HEAD_PV[1], A.head.a);
+    if (look.body === 1) pal.m = R.c(shade(sp.shade, -0.08));
+    R.spr(look.body === 1 ? RIG_HEAD_F : RIG_HEAD, pal, A.neck.x, A.neck.y, RIG_HEAD_PV[0], RIG_HEAD_PV[1], A.head.a);
     R.end(true, 1 << G_.chest);
     /* eye + brow (covered by glasses when worn) */
     const hc = look.hairP, ep = { w: R.c("#f1ebdb"), e: R.c(LOOK_EYES[look.eyes] || LOOK_EYES[0]), b: R.c(hc.shade) };
     R.begin(G_.head);
-    R.spr(["bbb", "...", "we."], ep, A.neck.x, A.neck.y, RIG_HEAD_PV[0] - 8, RIG_HEAD_PV[1] - 4, A.head.a);
+    if (look.body === 1) { ep.k = R.c("#120c0e"); ep.e = R.c(LOOK_EYES[look.eyes] || LOOK_EYES[0]); }
+    R.spr(look.body === 1 ? [".bb.", "..kk", "wek."] : ["bbb", "...", "we."], ep, A.neck.x, A.neck.y, RIG_HEAD_PV[0] - 8, RIG_HEAD_PV[1] - 4, A.head.a);
     R.end(false, 0);
-    const st = look.hatOn && !(HAIR_STYLES[look.hair] || HAIR_STYLES[0]).skinHair ? rigHairUnder() : rigHairRows(HAIR_STYLES[look.hair] || HAIR_STYLES[0]);
-    const hp = st.skinHair ? { h: R.c(sp.base), H: R.c(sp.shade), l: R.c(sp.light) } : { h: R.c(hc.base), H: R.c(hc.shade), l: R.c(hc.light) };
+    const hs0 = HAIR_STYLES[look.hair] || HAIR_STYLES[0], st = look.hatOn && !hs0.skinHair ? (hs0.long ? rigHairUnderLong(hs0) : rigHairUnder()) : rigHairRows(hs0);
+    const hp = st.skinHair ? { h: R.c(sp.base), H: R.c(sp.shade), l: R.c(sp.light) } : { h: R.c(hc.base), H: R.c(hc.shade), l: R.c(hc.light), d: R.c("#c0262a") };
     R.begin(G_.hair);
     R.spr(st.rows, hp, A.neck.x, A.neck.y, RIG_HEAD_PV[0] - st.ox, RIG_HEAD_PV[1] - st.oy, A.head.a);
     R.end(true, 1 << G_.head | 1 << G_.chest);
@@ -11550,13 +11640,14 @@ function rigArm(R, A, it, look, far) {
   const up = rigLimb(am.up), fo = rigLimb(am.fore), g = far ? G_.armF : G_.armN, g2 = far ? G_.armF2 : G_.armN2;
   const mx = sh[0] + (el[0] - sh[0]) * am.sl, my = sh[1] + (el[1] - sh[1]) * am.sl;
   R.begin(g);
-  R.cap(sh[0], sh[1], el[0], el[1], 2.6, 2.4, function(t, e, d) {
+  const thin = look.body === 1 ? 0.3 : 0;
+  R.cap(sh[0], sh[1], el[0], el[1], 2.6 - thin, 2.4 - thin, function(t, e, d) {
     return t <= am.sl ? up(t, e, d) : fo(t, e, d);
   }, 0);
   R.end(true, far ? 0 : 1 << G_.chest);
   R.begin(g2);
   const cuff = am.cuff ? R.c(am.cuff) : 0;
-  R.cap(el[0], el[1], hd[0], hd[1], 2.3, 2, function(t, e, d) {
+  R.cap(el[0], el[1], hd[0], hd[1], 2.3 - thin, 2 - thin, function(t, e, d) {
     return cuff && t > 0.76 && t < 0.9 ? cuff : fo(t, e, d);
   }, 0);
   R.end(true, 1 << g);
@@ -11787,7 +11878,8 @@ function rigNormLook(look) {
   look = look || {};
   const L = {
     skin: look.skin != null ? look.skin : RIG_DEFAULT_LOOK.skin, eyes: look.eyes != null ? look.eyes : RIG_DEFAULT_LOOK.eyes,
-    hair: look.hair != null ? look.hair : RIG_DEFAULT_LOOK.hair, hairC: look.hairC != null ? look.hairC : RIG_DEFAULT_LOOK.hairC
+    hair: look.hair != null ? look.hair : RIG_DEFAULT_LOOK.hair, hairC: look.hairC != null ? look.hairC : RIG_DEFAULT_LOOK.hairC,
+    body: look.body === 1 ? 1 : 0
   };
   const sk = typeof L.skin === "object" ? L.skin : LOOK_SKIN[L.skin] || LOOK_SKIN[0], hc = typeof L.hairC === "object" ? L.hairC : LOOK_HAIRC[L.hairC] || LOOK_HAIRC[0];
   L.skinP = { base: sk[0], shade: sk[1], light: sk[2] };
@@ -11815,7 +11907,7 @@ function rigNormEq(eq) {
   return E;
 }
 function rigKey(look, eq) {
-  let s = [look.skin, look.eyes, look.hair, look.hairC].join(",");
+  let s = [look.skin, look.eyes, look.hair, look.hairC].join(",") + (look.body ? ",f" : "");
   for (const k of RIG_SLOTS) s += "|" + (eq[k] ? eq[k].id + ":" + JSON.stringify(eq[k].pal) : "");
   let h = 5381;
   for (let i = 0; i < s.length; i++) h = (h * 33 ^ s.charCodeAt(i)) >>> 0;
@@ -21984,7 +22076,7 @@ const NET = (() => {
       });
     },
     me() {
-      return call("/rest/v1/profiles?select=id,name,name_changes,name_changed_at&limit=1").then((a) => {
+      return call("/rest/v1/profiles?select=*&limit=1").then((a) => {
         st.profile = one(a);
         st.name = st.profile && st.profile.name;
         st.offline = 0;
@@ -24091,7 +24183,10 @@ const LOOK = (function () {
   const SLOTS = ["head", "chest", "legs", "feet", "acc1", "acc2", "acc3", "acc4"];
   const SLOT_NAME = { head: "CABE\xC7A", chest: "PEITO", legs: "PERNAS", feet: "P\xC9S", acc1: "ACESS. 1", acc2: "ACESS. 2", acc3: "ACESS. 3", acc4: "ACESS. 4" };
   const RAR = ["comum", "incomum", "raro", "exclusivo", "lendário"];
-  const defLook = () => ({ skin: 0, eyes: 0, hairStyle: 0, hairColor: 0 });
+  const defLook = () => ({ skin: 0, eyes: 0, hairStyle: 0, hairColor: 0, body: 0 });
+  // v29: corpo do personagem. Escolhido só na criação; com conta, quem manda é o servidor (profiles.body)
+  const BODIES = [{ name: "MARCUS", hair: 0 }, { name: "DUDA", hair: HAIR_STYLES.findIndex((z) => z.name === "Rabo de cavalo") }];
+  const bodyName = (b) => (BODIES[b] || BODIES[0]).name;
   const defEq = () => ({ head: null, chest: "jaqueta_preta", legs: "jeans_escuro", feet: "sapato_preto", acc1: "oculos_escuro", acc2: null, acc3: null, acc4: null });
   const SPOT2RIG = { face: "face", neck: "front", shoulder: "front", back: "back", waist: "belt" };
   const RSLOT = (it) => it.slot === "head" ? "hat" : it.slot === "acc" ? SPOT2RIG[it.spot] : it.slot;
@@ -24107,6 +24202,7 @@ const LOOK = (function () {
     L.eyes = clampI(L.eyes, EYES.length, L0.eyes);
     L.hairStyle = clampI(L.hairStyle, HAIR_NAMES.length, L0.hairStyle);
     L.hairColor = clampI(L.hairColor, HAIR_COLS.length, L0.hairColor);
+    L.body = L.body === 1 ? 1 : 0;
     const first = !Array.isArray(d.inv);
     let inv = first ? [] : d.inv.filter((k) => typeof k === "string" && ITEMS[k]);
     FREE.forEach((k) => { if (inv.indexOf(k) < 0) inv.push(k); });
@@ -24380,7 +24476,7 @@ const LOOK = (function () {
   const hasRig = () => typeof rigDrawFrame === "function" && typeof buildLook === "function";
   function rigLook(look) {
     const L = look || D().look;
-    return { skin: L.skin, eyes: L.eyes, hair: L.hairStyle, hairC: L.hairColor };
+    return { skin: L.skin, eyes: L.eyes, hair: L.hairStyle, hairC: L.hairColor, body: L.body === 1 ? 1 : 0 };
   }
   // equipamento do save -> slots do rig (o cinto padrão fica quando não há item de cintura)
   function eqItems(eq, look) {
@@ -24521,6 +24617,37 @@ const LOOK = (function () {
   }
   function renderLookTab(R) {
     const L = ui.look;
+    if (ui.mode === "create") {
+      const row = h("div", "lkRow lkBody");
+      row.append(h("div", "lkLab", "QUEM"));
+      const box = h("div", "lkBodyB");
+      BODIES.forEach((bd, i) => {
+        const b = h("button", "lkBodyC" + ((L.body | 0) === i ? " on" : ""));
+        const cv = h("canvas");
+        cv.width = 96; cv.height = 96;
+        const lk = Object.assign({}, L, { body: i });
+        if ((L.body | 0) !== i) lk.hairStyle = bd.hair;
+        try { rigDrawFrame(cv.getContext("2d"), 46, 156, rigLook(lk), eqItems(ui.eq, lk), "Idle", 0, 2, { face: 1 }); } catch (e) {}
+        b.append(cv);
+        b.append(h("b", null, bd.name));
+        b.onclick = () => {
+          if ((L.body | 0) === i) return;
+          SFX.swap && SFX.swap();
+          L.body = i;
+          if (L.hairStyle === BODIES[1 - i].hair || L.hairStyle === 0) L.hairStyle = bd.hair;
+          refresh();
+        };
+        box.append(b);
+      });
+      row.append(box);
+      R.append(row);
+      R.append(h("p", "lkNote lkWarn", "Escolha com calma: o personagem fica na conta pra sempre. Cabelo, pele e roupa dá pra trocar depois."));
+    } else {
+      const row = h("div", "lkRow");
+      row.append(h("div", "lkLab", "QUEM"));
+      row.append(h("div", "lkVal lkFixed", bodyName(L.body) + " · fixo da conta"));
+      R.append(row);
+    }
     R.append(swatchRow("PELE", SKIN_ORDER.map((i) => SKIN_TONES[i]), Math.max(0, SKIN_ORDER.indexOf(L.skin)), (j) => { L.skin = SKIN_ORDER[j]; refresh(); }, (v) => v[0], (v, j) => SKIN_NAMES[SKIN_ORDER[j]]));
     R.append(swatchRow("OLHOS", EYES, L.eyes, (i) => { L.eyes = i; refresh(); }, (v) => v[0], (v) => v[1]));
     R.append(chipRow("CABELO", HAIR_NAMES, L.hairStyle, (i) => { L.hairStyle = i; refresh(); }));
@@ -24619,9 +24746,13 @@ const LOOK = (function () {
       const o = OUTFITS.find((z) => z.id === ui.outfit);
       if (o) o.items.forEach((k) => { if (d.inv.indexOf(k) < 0) d.inv.push(k); });
     }
+    const wasCreate = ui.mode === "create";
+    // o corpo só muda na criação; no guarda-roupa ele volta ao que está gravado
+    if (!wasCreate) ui.look.body = d.look && d.look.body === 1 ? 1 : 0;
     d.look = Object.assign({}, ui.look);
     d.eq = Object.assign({}, ui.eq);
     d.created = true;
+    if (wasCreate && typeof acctBodyLock === "function") acctBodyLock(d.look.body);
     sanitize(d);
     SAVE.save();
     AVA_CLEAR();
@@ -24757,7 +24888,7 @@ const LOOK = (function () {
     if (fresh.length) SAVE.save();
     return fresh.map((k) => ITEMS[k].name);
   }
-  return { ITEMS, KITS, OUTFITS, SLOTS, SKIN_TONES, EYES, HAIR_NAMES, HAIR_COLS, sanitize, canEquip, equipInto, kitPrice, apply, drawPreview, open, wire, shopGrid, checkUnlocks, rigLook, eqItems, defLook, defEq, thumb, thumbInfo, REGION, RSLOT };
+  return { BODIES, bodyName, ITEMS, KITS, OUTFITS, SLOTS, SKIN_TONES, EYES, HAIR_NAMES, HAIR_COLS, sanitize, canEquip, equipInto, kitPrice, apply, drawPreview, open, wire, shopGrid, checkUnlocks, rigLook, eqItems, defLook, defEq, thumb, thumbInfo, REGION, RSLOT };
 })();
 
 LOOK.wire();
@@ -25175,7 +25306,33 @@ function acctSync() {
     });
   });
 }
+// v29: o corpo do personagem é da conta. Servidor tem valor -> vale ele; servidor vazio e personagem já criado -> grava o daqui.
+function acctBodyApply(b) {
+  const L = SAVE.d.look;
+  if (!L || (b !== 0 && b !== 1) || L.body === b) return;
+  L.body = b;
+  if (b === 0 && LOOK.BODIES[1] && L.hairStyle === LOOK.BODIES[1].hair) L.hairStyle = 0;
+  SAVE.save();
+  try { LOOK.apply(); } catch (e) {}
+  try { TITLE.refresh(); } catch (e) {}
+}
+function acctBodyLock(b) {
+  const p = NET.st.profile;
+  if (DEV.on || !NET.logged || !p || !("body" in p)) return Promise.resolve(null);
+  if (p.body === 0 || p.body === 1) { acctBodyApply(p.body); return Promise.resolve(p.body); }
+  return NET.rpc("set_body", { p_body: b === 1 ? 1 : 0 }).then((v) => {
+    if (v === 0 || v === 1) { p.body = v; acctBodyApply(v); }
+    return v;
+  }).catch(() => null);
+}
+function acctBodySync() {
+  const p = NET.st.profile;
+  if (!p || !("body" in p)) return;
+  if (p.body === 0 || p.body === 1) acctBodyApply(p.body);
+  else if (SAVE.d.created) acctBodyLock(SAVE.d.look && SAVE.d.look.body);
+}
 function acctHome() {
+  acctBodySync();
   ECO.refresh();
   acctUI();
   UI.show("title");
