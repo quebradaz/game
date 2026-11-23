@@ -1,3 +1,10 @@
 out/
 public/clips/
 node_modules/
+public/trailer/clips/
+public/trailer/music/
+public/trailer/vo/
+public/trailer/img/
+public/trailer/art/
+public/trailer/fonts/
+public/trailer/sfx/
