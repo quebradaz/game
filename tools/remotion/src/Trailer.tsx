@@ -238,12 +238,12 @@ const SHOTS: Shot[] = [
   { t: 69.7, d: 2.0, c: I("ranking", { z0: 1.3, z1: 1.4, fx: 0.5, fy: 0.55 }) },
   { t: 71.7, d: 1.8, c: G("s12-duda-noite", { at: 3, z0: 1.6, z1: 1.8, fx: 0.47, fy: 0.62 }) },
   // ATO 3b · a mistura
-  { t: 73.5, d: 0.9, c: G("s02-horda-adega", { at: 6, z0: 1.4, z1: 1.5, fx: 0.6, fy: 0.62, filter: "brightness(.45)" }) },
-  { t: 74.4, d: 0.9, c: G("s07-observador", { at: 4, z0: 1.0, z1: 1.05, fx: 0.5, fy: 0.45, game: false, vx: 0.7, filter: "brightness(.45)" }) },
-  { t: 75.3, d: 0.9, c: { src: "itens.mp4", at: 9.5, game: false, z0: 1.5, z1: 1.55, fx: 0.5, fy: 0.42, filter: "brightness(.45)" } },
-  { t: 76.2, d: 0.9, c: G("s01-rua", { at: 2, z0: 2.0, z1: 2.1, fx: 0.47, fy: 0.62, filter: "brightness(.45)" }) },
-  { t: 77.1, d: 1.0, c: G("s08-copa-rpg", { at: 5, z0: 1.3, z1: 1.4, fx: 0.5, fy: 0.6, filter: "brightness(.5)" }) },
-  { t: 78.1, d: 1.0, c: G("s04-quadra", { at: 5, z0: 1.4, z1: 1.5, fx: 0.5, fy: 0.6, filter: "brightness(.5)" }) },
+  { t: 73.5, d: 0.55, c: G("s02-horda-adega", { at: 6, z0: 1.4, z1: 1.5, fx: 0.6, fy: 0.62, filter: "brightness(.45)" }) },
+  { t: 74.05, d: 0.73, c: G("s07-observador", { at: 4, z0: 1.0, z1: 1.05, fx: 0.5, fy: 0.45, game: false, vx: 0.7, filter: "brightness(.45)" }) },
+  { t: 74.78, d: 0.5, c: { src: "itens.mp4", at: 9.5, game: false, z0: 1.5, z1: 1.55, fx: 0.5, fy: 0.42, filter: "brightness(.45)" } },
+  { t: 75.28, d: 1.02, c: G("s01-rua", { at: 2, z0: 2.0, z1: 2.1, fx: 0.47, fy: 0.62, filter: "brightness(.45)" }) },
+  { t: 76.3, d: 1.4, c: G("s08-copa-rpg", { at: 5, z0: 1.3, z1: 1.4, fx: 0.5, fy: 0.6, filter: "brightness(.5)" }) },
+  { t: 77.7, d: 1.4, c: G("s04-quadra", { at: 5, z0: 1.4, z1: 1.5, fx: 0.5, fy: 0.6, filter: "brightness(.5)" }) },
   { t: 79.1, d: 1.9, c: G("s12-duda-noite", { at: 6, z0: 1.3, z1: 1.5, fx: 0.5, fy: 0.6, filter: "brightness(.5)" }) },
   // ATO 4 · campanhas
   { t: 81, d: 3.5, c: I("../art/camp", { z0: 1.05, z1: 1.18, fx: 0.5, fy: 0.4, filter: "brightness(.8)" }) },
@@ -273,19 +273,19 @@ const TEXTS: Shot[] = [
   { t: 63.7, d: 3.7, el: (v, d) => <Feature t="Baús e itens" s="cada partida rende alguma coisa" dur={d} v={v} /> },
   { t: 67.6, d: 2.0, el: (v, d) => <Feature t="Chama a tropa" s="área de amigos" dur={d} v={v} /> },
   { t: 69.8, d: 1.8, el: (v, d) => <Feature t="Ranking" s="por quebrada e entre amigos" dur={d} v={v} /> },
-  { t: 73.5, d: 0.9, el: (v, d) => <Slam t="HORDA." dur={d} v={v} /> },
-  { t: 74.4, d: 0.9, el: (v, d) => <Slam t="CHEFE." dur={d} v={v} /> },
-  { t: 75.3, d: 0.9, el: (v, d) => <Slam t="SAQUE." dur={d} v={v} /> },
-  { t: 76.2, d: 0.9, el: (v, d) => <Slam t="SOBREVIVÊNCIA." dur={d} v={v} /> },
-  { t: 77.1, d: 3.9, el: () => <AbsoluteFill style={{ background: "rgba(0,0,0,.45)" }} /> },
-  { t: 77.2, d: 3.7, el: (v, d) => <Center t={"TUDO QUE VOCÊ CURTE\nEM JOGO DE ZUMBI"} s="AGORA COM A CARA DA FAVELA" dur={d} size={104} v={v} /> },
+  { t: 73.5, d: 0.55, el: (v, d) => <Slam t="HORDA." dur={d} v={v} /> },
+  { t: 74.05, d: 0.73, el: (v, d) => <Slam t="CHEFE." dur={d} v={v} /> },
+  { t: 74.78, d: 0.5, el: (v, d) => <Slam t="SAQUE." dur={d} v={v} /> },
+  { t: 75.28, d: 1.02, el: (v, d) => <Slam t="SOBREVIVÊNCIA." dur={d} v={v} /> },
+  { t: 76.3, d: 4.7, el: () => <AbsoluteFill style={{ background: "rgba(0,0,0,.45)" }} /> },
+  { t: 76.4, d: 4.5, el: (v, d) => <Center t={"TUDO QUE VOCÊ CURTE\nEM JOGO DE ZUMBI"} s="AGORA COM A CARA DA FAVELA" dur={d} size={104} v={v} /> },
   { t: 81.2, d: 3.2, el: (v, d) => <Camp n="CAMPANHA 1" t="HELL DE JANEIRO" tag="SOBREVIVÊNCIA POR ONDAS · 7 QUEBRADAS" p="Segure a quebrada onda por onda." col={C.red} on dur={d} v={v} /> },
   { t: 84.7, d: 3.7, el: (v, d) => <Camp n="CAMPANHA 2" t="SAMPA APAGÃO" tag="TERROR NO ESCURO · METRÔ E MARGINAL" p="A cidade apagou. Lanterna, silêncio e munição contada: eles caçam pelo barulho." col="#5ab8ff" dur={d} v={v} /> },
   { t: 88.7, d: 3.7, el: (v, d) => <Camp n="CAMPANHA 3" t="CARNAVAL DOS MORTOS" tag="HORDA EM MOVIMENTO · SALVADOR" p="Um milhão de foliões, e a horda veio junto. Proteja o trio blindado até o fim do circuito." col="#ff3d8b" dur={d} v={v} /> },
   { t: 92.7, d: 3.7, el: (v, d) => <Camp n="CAMPANHA 4" t="MARCO ZERO" tag="MUNDO ABERTO · AMAZÔNIA" p="Onde tudo começou. Construa o abrigo e descubra quem está criando os mortos." col="#59ff7a" dur={d} v={v} /> },
   { t: 96.6, d: 7.2, el: (v, d) => <Logo dur={d} v={v} small /> },
   { t: 97.4, d: 6.4, el: (v, d) => <Cta dur={d} v={v} /> },
-  { t: 103.6, d: 2.2, el: (v, d) => <Center t="NÃO OLHA PRA TRÁS." dur={d} size={86} col={C.red} v={v} /> },
+  { t: 103.2, d: 2.6, el: (v, d) => <Center t="NÃO OLHA PRA TRÁS." dur={d} size={86} col={C.red} v={v} /> },
 ];
 
 // cabeçalho do vertical: logo pequeno em cima da janela de jogo
@@ -313,8 +313,8 @@ const Cta: React.FC<{ dur: number; v: boolean }> = ({ dur, v }) => {
 // ---------- som ----------
 // falas (roteiro-elevenlabs.md): quando cada voNN entra
 export const VO: [string, number][] = [
-  ["vo01", 1], ["vo02", 4.5], ["vo03", 10], ["vo04", 12.5], ["vo05", 20], ["vo06", 22], ["vo07", 34], ["vo08", 45.5],
-  ["vo09", 54.5], ["vo10", 67.5], ["vo11", 73.5], ["vo12", 81.5], ["vo13", 84.5], ["vo14", 88.5], ["vo15", 92.5], ["vo16", 96.5], ["vo17", 100.5],
+  ["vo01", 0.9], ["vo02", 4.8], ["vo03", 10], ["vo04", 12.5], ["vo05", 20], ["vo06", 22], ["vo07", 33.6], ["vo08", 45.5],
+  ["vo09", 54.5], ["vo10", 67.5], ["vo11", 73.3], ["vo12", 81.5], ["vo13", 84.5], ["vo14", 88.5], ["vo15", 92.5], ["vo16", 96.5], ["vo17", 100.5],
 ];
 type Sfx = [string, number, number?];
 const SFX: Sfx[] = [
@@ -322,16 +322,16 @@ const SFX: Sfx[] = [
   ["drone", 0, 0.55], ["reverse", 15.4, 0.8], ["riser", 13, 0.5], ["braam", 17, 1], ["impact", 17, 0.9],
   ["whoosh", 19.8, 0.6], ["impact", 33, 0.7], ["braam_low", 33, 0.6], ["whoosh", 37.1, 0.5], ["impact", 39.2, 0.7], ["whoosh", 42.9, 0.5],
   ["whoosh", 44.9, 0.5], ["whoosh", 53.9, 0.5], ["whoosh", 67.4, 0.4],
-  ["impact", 73.5, 0.8], ["impact", 74.4, 0.8], ["impact", 75.3, 0.8], ["impact", 76.2, 0.9], ["riser", 77.0, 0.45], ["braam", 81, 0.9],
+  ["impact", 73.5, 0.8], ["impact", 74.05, 0.8], ["impact", 74.78, 0.8], ["impact", 75.28, 0.9], ["riser", 77.0, 0.45], ["braam", 81, 0.9],
   ["glitch", 84.5, 0.5], ["braam_low", 84.5, 0.6], ["glitch", 88.5, 0.5], ["impact", 88.5, 0.6], ["glitch", 92.5, 0.5], ["braam_low", 92.5, 0.6],
-  ["drone", 84.5, 0.5], ["reverse", 95.9, 0.8], ["braam", 96.5, 1], ["impact", 96.5, 1], ["heart", 101, 0.8], ["heart", 102.2, 0.8], ["reverse", 103, 0.7], ["impact", 103.6, 1],
+  ["drone", 84.5, 0.5], ["reverse", 95.9, 0.8], ["braam", 96.5, 1], ["impact", 96.5, 1], ["heart", 101, 0.8], ["heart", 102.2, 0.8], ["reverse", 102.6, 0.7], ["impact", 103.2, 1],
 ];
 // trilha: trecho de trilha.mp3 (a música das partidas) do ato 2 até as campanhas
 const MUS_IN = 20, MUS_OUT = 84.5, MUS_FROM = 99;
 
-const Track: React.FC<{ vo: string[] }> = ({ vo }) => {
+const Track: React.FC<{ vo: string[]; voDur: Record<string, number> }> = ({ vo, voDur }) => {
   const has = new Set(vo);
-  const voOn = (s: number) => VO.some(([id, t]) => has.has(id) && s >= t - 0.1 && s <= t + 4.2);
+  const voOn = (s: number) => VO.some(([id, t]) => has.has(id) && s >= t - 0.15 && s <= t + (voDur[id] ?? 4) + 0.2);
   return (
     <>
       {SFX.map(([id, t, vol], i) => (
@@ -341,7 +341,7 @@ const Track: React.FC<{ vo: string[] }> = ({ vo }) => {
         <Audio src={staticFile(T + "music/trilha.mp3")} startFrom={f(MUS_FROM)} volume={(fr) => {
           const s = MUS_IN + fr / FPS;
           const env = interpolate(s, [MUS_IN, MUS_IN + 1.2, 72.8, 73.5, 77, 78, MUS_OUT - 1.5, MUS_OUT], [0, 0.85, 0.85, 0.15, 0.15, 0.9, 0.9, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-          return env * (voOn(s) ? 0.5 : 1);
+          return env * (voOn(s) ? 0.38 : 1);
         }} />
       </Sequence>
       {VO.filter(([id]) => has.has(id)).map(([id, t]) => (
@@ -352,8 +352,8 @@ const Track: React.FC<{ vo: string[] }> = ({ vo }) => {
 };
 
 // ---------- composição ----------
-export type TrailerProps = { vertical: boolean; vo: string[] };
-export const Trailer: React.FC<TrailerProps> = ({ vertical, vo }) => {
+export type TrailerProps = { vertical: boolean; vo: string[]; voDur?: Record<string, number> };
+export const Trailer: React.FC<TrailerProps> = ({ vertical, vo, voDur = {} }) => {
   useFonts();
   const fr = useCurrentFrame();
   const s = fr / FPS;
@@ -407,7 +407,7 @@ export const Trailer: React.FC<TrailerProps> = ({ vertical, vo }) => {
       <Sequence from={f(105.2)} durationInFrames={f(0.8)}><Fade dur={0.8} /></Sequence>
       {!v ? <Bars h={bars} /> : null}
       <Grain />
-      <Track vo={vo} />
+      <Track vo={vo} voDur={voDur} />
     </AbsoluteFill>
   );
 };

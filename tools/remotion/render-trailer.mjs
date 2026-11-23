@@ -20,6 +20,7 @@ for (const f of fs.readdirSync(SRC).filter((f) => /^s\d\d.*\.webm$/.test(f))) {
   console.log("clip", f);
 }
 const vo = fs.existsSync(path.join(PUB, "vo")) ? fs.readdirSync(path.join(PUB, "vo")).filter((f) => /^vo\d\d\.mp3$/.test(f)).map((f) => f.slice(0, 4)).sort() : [];
+const voDur = Object.fromEntries(vo.map((id) => [id, +execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path.join(PUB, "vo", id + ".mp3")]).toString().trim()]));
 console.log("falas:", vo.length ? vo.join(" ") : "nenhuma (só textos)");
 const mode = process.argv[2] || "h";
 const outDir = process.argv[3] || path.join(HERE, "out");
@@ -29,15 +30,15 @@ const serveUrl = await bundle({ entryPoint: path.join(HERE, "src/index.ts") });
 if (mode === "stills") {
   const at = (process.argv[3] || "1,6,13,18,23,29,35,41,46,49,52,55,58,60,62,64,66,68,70,74,79,82,86,90,94,99,104").split(",").map(Number);
   for (const id of ["Trailer", "TrailerVertical"]) {
-    const composition = await selectComposition({ serveUrl, id, inputProps: { vertical: id !== "Trailer", vo }, browserExecutable });
+    const composition = await selectComposition({ serveUrl, id, inputProps: { vertical: id !== "Trailer", vo, voDur }, browserExecutable });
     fs.mkdirSync(path.join(HERE, "out/stills"), { recursive: true });
-    for (const s of at) await renderStill({ serveUrl, composition, frame: Math.round(s * 30), output: path.join(HERE, `out/stills/${id}-${String(s).padStart(3, "0")}.png`), inputProps: { vertical: id !== "Trailer", vo }, browserExecutable, scale: id === "Trailer" ? 0.5 : 0.4 });
+    for (const s of at) await renderStill({ serveUrl, composition, frame: Math.round(s * 30), output: path.join(HERE, `out/stills/${id}-${String(s).padStart(3, "0")}.png`), inputProps: { vertical: id !== "Trailer", vo, voDur }, browserExecutable, scale: id === "Trailer" ? 0.5 : 0.4 });
     console.log("stills", id);
   }
   process.exit(0);
 }
 for (const id of mode === "ambos" ? ["Trailer", "TrailerVertical"] : [mode === "v" ? "TrailerVertical" : "Trailer"]) {
-  const inputProps = { vertical: id !== "Trailer", vo };
+  const inputProps = { vertical: id !== "Trailer", vo, voDur };
   const composition = await selectComposition({ serveUrl, id, inputProps, browserExecutable });
   const out = path.join(outDir, id === "Trailer" ? "quebrada-z-trailer-16x9.mp4" : "quebrada-z-trailer-9x16.mp4");
   const t0 = Date.now();
