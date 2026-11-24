@@ -1154,6 +1154,25 @@ body.hudEditing #hud *{pointer-events:none!important}
 .zcPay{font-size:12px;color:#cfc4e0;text-align:center;margin:0 0 2px}
 .zcHd{font:400 15px var(--fy);letter-spacing:1px;color:#d9a6ff;margin:10px 0 2px}
 #msZcBox{display:none;flex:1 1 auto;min-width:0}#mshop.zcOn #msZcBox{display:block}#mshop.zcOn .msStage,#mshop.zcOn .msGrid{display:none!important}
+/* v29.6: loja de lendários */
+#msLend{color:#ffd277}
+#mshop.zcOn #msZcBox{overflow-y:auto;overflow-x:hidden;min-height:0;scrollbar-width:thin;scrollbar-color:#6a3aa8 transparent;padding-right:2px}
+.lgTop{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:0 0 4px}.lgTop p{margin:0;font-size:12px;color:#cfc4e0}
+.lgTop .btn{padding:4px 10px;font-size:14px;min-height:30px}
+.lgSec{margin:6px 0 2px}
+.lgH{display:flex;align-items:baseline;gap:8px;padding:0 4px;border-left:4px solid #ffc23a;margin-left:2px}.lgH b{font:400 17px var(--fy);letter-spacing:1px;color:#ffd277}.lgH small{font-size:12px;color:#a89cbc}
+.lgSec.feat .lgH{border-color:#ff8a3a}.lgSec.feat .lgH b{color:#ffb35a}
+.lgRail{gap:10px}
+.lgCard{flex:0 0 clamp(124px,19%,160px);scroll-snap-align:start;display:flex;flex-direction:column;gap:4px;padding:7px;position:relative;text-align:center;user-select:none;-webkit-user-select:none;background:linear-gradient(180deg,#3a2a12 0%,#1b130b 75%);border:2px solid #000;box-shadow:inset 0 0 0 2px #ffc23a,4px 4px 0 rgba(0,0,0,.55)}
+.lgCard.big{flex-basis:clamp(160px,26%,220px);background:linear-gradient(180deg,#4a2410 0%,#1b0f08 78%);box-shadow:inset 0 0 0 2px #ff9a3a,0 0 14px rgba(255,150,50,.25),4px 4px 0 rgba(0,0,0,.55)}
+.lgCard canvas{width:100%;aspect-ratio:1;image-rendering:pixelated;background:radial-gradient(circle at 50% 58%,rgba(255,190,60,.28),transparent 66%)}
+.lgCard .lgTag{position:absolute;top:5px;left:5px;font:700 9px system-ui,sans-serif;letter-spacing:.5px;color:#1a0d00;background:#ffc23a;border:1px solid #000;padding:1px 4px}
+.lgCard .lgNm{font:400 14px var(--fy);color:#fff1cf;line-height:1.1;min-height:2.2em;display:flex;align-items:center;justify-content:center}
+.lgCard .btn{margin-top:auto;padding:5px 4px;font-size:16px;min-height:36px;display:inline-flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap}
+.lgCard .btn .ic{width:18px;height:18px;flex:0 0 18px}
+.lgCard .btn.poor{filter:saturate(.35) brightness(.8)}.lgCard .btn.ok{background:#3ee68a}
+.lgCard.own{opacity:.72}.lgCard.own .btn{font-size:14px}
+@media (max-height:500px){.lgTop p{display:none}.lgTop .btn{min-height:26px;font-size:13px;padding:2px 8px}.lgCard{flex-basis:clamp(112px,21%,150px);padding:5px;gap:3px}.lgCard.big{flex-basis:clamp(150px,28%,210px)}.lgCard canvas{width:auto;height:clamp(64px,24vh,110px);align-self:center}.lgCard .lgNm{font-size:12px}.lgCard .btn{min-height:30px;font-size:14px}.lgH b{font-size:15px}}
 #bZc{white-space:nowrap;color:#e7c8ff;box-shadow:inset 0 0 0 1px #8a3ad8,4px 4px 0 rgba(0,0,0,.55);display:inline-flex;align-items:center;gap:6px}
 #bZc .ic{width:1em;height:1em;flex:0 0 1em;background-size:contain}
 @media (hover:hover){.zcCard:hover{transform:translateY(-2px)}}
@@ -1164,6 +1183,7 @@ body.hudEditing #hud *{pointer-events:none!important}
 #zpOv .zpT{font-family:var(--fy);font-size:20px;color:#fff;letter-spacing:1px;margin-bottom:6px}#zpOv.ok .zpT{color:#c86aff}
 #zpOv .zpS{font-family:system-ui,sans-serif;font-size:14px;line-height:1.35;color:#d9d3e6;margin-bottom:12px}
 #zpOv .zpSpin{display:inline-block;width:10px;height:10px;margin:0 3px;background:#c86aff;animation:hplow .5s steps(2) infinite alternate}
+#zpOv #zpX{display:block;margin:14px auto 0}#zpOv #zpX.hidden{display:none}
 #zpOv .zpSpin:nth-child(2){animation-delay:.15s}#zpOv .zpSpin:nth-child(3){animation-delay:.3s}
 /* v28.8: passe visual (trilha lateral com prêmios) */
 .bpHead{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:4px 2px 10px;border-bottom:1px solid #2a2638}
@@ -1572,7 +1592,7 @@ window.qzLoadStep=function(v,t){clearInterval(window.__qlT);f.style.width=v+'%';
     <button class="btn alt hidden" id="bNameBack">VOLTAR</button>
   </div>
 </div>
-<div id="zpOv" class="hidden" role="dialog" aria-live="polite"><div class="zpBox"><div class="zpIco ic zc"></div><div class="zpT" id="zpT"></div><div class="zpS" id="zpS"></div><div id="zpWait"><i class="zpSpin"></i><i class="zpSpin"></i><i class="zpSpin"></i></div><button class="btn yo hidden" id="zpOk">OK</button></div></div>
+<div id="zpOv" class="hidden" role="dialog" aria-live="polite"><div class="zpBox"><div class="zpIco ic zc"></div><div class="zpT" id="zpT"></div><div class="zpS" id="zpS"></div><div id="zpWait"><i class="zpSpin"></i><i class="zpSpin"></i><i class="zpSpin"></i></div><button class="btn yo hidden" id="zpOk">OK</button><button class="btn alt hidden" id="zpX">VOLTAR</button></div></div>
 <div id="ecoScr" class="screen shadeFull hidden">
   <div class="rkWrap">
   <div class="selHead"><div class="h2 yo"><small id="ecSeason">TEMPORADA</small>PASSE E LOJA</div><button class="btn alt yo" id="bEcoBack">VOLTAR</button></div>
@@ -1643,7 +1663,7 @@ window.qzLoadStep=function(v,t){clearInterval(window.__qlT);f.style.width=v+'%';
 <div id="mshop" class="screen shadeFull hidden">
   <div class="panel wide">
     <h3 class="yo">LOJA</h3>
-    <div class="msHead"><span class="chip"><i class="ic coin"></i><b id="msCoins" class="num">0</b></span><div class="seg" id="msTabs"><button data-t="skin">VISUAL</button><button data-t="skills" id="msSkills">HABILIDADES ›</button><button data-t="zc" id="msZc">Z-COIN</button></div></div>
+    <div class="msHead"><span class="chip"><i class="ic coin"></i><b id="msCoins" class="num">0</b></span><div class="seg" id="msTabs"><button data-t="skin">VISUAL</button><button data-t="lend" id="msLend">★ LENDÁRIOS</button><button data-t="skills" id="msSkills">HABILIDADES ›</button><button data-t="zc" id="msZc">Z-COIN</button></div></div>
     <div class="msBody"><div class="msStage" id="msStage"><div class="stH">PROVADOR</div><canvas id="msPrev" width="176" height="176" title="Toque pra virar"></canvas><div class="msTry" id="msTry"></div></div><div class="msGrid" id="msGrid"></div><div id="msZcBox"></div></div>
     <p class="segNote" id="msNote">Roupas e acessórios são só visual.</p>
     <div class="row" style="justify-content:center"><button class="btn yo" id="bMsOk">VOLTAR</button></div>
@@ -1846,7 +1866,7 @@ const ART = { "dia": "data:image/webp;base64,UklGRu5ZBABXRUJQVlA4IOJZBADQQw+dASq
 const GORE_MASKS = [{ "k": "crown", "a": 2.33, "S": [35, 22, 19, 11, "AAAMAAAAAcADgAB4B/4AHwHv4APgff8AXA+f8AuD8/GAOPw+EAcXg8AA4OA8ABw4B8ADhwB4IHDgDwYMOADw4cYADx/54Abz//gAP3//AAP//8AAf//8AAH//wAAD8AAAA=="], "L": [59, 37, 31, 19, "AAAAADAAAAAAAAAPAAAAAAAAAfAAAAAAAAA+AAD/gAAAD8AAf/8AAAP4AB+/+AAAf4AH9/+AAA/wA/7/+AADvgB/j//AAGfAH/H//AAE+Af+P/3AAI+B/8P/DgAB8D/wP+DgAD8G/Af4BgAH4J+Af4BAAPwj4APwAAAfgHwAfwAAA+AfAA/wAAB8A+AA/wAAD4B4AA/gCAHwHwAA+AEAPgPgAB+AMAeA+AAB+A8A8B4AAB+B8B8HgAAD+D8/4fQAAj+D//5/AAAz+H///8AAAz0H//74AAAb8f/7vgAAAb9//3+AAAAf////4AAAA/////+AAAAf////4AAAAH////AAAAAB//xwAAAAAB/wAAAA"] }, { "k": "jet", "a": -0.641, "S": [40, 60, 1, 43, "AAAAACAAAAAB4AAAAAPAAAAAB8AAAAAPgAAAAB+AAAAAPwAAAAB/AAAAAP4AAAAB/gAAAAP+AAAAA/wAAAAD/AAAAAf8AAAAD/wAAAAf+AAAAD/4AAAAf/AAAAD/8AAAAf/4AAAD//wAAAf//gAAB///4AAD///4AAH///wAAf///gAD///+AAP///8AB////wAH////AA///34AH//8PgD///AAAP//4AAF9//AAA/B/gAAD8D8AAAAQPwBgAAAfgAAAAB/7AAAAP/8AAAA//gAAAP8zAAAD/H8AAAfAAAAAHwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAABAAAAAAEAAAAAAwAAAAADAAAAAAIAAAAAAgAAAAA"], "L": [67, 100, 1, 72, "AAAAAAAAAGAAAAAAAAAAPAAAAAAAAAAfgAAAAAAAAAfgAAAAAAAAAfgAAAAAAAAA/wAAAAAAAAA/wAAAAAAAAA/4AAAAAAAAA/4AAAAAAAAA/8AAAAAAAAA/8AAAAAAAAA/+AAAAAAAAA/+AAAAAAAAA//AAAAAAAAA//AAAAAAAAA//gAAAAAAAA//wAAAAAAAAf/4AAAAAAAAf/4AAAAAAAAH/8AAAAAAAAH/+AAAAAAAAH//AAAAAAAAH//gAAAAAAAH//wAAAAAAAH//wAAAAAAAH//wAAAAAAAD//wAAAAAAAD//4AAAAAAAD//4AAAAAAAH//8AAAAAAAH//+AAAAAAAH///AAAAAAAH///wAAAAAAH///8AAAAAAH////AAAAAAH////wAAAAAD/////8AAAAA/////+AAAAAf/////wAAAAP/////+AAAAB//////wAAAA//////4AAAAf/////8AAAAf//////gAAAP//////wAAAP//////8AAAH//////+AAAD///////AAAD///////gAAD///////wAAD/////3/wAAD/////w/4AAD////+AP4AAF////8APwAAf////8AAAAAP////8AAAACH////8AAAABn8P//8AAAAA/8B//wAAAAA/8Af/gAAAAA/+AH/gAAAAAQOAD/gAA4AAABAD/wAA8AAAAAA/8AAcAAAAAAH/AAAAAAAAAD//jgAAAAAAH///gAAAAAAD///8AAAAAAB///8AAAAAAA///4AAAAAAD/+PGAAAAAAD//HPwAAAAAH/4H/4AAAAAD/gHwAAAAAAP+AAAAAAAAA/4AAAAAAAAA3gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAIAAAAAAAAAAEAAAAAAAAAAGAAAAAAAAAADAAAAAAAAAABgAAAAAAAAABwAAAAAAAAAA4AAAAAAAAAAYAAAAAAAAAAMAAAAAAAAAAEAAAAAAAAAACAAAAAAAAAAA=="] }, { "k": "burst", "a": -1.983, "S": [34, 31, 21, 25, "AAADwAAAA/4AAAD/8AAAP/gAAH/4AAAf+AAAB/4AAAP/AAAA/8AAAB/wAAAH/AAAA/8AAAD/wAAAP/AAAA//gAAH//gAAf//gAB//+AAf//8AD///js///4f////h///88H//4AQf/8AAB//wAAP+fwAA/4fgAB/h+AAAAHwAAAAOAAA"], "L": [56, 52, 36, 41, "AAAAAAfgAAAAAAAf/AAAAAAAP/4AAAAAAH//4AAAAAB///AAAAAAf//gAAAAAf//wAAAAAf//gAAAAAP//gAAAAAD//4AAAAAA//8AAAAAAf/+AAAAAAH//gAAAAAB//4AAAAAAf/8AAAAAAH//AAAAAAA//wAAAAAAP/8AAAAAAD//AAAAAAB//4AAAAAAf/+AAAAAAH//gAAAAAB//4AAAAAA///AAAAAAP///AAAAAD///4AAAAB////gAAAAf///+AAAAP////wAAAD////+AAAB/////wAAB/////8AAA/////8AAA/////+A84/////+Af///////gP///////4D//////H8B/////+APAf////gAAwH///+AAAAA////AAAAAP///wAAAAP/+//AAAAD//D/8AAAA//wX/gAAAH/8A/4AAAB//gf+AAAAH54H8AAAAAAAB/gAAAAAAAP4AAAAAAAB8AAAAA=="] }, { "k": "burst", "a": -2.542, "S": [28, 46, 26, 21, "wAAABAAAABAAACAAAAIHAAAgfAAAA/gAAD+CAgH+ICAP9wYB/zhAD/GOAD+/4AP//gAZ/7ABn+oAcJgjA70AAA/gAAB8AAAPwAAA8AAAD+gAAHmAAAY+AAAGAAAAQAAAAAAACAAAAgAAAGAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAABAA="], "L": [46, 76, 43, 35, "wAAAAAADgAAAAAADAAAAAAACAAAAAAgEAAAAADAAAAAAAMAHAAAAAwAeAAAADAB8AAAAEAH8AAAAAAP5AAAAAA/+AIAIAB/8AgAwAH/4GADAAP/4cAMAAf/7wBwAD//PgGAAP/4PgYAAf/geDgAA//B4fAAA/+P/8AAB////wAAH////AAAPP//vAAA4//+cAADh7/ZgAA8DHAGAAHgMMAQMQPD5gBA8AG/2AAAAAf/gAAAAAf8AAAAAA/wAAAAAP+AAAAAB/AAAAAAH8AAAAAAf7AAAAAA//QAAAAB/DAAAAADgPwAAAAODeAAAAAAPAAAAAADAAAAAAAIAAAAAAEAAAAAAAAAAAAAAQAAAAAADAAAAAABAAAAAAAEAAAAAABgAAAAAAOAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAwAAAAAACAAA="] }, { "k": "jet", "a": -1.01, "S": [29, 35, 1, 32, "AAAYAAABwAQAHAAgAeABAB8ACBvwAMD/gAcP+AA4/8ABz3wAD/ngAH+PAAf48AA/z4AB//wAD//AAH/+AAP/8AAX/4ACv/wAKf/gAE//gBp8PADBwMAIDAYAAAAwAAAD4AAAH/YAAH/gAAP8AAD/AAAHwAAAfAAAA4AAACAAAA=="], "L": [49, 58, 2, 53, "AAAAAGAAAAAAAHAAAAAAAHgAAEAAAPwAACAAAPwAABAAAPwAABgAAP4AAAwAAP8AAAYAMP+AAAMAOf+AAAOAHf/AAAHgH//AAADwH//gAAB4D//gAAA8D5/wAAAfH4/wAAAPn8P4AAAP/+H8AAAH/+D8AAAD/+D+AAAB//B+AAAB//B/AAAA//D/gAAAf/5/wAAAP///4AAAP///4AAAH///8AAAD///+AAAB///+AAAA7///AAAAZ///gAABs///gAAA2f//4AAAiH//8AAADD///AAABh///wAAMg/4f4AAOQfwD4AAOAPwA4AAMADgAcAAIABwAOAAAAAwAHgAAAAAADwAAAAAAD+AAAAAAB/4AAAAAA//zgAAAAP//4AAAAD//gAAAAD/+AAAAAH/4AAAAAf/gAAAAAP/AAAAAAP+AAAAAAH8AAAAAAD4AAAAAABwAAAAAABgAAAAAABAAAAAAA="] }, { "k": "jet", "a": -0.461, "S": [41, 50, 1, 27, "AAAAAMAAAAAH4AAACB/AABgOH8AADAe/4AAHh//AAAPH/8AAA8P/8AADw//8AAHn5/wAAf/D+AAA/4P4AABfw/gAAA/A/AAAHoB/AAAeAH8AAAwAEAAAACAAAAAAMADwAAAQA/AAAAAH4AAAAB/AAAAAB8AAAAABwAAAAAH4AAAAD/wAAAAH/gAAAAIMAAAAADAAAAAADAAAACFvAAAAGP/gAAAGP/gAAAG/fgAAAP+AAAAAP+AAAAAP+AAAAAH+AAAAAH+AAAAAD+AAAAAB+AAAAAB+AAAAAAcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGAAAAAAIA="], "L": [69, 83, 1, 45, "AAAAAAAAA4AAAAAAAAAB/gAAAAAAAAA/4AAAAAAAAD/+AAAAEAAwA//AAAABwAPAP/wAAAAOAB4D/8AAAABwAOR//AAAAAfgD/f/wAAAAD+A///4AAAAAfwf//+AAAAAD8H///4AAAAA/Af///gAAAAPwB///+AAAAB+Bv///wAAAAfw/8//8AAAAD//sD/8AAAAA///A//AAAAAH//AH/wAAAAB//4B/8AAAAAO/+Af/gAAAAAn/gB/4AAAAAB/4AP/gAAAAAPcAD/+AAAAAPwAAP/gAAAAB8AAD/4AAAAAfAAAfoAAAAADgAABAAAAAAAICAAAAAAAAAABwAAAMAAAAAAMAAAfwAAAAAAgAA/8AAAAAAIAAP/AAAAAAAAAP/AAAAAAAAAD/gAAAAAAAAH/4AAAAAAAAA/+AAAAAAAAAB/AAAAAAAAAAH4AAAAAAAAAB+AAAAAAAAAAf+AAAAAAAACH/gAAAAAAAAf/+AAAAAAAAH//4AAAAAAAA//+AAAAAAAACAOAAAAAAAAAAQAAAAAAAAAAHAAAAAAAAAAA8AAAAAAAAAADwAAAAAAAQCc/AAAAAAAHA//+AAAAAAAcD//4AAAAAABwf//wAAAAAAHB///AAAAAAAcf+/8AAAAAAD3/A5AAAAAAAP/8AAAAAAAAA//wAAAAAAAAD//AAAAAAAAAP/8AAAAAAAAA//wAAAAAAAAB//AAAAAAAAAH/8AAAAAAAAAb/wAAAAAAAAAP/AAAAAAAAAA/8AAAAAAAAAB/wAAAAAAAAAH/AAAAAAAAAAP8AAAAAAAAAAPgAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHAAAAAAAAAAB4AAAAAAAAAAOAAAAAAAAAABg="] }, { "k": "crown", "a": -1.647, "S": [40, 34, 19, 34, "AAAwAAAAADAAAAAAMAAAAAAwAAAAAHgAAAAAeAAAAAD4AAAAAPgAAAAA/AAAAAH8AAAAAfwAAAAD/AAAAAP8AAAAC/4AAAAf/gAAAB/+AAAAD/4AAIAP9gAAAG/mAAI4efIABzx78AAMHn/xAEAPOP+HwA/wQ8+wB/jB7wAD/8D+AAH/4P8AAf8B/gAB3wP4AABvB/AAAA4DgAAADgEAAAAEBAAAAAAAAAA="], "L": [67, 58, 31, 56, "AAAAAYAAAAAAAAAAOAAAAAAAAAAHAAAAAAAAAAHgAAAAAAAAADwAAAAAAAAAB4AAAAAAAAAB8AAAAAAAAAA/AAAAAAAAAAfgAAAAAAAAAfwAAAAAAAAAf4AAAAAAAAAP8AAAAAAAAAH+AAAAAAAAAD/gAAAAAAAAB/wAAAAAAAAB/4AAAAAAAAB/8AAAAAAAAA/+AAAAAAAAAf/AAAAAAAAAf/wAAAAAAAAP/4AAAAAAAAH/8AAAAAAAAz//AAAAAAAA///gAAAAAAAf//wAAAAAAAP//4AAAAAAAH//8AAAAAAAB//+AAAADAAA///AAAABgAAf/zgAAAAwADP/54AAAAAAD3f4cAAABg4B/v+OAAAB4eA/z/jAAAB8Pgfz/xgAAB8H4P5/4QAAA4D+H//8OAAIAA/x/3/PgDsAAP8/h//wH+AAD//gP/8P+wAB//gGD+P+cAA//wOA/n+OAAP/5/AH7+AAAD/9/wD/+AAAAf+/8A//gAAAP/f+A//wAAAH/v6Af/wAAAD//wAf/wAAAA//4Af/AAAAAPv8Af/gAAAABz+AP/gAAAAAJ+AH/gAAAAAB+AA5AAAAAAA/AAYAAAAAAAHgA4AAAAAAABgAYAAAAAAAAQAIAAAAAAAAAAAAAAAA"] }, { "k": "jet", "a": -0.766, "S": [40, 38, 1, 37, "AACAAAAAAYAAAAADAAAAAAAAAAAAADwAAAAD+AAAAAf4AAAAH/AAAAH/4AAAA8PAAAADg8AAAAcDgAAABgPAAAAEA8AAAAQBwAAAAAGAAAAAAcY8HwAB//wfAAH//n4wAf///DAB///8ODP///A998P/gH/mAH4AfMAAPAFwwAA8A2AAAHgAQAAAYAAAAACAIAAAH8AAAAf/gAAAA/gAAAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="], "L": [67, 64, 1, 62, "AAAAGAAAAAAAAAAHAAAAAAAAAAHAAAAAAAAAADAAAAAAAAAADAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAfgAAAAAAAAA/wAAAAAAAAH/wAAAAAAAAP/4AAAAAAAAf/4AAAAAAAAf/4AAAAAAAP//4AAAAAAAf//4AAAAAAAPgP4AAAAAAAPgD8AAAAAAAHgB+AAAAAAADgA+AAAAAAADgA/AAAAAAADgAfgAAAAAABwAP4AAAAAAAwAD8AAAAAAAYAA+AAAAAAAEAAfAAAAAAAAAAHAAAAAAAAAADgAAAADwAAAB4OB8Af8AAAA+fz/gD+AAAAf///wH/AAAAP///4H/BgAAH///+P/AwAAH//////AcAAD//////geAAB//////wPgBh//////wHwDw//////AD+P4/////+AB//8/4P//8AB//8fgAf/wAA//8eAAB/gAAf8+MAAAfgADPwOAAAAfwADvwGAAAAP4AB3gAAAAAP4AADwAAAAAH8AABwAAAAAHwAIAYAAAAAHAAMAAAAAAAPAAGAAAAAAP/wAAAAAAAD//4AAAAAAA///8AAAAAAAf//8AAAAAAAD/8AAAAAAAAAH8AAAAAAAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="] }, { "k": "jet", "a": -0.455, "S": [35, 33, 1, 25, "AAAAAOAAAAH8AAAB/wAAAP/AAAB/8AAAP/wAAA//AAAD/8AADv/wAAH//AAA//8AAB//wAAH//AAAf/8gAB//4AAD//4AAf//gAA//+AAD//8AAH//wAAd//AAAh/+AADB//AAED//4AcP//gAgf/+AAg//AADD/4AAH//4AAH//8AAA//8AAD//AAAA8AAAAA=="], "L": [58, 55, 1, 42, "AAAAAAAAA8AAAAAAAA/wAAAAAAAf+AAAAAAAH/4AAAAAAD//AAAAAAB//wAAAAAAf/+AAAAAAH//wAAAAAA//+AAAAAAP//wAAAAAD//+AAAAAAf//wAAAAAD//+AAAAAOf//wAAAAD7//+AAAAAP///wAAAAB///+AAAAAf///4AAAAD////AAAAAP///4AAAAB////AAAAAP///4AAAAB////GAAAAP///8QAAAA////gAAAAH////gAAAA////+AAAAH////wAAAA////+AAAAD////4AAAAf////AAAAB////4AAAAH////gAAAB////+AAAAHz///gAAAAcH//+AAAADgP//8AAAAcA///4AAABwB////wAAPAH////gAA+A////8AAHwH////gAAcAP///4AAAAB///+AAADgD//8AAAAeB//+AAAAB8///8AAAAH////4AAAA/////4AAAAf////wAAAAA////wAAAAH///+AAAAA///+AAAAAA/wB4AAAAAAfwAAAAAA"] }, { "k": "crown", "a": 2.121, "S": [30, 27, 16, 14, "AABgAAABgAAABgD4ADhH+ADwe/ADwe/gHwefwBw+f4Ax+fMA58fGA5cPAA4cHgA44HgAw4DwAwwDgAwwDwgxwB5wxgA47zgA8/7wAc//gA+//gAf//AAf//gAP//AAD/+AAB+AAA"], "L": [50, 45, 26, 23, "AAAABgAAAAAAA8AAAAAAAPAAAAAAADwABwAAAA8AA/wAAAfAwf/wAAPwAPv+AAD+Af7/wAA/gD+/+AAP4B/v/gAHeAf5/+ABngP+f/wAJ4D/n/8ACfB/5/7wAHwf8f8cAB8H/D/DgAfh/g/wMAH4X4H8BAB+B8A/AQAfgfAH4AAHwHwB+AAB8D4AfwAAfA+AD+AAHwPAA/gAB8DwAHwCAfA8AB8AgHwPAAfgMB4HgAD8HgeB4AAfh8Hw8AAH4fH8PAAA/D7/HyAAPw//7+AAB+P///AAAPh///wAAP8f//4AAD/P/38AAAf////AAAD////gAAA/////AAAH////gAAA////wAAAD///4AAAAP/84AAAAB/gAAAA"] }, { "k": "jet", "a": -0.462, "S": [51, 51, 1, 37, "AAAAAAAYAAAAAAAfAAAAAAAfgAAAAAAH8AAAAAAB/AAAAAAA/wAAAAAAP8AAAAAAH/gAAAAAB/8AAAAAAP/AAAAAAD/4AAAAAB//AAAAAAf/wAAAAAH/8AAAAAB//AAAAAB//8AAAAAf//gAAAAP//+AAAAB////wAAAH////gAAAf////gAAD////8AAA/////wAAH/////AAB/////4AA//////AAP///wPwAH///4D4Aj///8AAAG+H//AAAB/gP+EAAAQcB/gAcAAAAH8ADAAAAAf/uAAAAAP//4AAAAB//8AAAAD/8/4AAAAfwPAAAAB/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAABwAAAAAAAGAAAAAAABwAAAAAAAMAAAAAAABAAAAAAAAA="], "L": [86, 85, 1, 61, "AAAAAAAAAAAAcAAAAAAAAAAAAD/AAAAAAAAAAAAB/wAAAAAAAAAAAB/wAAAAAAAAAAAB/4AAAAAAAAAAAA/8AAAAAAAAAAAA//AAAAAAAAAAAA//gAAAAAAAAAAAf/wAAAAAAAAAAAP/8AAAAAAAAAAAP/8AAAAAAAAAAGH//AAAAAAAAAAAH//gAAAAAAAAAAH//4AAAAAAAAAAB//+AAAAAAAAAAA///gAAAAAAAAAAH//wAAAAAAAAAAH//8AAAAAAAAAAH///AAAAAAAAAAD///wAAAAAAAAAD///4AAAAAAAAAB///4AAAAAAAAAAf//8AAAAAAAAAAf///AAAAAAAAAA////gAAAAAAAAAf///8AAAAAAAAAf////AAAAAAAAAP////wAAAAAAAAP////+AAAAAAAAP/////4AAAAAAAD///////wAAAAAA///////+AAAAAAH///////4AAAAAB////////wAAAAAD////////AAAAAA////////wAAAAAf////////AAAAAP////////4AAAAD/////////AAAAB/////////wAAAAf////////8AAAAf/////////AAAAP/////////wAAAP//////+f/4AAAH//////gA/8AAAN//////gAf4AAA///////gAAAAAIP//////wAAAAADj//////wAAAAAA//wP///4AAAAAAf/wAf/+BgAAAAB//8AD//AIAAAAAKAeAB//gAAHwAAAABAAf/4AAB8AAAAAAAB//gAAcAAAAAAAAH//8PAAAAAAAAAP////gAAAAAAAAD/////AAAAAAAAA/////AAAAAAAAB/////gAAAAAAAA///Hz+AAAAAAAB//wD//wAAAAAAAf/gB/AAAAAAAAf/8AAAAAAAAAAAP/wAAAAAAAAAAADPgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAYAAAAAAAAAAAAAeAAAAAAAAAAAAAHgAAAAAAAAAAAAA4AAAAAAAAAAAAAeAAAAAAAAAAAAAHgAAAAAAAAAAAABwAAAAAAAAAAAAAYAAAAAAAAAAAAAEAAAAAAAAAAAAA="] }, { "k": "burst", "a": -2.142, "S": [43, 26, 27, 21, "AAAAD4AAAAAH/8AAAAH/+AAAAP/+AAAAP/4AAAAP/4AAAAH/4AAAAD/4AAAAA/8AAAAA//AAAAAf/gAAAAf/wAAAAP//wAAAP//+gAAP///wAAf///8AA////4f/////wf/////4P///+A8H//8AAAH//+QAAD/4/8AAA/8H+AAAHmD8AAAAAA+AAAA="], "L": [72, 44, 45, 35, "AAAAAAAB/wAAAAAAAAAP//AAAAAAAAAf//+AAAAAAAA////gAAAAAAA////AAAAAAAD///+AAAAAAAf///wAAAAAAA///8AAAAAAAA///8AAAAAAAB///wAAAAAAAD///wAAAAAAAD///wAAAAAAAD///AAAAAAAAB///AAAAAAAAA///AAAAAAAAA///AAAAAAAAD///wAAAAAAAD///wAAAAAAAD///wAAAAAAAH///wAAAAAAAH////wAAAAAAH////4AAAAAAP/////MAAAAAf/////8AACAA//////8AAAAA///////AAAAH///////AAAAf//////8AAAB///////wD//////////AH//////////AP/////////+Af///////AB+Af/////8AAAOAP////8AAAAAAP////4YAAAAA//////QAAAAA///D//4AAAAA///A//8AAAAAf//AL/8AAAAAP//gH/8AAAAAD+PgH/gAAAAAAMAAH/wAAAAAAAAAB/AAAAAA"] }, { "k": "burst", "a": -2.669, "S": [35, 39, 33, 18, "AAAAAAAAAAAAAAAAAwDgAADgHwAAAAP2AAAAP+DAMAP/GAYAf/eBgAf8PHAAP+f/AAP//+AAN//uAB47gIADjzAQAB/4AAAA/gAAAD+AAAAP+AAAAH5gAAAGD4AAAAKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"], "L": [58, 64, 55, 30, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAABgABAAAAAAHAAfAAAAAA8AB+AAAAABwAH/AAAAACAAP+IAAAAAAA//wAIABAAA//wBgAHAAD//gOAAcAAD//98AHwAAP//34AeAAB//8f8BwAAD//wPwHAAAD//gfB/AAAD//H//8AAAH/////wAAAP/////wAAAf////fAAAB4f//c4AAA/A4eADgAAHwDg4AMAAAHz/nAAgAAAD//4AAAAAAP/+AAAAAACD/wAAAAAAB/+AAAAAAAP+AAAAAAAA/9gAAAAAAB//EAAAAAAB/g/wAAAAADwP/AAAAAAOB/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="] }, { "k": "jet", "a": -0.825, "S": [38, 29, 2, 27, "AAAAYAAAAAeAAEAAfAADAAPwAAwH/4AAcF/+AAHA//AAB58/gAAe/H4AAP/h8AAD/w+AAB/8/gAA///wAAH//8AAB//+AAAb//gAAE//4AADH//gAEh/H4ADAeAYABAGAHAAAAABwAAAAA/+YAAAD/8AAAB/4AAAH/AAAAD/AAAAA8AAAAAAAAAA"], "L": [62, 49, 3, 45, "AAAAAABwAAAAAAAAB8AAAAgAAAB/AAAAYAAAB/wAAAGAEAA/wAAADgAAA/8AAAA4AAAf/AAAAOAA///gAAAHgGff/4AAAB8An//8AAAAfAH//+AAAAHwB///AAAAB+D/H/wAAAAfz/x/4AAAAP//4P+AAAAD//8D+AAAAA//+B/sAAAAf//A/wAAAAP//h/8AAAAD//8f/AAAAA/////wAAAAf////4AAAAH////+AAAAB/////AAAAAf////wAAAAHv///8AAAAB7///8AAAAAc////wAAAAOH///8AAAADh////wAAAYwf///8AAAPMH/4P/AAAHgB/wAPAAAHAAHgADwAAAAAB4AA8AAAAAAYAAPgAAAAAAAAH+AAAAAAAAB/+AAAAAAAAf//PgAAAAAD///8AAAAAA///wAAAAAA///AAAAAAH//hAgAAAAB//AAAAAAAA//AAAAAAAAP+QAAAAAAAD+AAAAAAAAB8AAAAAAAAAAAAAAAAA="] }, { "k": "jet", "a": -0.319, "S": [53, 42, 1, 23, "AAAAAABwAAAAAAP/AAAGAOA/4AAAMAcH/gAAA+B//+AAAB8P//gAAAP4P//wAAAfH+//gAAB//g/4AAAH/8D/gAAAN/wP+AAAAH+Af8AAAA+AA/4AAADwAB4AAAACAAAAAAAAAAABfAAAAAAAP8AAAAAAD/AAAAAAA/4AAAAAAAfAAAAAAAB/gAAAAAB//AAAAAAD/+AAAAAAAIAAAAAAAA8AAAAACBN8AAAAAHD//AAAAADn//gAAAAD/5fAAAAAD/4AAAAAAL/4AAAAAAA/8AAAAAAA/+AAAAAAAH+AAAAAAAD+AAAAAAAAeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgAAAAAAAGA"], "L": [88, 70, 1, 38, "AAAAAAAAAAAHgAAAAAAAAAAAB//AAAAAAAAAAAH//wAAAAAQAAGAA//+AAAAADwAB8AP//AAAAAAPAAHwB//4AAAAAA8AAeY///gAAAAAP+AH////wAAAAAA/8D////4AAAAAAD/gf////gAAAAAMf4A/////gAAAAAD/YB/////AAAAAAf9H/////8AAAAAB////j///AAAAAAP///gP//AAAAAAB///8A//4AAAAAAP//+AH/+AAAAAAA9//wB//4AAAAAAAv/+AB//gAAAAAAA//gAP//AAAAAAA/5wAA//8AAAAAAD+AAAH//AAAAAAAfwAAAf7AAAAAAAB4AAAAQACAAAAAACAAAAAABgAAAAAAAAAAABn/AAAAAAAAAAAAP/8AAAAAAAAAAAB//AAAAAAAAAAAB//AAAAAAAAAAAH//gIAAAAAAAAAA//8AgAAAAAAAAAB//AAAAAAAAAAAAB/wAAAAAAAAAAAAH+AAAAAAAAAAAAA//gAAAAAAAAAAP//+AAAAAAAAAAB///8AAAAAAAAAAH///AAAAAAAAAAAICHgAAAAAAAAAAAAcAAAAAAAAAAAAAD4AAAAAAAAAAAAAD4AAAAAAAAAEAM8/4AAAAAAAAA+B///8AAAAAAAAB8D///8AAAAAAAAD4H///8AAAAAAAAB4//v/4AAAAAAAAH3/4TzAAAAAAAAAP//wAAAAAAAAAAAP//wAAAAAAAAAACf//gAAAAAAAAAAA///gAAAAAAAAAAAf//gAAAAAAAAAAAf//gAAAAAAAAAAA7//AAAAAAAAAAAAD/+AAAAAAAAAAAAH/8AAAAAAAAAAAAH/8AAAAAAAAAAAAB/4AAAAAAAAAAAAAfgAAAAAAAAAAAAAEAAAAAAAAAAAAAAQAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAHwAAAAAAAAAAAAAfAAAAAAAAAAAAABw="] }, { "k": "crown", "a": -1.633, "S": [34, 42, 16, 41, "AACAAAAAIAAAABgAAAAGAAAAAYAAAABwAAAAPAAAAA8AAAADwAAAAPAAAAA8AAAAHwAAAAfAAAAD+AAAAP4AAAA/gAAAL+AAAA/4AAAD/gAAAP+AAAA/4AAAD/gAAAvzAADH/sADMe+QAI575ABDz/2AgHvP4KAP4fzwA/AHeAD+YO4AH/w/AAP/D+AA/4P4AD/B+AAG8PwAALw/AAAOBgAAA4EAAABAAAAAEAAAAAAAAAA="], "L": [56, 70, 26, 69, "AAAAMAAAAAAAADAAAAAAAAAwAAAAAAAAMAAAAAAAAHAAAAAAAABwAAAAAAAAcAAAAAAAAHAAAAAAAAD4AAAAAAAA+AAAAAAAAPgAAAAAAAH4AAAAAAAB+AAAAAAAAfgAAAAAAAH4AAAAAAAB+AAAAAAAAfwAAAAAAAH8AAAAAAAD/AAAAAAAB/wAAAAAAAf8AAAAAAAH/AAAAAAAB/wAAAAAAA/+AAAAAAAP/gAAAAAAj/4AAAAAAI/+AAAAAABv/wAAAAAA//8AAAAAAP//AAAAAAD//wAAAAAA//8AAAAAAP//AAAAAAB//wAAAAAAf/8AAAAAAH//AAAAAAJ/9wAAAAAHf+OAAAIAD3/jgAAGHA/384AADx4P5/OAAA4eD+/xgAAeHw/v8YAAGB+P7/GAAAAPx/v9wAMAB+fx/+A7AAf34f/gfgAD/8D/8fwAA/+Aw/H8AAP/gMPz+AAD/8HA+PAAAf/fwP/wAAD/38B/4AAAP9/h//AAAD/f4H/4AAB/39D/8AAAf94A/+AAAD/+Af8AAAA//gH/IAAAHv4D/yAAAA5+A/4AAAACfAP+AAAAAHgBwAAAAAD4AcAAAAAA+AGAAAAAADgAAAAAAAAwAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA=="] }, { "k": "jet", "a": -0.578, "S": [51, 32, 1, 32, "AAAMAAAAAAADAAAAAAAAAAAAAAAAAAAAAAAAA/4AAAAAEf+AAAAAAP/gAAAAB//4AAAAAOA+AAAAADgHgAAAAA4E+AAAAAGAHwAAAAAQAeAAAAAAABwwcB/AAAPfv4H4gAB///P+GAAf////h4AT////4Pz4////wB//PEH/wAfzzAAHwADwIAAA+AAcAAAAPgADAAAADAAAAAAABwAAAAAD//AAAAAB/4AAAAAAAYAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"], "L": [86, 54, 1, 53, "AAAAADgAAAAAAAAAAAAD4AAAAAAAAAAAAA4AAAAAAAAAAAAAcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/+AAAAAAAAAAAH//AAAAAAAAAAQP//gAAAAAAAAAGP//4AAAAAAAAAAP//wAAAAAAAAAP///4AAAAAAAAAP///4AAAAAAAAAH8AP+AAAAAAAAAB+YD/gAAAAAAAAAeAA/gAAAAAAAAAfAEf4AAAAAAAAAPABn/AAAAAAAAADwAA/4AAAAAAGAA4ADH+IAAAAAAAAGAgA/iAAAAAAAAAAAAHgAAAAAAAAAAAAB8B4B+AB/8AAAAAfj/j/4Af/AAAAAH/////AH/wAAAAB/////wn/8HAAAAf////+P/8BwAEAP///////8AeABBD////////APgAAw////////gD8ABw///////+AA/4f8P//////8AAP//+P/+H///8AAH///D+BAD//wAAD/8/hwAAAD/hAAA/wDzAAAAA/4QAAP4AwAAAAAf8AAAH4AAAAAAAP+AAAB8AAAAAAAD/gAAAOAAAAAAAB+AAAAAAAAAAAABwAAAAAAAAAAAAB8AAAAAAAAAAH///wAAAAAAAAB////4AAAAAAAAAf///8AAAAAAAAAAD/wAMAAAAAAAAAAHAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="] }, { "k": "jet", "a": -0.319, "S": [45, 28, 1, 22, "AAAAAAC4AAAAAP+AAAAAf/QAAAAP/yAAAAf/8AAAAP/+AAAAH//AAAAd//wAAAH//8AAAD///AAAA///gAAAf//4AAAH///AAAB///8AAAf//+AAAH///wAAA///4AAAe//+AAAGB//4AAAgP///AAeB///4ADAP//8AAIB//gAADj//4AAA////wAAA////AAAAf//4AAAAfAQAAAA="], "L": [74, 46, 1, 36, "AAAAAAAAAAAHwAAAAAAAAAP/8AAAAAAAAAP/+AAAAAAAAA///AAAAAAAAD//+QAAAAAAAH///MAAAAAAAP///gAAAAAAAf///gAAAAAAAf///wAAAAAABf///wAAAAAAAf///wAAAAAAOH///4AAAAAAPn///8AAAAAAH/////AAAAAAH////+AAAAAAH/////AAAAAAB/////gAAAAAB/////gAAAAAB/////wAAAAAA/////4AAAAAAP////8AAAAAAP/////wAAAAAH/////8AAAAAH/////8AAAAAB//////AAAAAB//////gAAAAAf/////gAAAAAf/////4AAAAAHw////wAAAAABwH///8AAAAAB4A////wAAAAA4AH/////gAAAeAB/////+AAAHwAf/////gAAD4Af/////gAAA4AD/////AAAAAAB////+AAAADwB////gAAAAA8H////AAAAAAP/////8AAAAAP//////wAAAAAP//////AAAAAAA/////8AAAAAAf////8AAAAAAH////wAAAAAAAB/gAAAAAAAA"] }];
 "use strict";
 const QZ_VERSION='29.6';
-const QZ_NOTE='Vitrine de Z-Coin: cards com rolagem lateral, aba Z-COIN na loja e botão no menu';
+const QZ_NOTE='Vitrine de Z-Coin com rolagem lateral, loja de lendárias em seções e botão Z-COIN no menu';
 // Modo de teste: ligado e desligado pelo código em Ajustes › Resgatar código, só nesta sessão (some ao recarregar).
 // REGRA: com o modo ligado nada é salvo (local ou nuvem) e nada conta para ranking, missões ou passe.
 // Ao desligar, o save volta a ser exatamente o de antes de ligar (DEV.bak).
@@ -24807,7 +24827,15 @@ function showMShop() {
   document.querySelectorAll("#msTabs button").forEach((b) => b.classList.toggle("on", b.dataset.t === msTab));
   g2.innerHTML = "";
   if (msTab === "up") msTab = "skin";
-  $("mshop").classList.toggle("zcOn", msTab === "zc");
+  $("mshop").classList.toggle("zcOn", msTab === "zc" || msTab === "lend");
+  if (msTab === "lend") {
+    const zb = $("msZcBox"), sy = zb.scrollTop;
+    zb.innerHTML = LEND.html();
+    LEND.mount(zb);
+    $("msNote").textContent = "Lendárias são só visual. Toque no preço e depois em CONFIRMAR.";
+    UI.show("mshop");
+    return;
+  }
   if (msTab === "zc") {
     const zb = $("msZcBox");
     zb.innerHTML = ECO.storeApp ? '<p class="ecNote">A compra de Z-Coin não está disponível neste app.</p>' : ZSHOP.html();
@@ -26745,11 +26773,8 @@ const ECO = {
       B.querySelectorAll(".chCard canvas[data-th]").forEach((c) => LOOK.thumb(c, [c.dataset.th]));
     } else {
       let h = this.storeApp ? "" : ZSHOP.html();
-      if (!this.storeApp && (d.shop || []).length) h += '<div class="zcHd">ROUPAS POR Z-COIN</div>';
-      (d.shop || []).forEach((it) => {
-        const own = this.items.indexOf(it.id) >= 0 || (d.items || []).indexOf(it.id) >= 0;
-        h += '<div class="ecRow"><div><b>' + esc(this.name(it.id)) + "</b><small>" + (it.kind === "pack" ? "Jaqueta zumbi (lendária) + jaqueta neon + moletom roxo + 50 Z-Coin" : it.rarity >= 3 ? "Lendária" : "Rara") + "</small></div>" + (own ? "<b>✓ SUA</b>" : '<button class="btn yo" data-act="item" data-id="' + it.id + '">' + it.price + " Z</button>") + "</div>";
-      });
+      const nL = LEND.list().length;
+      if (nL) h += '<div class="ecRow"><div><b>★ LOJA DE LENDÁRIOS</b><small>' + nL + ' roupas lendárias por Z-Coin, em seções com destaque.</small></div><button class="btn yo" data-golend="1">VER ›</button></div>';
       B.innerHTML = h;
       ZSHOP.mount(B);
     }
@@ -27534,21 +27559,56 @@ const ZPAY = {
   busy: 0,
   get() { try { const o = JSON.parse(localStorage.getItem(this.LS) || "null"); return o && Date.now() - o.t < 864e5 ? o : null; } catch (e) { return null; } },
   put(o) { try { o ? localStorage.setItem(this.LS, JSON.stringify(o)) : localStorage.removeItem(this.LS); } catch (e) {} },
-  ov(state, title, sub) {
+  ov(state, title, sub, xIn) {
     const el = $("zpOv");
     el.className = state ? state : "hidden";
     $("zpT").textContent = title || ""; $("zpS").textContent = sub || "";
     $("zpWait").classList.toggle("hidden", state !== "wait");
     $("zpOk").classList.toggle("hidden", state === "wait");
+    clearTimeout(this.tmX); $("zpX").classList.add("hidden");
+    if (state === "wait" && xIn != null) this.tmX = setTimeout(() => $("zpX").classList.remove("hidden"), xIn);
+    if (!state) document.querySelectorAll("[data-act=pack]").forEach((b) => b.disabled = false);
+  },
+  // jogador fechou a espera: para de esperar a página abrir; o pedido (se já existe) segue guardado
+  quit() {
+    this.go = this.left = null; this.hid = 1; clearTimeout(this.tmo);
+    this.ov(0);
+  },
+  // voltou pro jogo depois de ir pra InfinitePay sem a compra aprovada
+  ret() {
+    if (!this.left || $("zpOv").className !== "wait") return;
+    this.go = this.left = null; clearTimeout(this.tmo);
+    const pend = this.get();
+    const nope = () => this.ov("info", "COMPRA NÃO FINALIZADA", "Você voltou antes de concluir o pagamento. Se pagou e a InfinitePay aprovar depois, a Z-Coin entra sozinha na sua conta e o jogo avisa.");
+    if (!pend || !NET.logged) return nope();
+    this.ov("wait", "CONFERINDO O PEDIDO", "Um instante...", 0);
+    let done = 0;
+    const end = (f) => { if (done || $("zpOv").className !== "wait") return; done = 1; f(); };
+    setTimeout(() => end(nope), 1e4);
+    NET.fn("zcoin-checkout", { action: "confirm", order: pend.order }).then((r) => {
+      const st = r && r.status;
+      if (st === "paid") return end(() => this.paid(r.zcoin || pend.z));
+      if (st === "failed" || st === "invalid") this.put(null);
+      end(nope);
+    }, () => end(nope));
   },
   buy(p) {
     if (!NET.logged) return Promise.reject(new Error("SEM_LOGIN"));
-    this.ov("wait", "ABRINDO O PAGAMENTO", p.n + " · " + (p.z + p.b) + " Z-Coin · " + p.p);
+    const go = this.go = {}; this.left = null;
+    this.ov("wait", "ABRINDO O PAGAMENTO", p.n + " · " + (p.z + p.b) + " Z-Coin · " + p.p, 0);
+    clearTimeout(this.tmo);
+    this.tmo = setTimeout(() => {
+      if (this.go !== go || document.hidden) return;
+      this.go = this.left = null;
+      this.ov("info", "O PAGAMENTO NÃO ABRIU", "A página da InfinitePay demorou demais para abrir. Confira a internet e tente de novo. Se pagou, a Z-Coin entra sozinha quando for aprovada.");
+    }, 25e3);
     return NET.fn("zcoin-checkout", { action: "create", pack: p.id }).then((r) => {
+      if (this.go !== go) return;
       if (!r || !r.url || !/^https:\/\/([a-z0-9-]+\.)*infinitepay\.io\//i.test(r.url)) throw new Error("CHECKOUT_FALHOU");
       this.put({ order: r.order, z: r.zcoin, t: Date.now() });
+      this.left = go;
       location.href = r.url;
-    }, (e) => { this.ov(0); throw e; });
+    }).catch((e) => { if (this.go !== go) return; this.go = null; clearTimeout(this.tmo); this.ov(0); throw e; });
   },
   // volta do checkout: ?zcpay=1&order_nsu=...&transaction_nsu=...&slug=...&receipt_url=...
   fromUrl() {
@@ -27564,9 +27624,9 @@ const ZPAY = {
     const order = back && back.order || pend && pend.order;
     if (!order || this.busy || !NET.logged) return;
     if (pend && back && back.order && pend.order !== back.order) this.put(null);
-    this.busy = 1;
+    this.busy = 1; this.hid = 0;
     const z = pend && pend.z;
-    if (back) this.ov("wait", "CONFIRMANDO SUA COMPRA", "Estamos conferindo o pagamento com a InfinitePay. Não feche o jogo.");
+    if (back) this.ov("wait", "CONFIRMANDO SUA COMPRA", "Estamos conferindo o pagamento com a InfinitePay. Não feche o jogo.", 8e3);
     const body = { action: "confirm", order, transaction_nsu: back && back.tx || void 0, slug: back && back.slug || void 0, receipt_url: back && back.receipt || void 0 };
     const t0 = Date.now();
     const step = () => NET.fn("zcoin-checkout", body).then((r) => {
@@ -27575,12 +27635,13 @@ const ZPAY = {
       if (st === "failed" || st === "unknown" || st === "invalid") return this.bad(back);
       // ainda pendente: o aviso da InfinitePay pode demorar alguns segundos
       const age = Date.now() - t0;
+      if (back && this.hid) back = null;
       if (back && age < 18e4) return new Promise((ok) => setTimeout(ok, age < 3e4 ? 3e3 : 8e3)).then(step);
       this.busy = 0;
       if (back) this.ov("info", "PAGAMENTO EM ANÁLISE", "A InfinitePay ainda não aprovou. Assim que aprovar, a Z-Coin entra sozinha na sua conta e o jogo avisa.");
     }, () => {
       this.busy = 0;
-      if (back) this.ov("info", "SEM CONEXÃO", "Não deu para conferir agora. Quando a internet voltar, o jogo confere de novo sozinho.");
+      if (back && !this.hid) this.ov("info", "SEM CONEXÃO", "Não deu para conferir agora. Quando a internet voltar, o jogo confere de novo sozinho.");
     });
     step();
   },
@@ -27593,10 +27654,12 @@ const ZPAY = {
   },
   bad(back) {
     this.busy = 0; this.put(null);
-    if (back) this.ov("info", "COMPRA NÃO CONFIRMADA", "O pagamento não foi aprovado ou não bate com o pedido. Se o dinheiro saiu, fale com a gente em Ajustes › Feedback com o comprovante.");
+    if (back && !this.hid) this.ov("info", "COMPRA NÃO CONFIRMADA", "O pagamento não foi aprovado ou não bate com o pedido. Se o dinheiro saiu, fale com a gente em Ajustes › Feedback com o comprovante.");
   }
 };
-$("zpOk").onclick = () => { ZPAY.ov(0); UI.show("title"); };
+$("zpOk").onclick = () => { ZPAY.ov(0); if ($("ecoScr").classList.contains("hidden")) UI.show("title"); };
+$("zpX").onclick = () => ZPAY.quit();
+addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("zpX").classList.contains("hidden") && $("zpOv").className === "wait") ZPAY.quit(); });
 ZPAY.open = () => {
   SFX.swap && SFX.swap();
   if (!ECO.ready) { msTab = "zc"; showMShop(); return; }
@@ -27616,19 +27679,21 @@ const ZSHOP = {
     return h + '</div><button class="zcArr r" aria-label="Próximo">&rsaquo;</button></div><div class="zcDots">' + P.map(() => "<i></i>").join("") + "</div>";
   },
   mount(root) {
-    const w = root.querySelector(".zcShop");
-    if (!w) return;
-    const rail = w.querySelector(".zcRail"), L = w.querySelector(".zcArr.l"), R = w.querySelector(".zcArr.r"), dots = [...root.querySelectorAll(".zcDots i")];
-    root.querySelectorAll(".zcCard .ic.zc").forEach((e) => e.style.backgroundImage = `url(${ICON_ZC})`);
-    rail.querySelectorAll("canvas[data-zc]").forEach((c) => this.art(c, +c.dataset.zc));
-    const step = () => { const c = rail.querySelector(".zcCard"); return c ? c.offsetWidth + 10 : rail.clientWidth * 0.8; };
+    root.querySelectorAll(".ic.zc").forEach((e) => e.style.backgroundImage = `url(${ICON_ZC})`);
+    root.querySelectorAll("canvas[data-zc]").forEach((c) => this.art(c, +c.dataset.zc));
+    root.querySelectorAll(".zcShop").forEach((w) => this.wire(w));
+  },
+  // um trilho: setas, pontinhos (se houver .zcDots logo depois), roda do mouse, arrasto e teclado
+  wire(w) {
+    const rail = w.querySelector(".zcRail"), L = w.querySelector(".zcArr.l"), R = w.querySelector(".zcArr.r"), dw = w.nextElementSibling && w.nextElementSibling.classList.contains("zcDots") ? w.nextElementSibling : null, dots = dw ? [...dw.children] : [];
+    const step = () => { const c = rail.firstElementChild; return c ? c.offsetWidth + 10 : rail.clientWidth * 0.8; };
     const upd = () => {
       const max = rail.scrollWidth - rail.clientWidth - 2;
       L.disabled = rail.scrollLeft <= 2;
       R.disabled = rail.scrollLeft >= max;
       const k = max <= 0 ? -1 : Math.round(rail.scrollLeft / step());
       dots.forEach((d, i) => d.classList.toggle("on", max <= 0 || i === k || (rail.scrollLeft >= max && i >= dots.length - Math.round(rail.clientWidth / step()))));
-      root.querySelector(".zcDots").style.visibility = max <= 0 ? "hidden" : "";
+      if (dw) dw.style.visibility = max <= 0 ? "hidden" : "";
     };
     L.onclick = () => { SFX.swap && SFX.swap(); rail.scrollBy({ left: -step(), behavior: "smooth" }); };
     R.onclick = () => { SFX.swap && SFX.swap(); rail.scrollBy({ left: step(), behavior: "smooth" }); };
@@ -27736,6 +27801,88 @@ const ZSHOP = {
     }
   }
 };
+const LEND = {
+  // seções: DESTAQUE (as de 900 Z ou mais) e o resto por parte do corpo
+  SECS: [["feat", "DESTAQUE", "As mais caras da quebrada"], ["head", "NA CABEÇA", ""], ["body", "ROUPAS", "Peito, pernas e pés"], ["acc", "ACESSÓRIOS", "Máscaras, costas e nas mãos"]],
+  list() {
+    const d = ECO.data;
+    return (d && d.shop || []).filter((it) => it.kind === "item" && it.rarity >= 3 && LOOK.ITEMS[it.id]);
+  },
+  owns(id) { return (ECO.items || []).indexOf(id) >= 0 || (ECO.data && ECO.data.items || []).indexOf(id) >= 0; },
+  sec(it) {
+    if (it.price >= 900) return "feat";
+    const sl = LOOK.ITEMS[it.id].slot;
+    return sl === "head" ? "head" : sl === "acc" ? "acc" : "body";
+  },
+  html() {
+    if (!ECO.ready || !ECO.data) return '<p class="ecNote">Entre na sua conta para ver a loja de lendários.</p>';
+    const L = this.list(), esc = (t) => String(t).replace(/[<>&"]/g, "");
+    if (!L.length) return '<p class="ecNote">Nenhuma lendária à venda agora. Volte mais tarde.</p>';
+    let h = '<div class="lgTop"><span class="chip"><i class="ic zc"></i><b class="num">' + ECO.zcoin + '</b></span><p>Só lendárias · pague com Z-Coin · arraste para o lado para ver mais</p><button class="btn alt" data-lgzc="1">+ Z-COIN</button></div>';
+    this.SECS.forEach(([k, nm, sub]) => {
+      const it = L.filter((x) => this.sec(x) === k).sort((a, b) => (this.owns(a.id) ? 1 : 0) - (this.owns(b.id) ? 1 : 0) || b.price - a.price);
+      if (!it.length) return;
+      const big = k === "feat";
+      h += '<div class="lgSec' + (big ? " feat" : "") + '"><div class="lgH"><b>' + nm + "</b><small>" + (sub ? sub + " · " : "") + it.length + '</small></div><div class="zcShop"><button class="zcArr l" aria-label="Anterior">&lsaquo;</button><div class="zcRail lgRail" tabindex="0" aria-label="' + nm + '">';
+      it.forEach((x) => {
+        const own = this.owns(x.id), nmI = esc(LOOK.ITEMS[x.id].name);
+        h += '<div class="lgCard' + (big ? " big" : "") + (own ? " own" : "") + '"><canvas data-lg="' + esc(x.id) + '"></canvas><span class="lgTag">LENDÁRIA</span><span class="lgNm">' + nmI + "</span>" +
+          (own ? '<button class="btn alt" disabled>✓ SUA</button>' : '<button class="btn yo' + (ECO.zcoin < x.price ? " poor" : "") + '" data-lend="' + esc(x.id) + '" data-price="' + x.price + '"><i class="ic zc"></i>' + x.price + "</button>") + "</div>";
+      });
+      h += '</div><button class="zcArr r" aria-label="Próximo">&rsaquo;</button></div></div>';
+    });
+    return h;
+  },
+  mount(root) {
+    root.querySelectorAll("canvas[data-lg]").forEach((c) => LOOK.thumb(c, [c.dataset.lg], { full: !!c.dataset.full }));
+    ZSHOP.mount(root);
+  },
+  // primeiro toque arma ("CONFIRMAR"), o segundo (em até 4 s) compra
+  buy(b) {
+    const id = b.dataset.lend, pr = +b.dataset.price, lab = '<i class="ic zc" style="background-image:url(' + ICON_ZC + ')"></i>' + pr;
+    if (ECO.zcoin < pr) {
+      SFX.deny && SFX.deny();
+      UI.toast && UI.toast("FALTA " + (pr - ECO.zcoin) + " Z-COIN", "#c86aff");
+      setTimeout(() => { msTab = "zc"; showMShop(); }, 700);
+      return;
+    }
+    if (this.arm !== b) {
+      if (this.arm) { this.arm.classList.remove("ok"); this.arm.innerHTML = this.arm._lab; }
+      this.arm = b; b._lab = lab;
+      b.classList.add("ok");
+      b.textContent = "CONFIRMAR";
+      clearTimeout(this.t);
+      this.t = setTimeout(() => { if (this.arm === b) { b.classList.remove("ok"); b.innerHTML = lab; this.arm = null; } }, 4e3);
+      return;
+    }
+    this.arm = null;
+    clearTimeout(this.t);
+    b.disabled = true;
+    NET.rpc("buy_item", { p_item: id }).then((r) => {
+      try { NOTIF.acted("item", { dataset: { id } }, r); } catch (e) {}
+      const D = SAVE.d;
+      if (D.inv && D.inv.indexOf(id) < 0) D.inv.push(id);
+      ECO.items = Array.from(new Set((ECO.items || []).concat([id])));
+      SFX.buy && SFX.buy();
+      UI.toast && UI.toast(LOOK.ITEMS[id].name.toUpperCase() + " É SUA!", "#ffc23a");
+      return ECO.got(r);
+    }).then(() => { if (!$("mshop").classList.contains("hidden") && msTab === "lend") showMShop(); }, (e) => {
+      b.disabled = false; b.classList.remove("ok"); b.innerHTML = lab;
+      UI.toast && UI.toast(ecoErr(e), "#ff5a5a");
+    });
+  }
+};
+$("msZcBox").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-lend]");
+  if (b) return LEND.buy(b);
+  if (e.target.closest("button[data-lgzc]")) { SFX.swap && SFX.swap(); msTab = "zc"; showMShop(); }
+});
+$("ecBody").addEventListener("click", (e) => {
+  if (!e.target.closest("button[data-golend]")) return;
+  SFX.swap && SFX.swap();
+  msTab = "lend";
+  showMShop();
+});
 ZSHOP.img = new Image();
 ZSHOP.img.onload = () => document.querySelectorAll("canvas[data-zc]").forEach((c) => ZSHOP.art(c, +c.dataset.zc));
 ZSHOP.img.src = ICON_ZC;
@@ -27759,7 +27906,9 @@ document.querySelectorAll("#zpOv .ic.zc, #bZc .ic.zc").forEach((e) => e.style.ba
 {
   const back = ZPAY.fromUrl();
   setTimeout(() => ZPAY.check(back), back ? 300 : 2500);
-  document.addEventListener("visibilitychange", () => { if (!document.hidden) ZPAY.check(null); });
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) { ZPAY.ret(); ZPAY.check(null); } });
+  addEventListener("pageshow", (e) => { if (e.persisted) { ZPAY.ret(); ZPAY.check(null); } });
+  addEventListener("focus", () => setTimeout(() => ZPAY.ret(), 400));
 }
 let helpBack = "title";
 function showHelp(back) {

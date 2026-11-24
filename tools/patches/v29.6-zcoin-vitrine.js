@@ -247,7 +247,7 @@ rep('document.querySelectorAll("#zpOv .ic.zc").forEach((e) => e.style.background
   'document.querySelectorAll("#zpOv .ic.zc, #bZc .ic.zc").forEach((e) => e.style.backgroundImage = `url(${ICON_ZC})`);');
 
 // versão
-rep("const QZ_VERSION='29.5.1';", "const QZ_VERSION='29.6';");
+s = s.replace(/const QZ_VERSION='[^']*';/, "const QZ_VERSION='29.6';");
 s = s.replace(/const QZ_NOTE='[^']*';/, "const QZ_NOTE='Vitrine de Z-Coin: cards com rolagem lateral, aba Z-COIN na loja e botão no menu';");
 
 fs.writeFileSync(F, s);
