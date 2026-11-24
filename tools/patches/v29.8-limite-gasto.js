@@ -1,11 +1,11 @@
-// v29.7: compra de Z-Coin com responsabilidade (ideia 7, aprovada pelo dono em 24/11).
+// v29.8: compra de Z-Coin com responsabilidade (ideia 7, aprovada pelo dono em 24/11).
 //   - Idade perguntada uma vez, antes da primeira compra (o servidor recusa pedido sem idade: IDADE_PENDENTE).
 //   - Menor de 18: aviso de pedir autorização ao responsável a cada compra + teto obrigatório (R$ 50, máx. R$ 100).
 //   - LIMITE DE GASTO: teto mensal opcional. Baixar vale na hora; subir/tirar espera 72 h (o servidor manda).
 //   - MINHAS COMPRAS: todas as compras da conta (zc_my_orders), comprovante e pedido de devolução em até 7 dias
 //     (CDC art. 49). A Z-Coin da compra sai da carteira ao pedir; se for negado, volta.
-// Servidor: supabase/migrations/v29_7_limite_gasto.sql. Não mexe nos baús nem no checkout (só embrulha ZPAY.buy).
-// Uso: node tools/patches/v29.7-limite-gasto.js index.html
+// Servidor: supabase/migrations/v29_8_limite_gasto.sql. Não mexe nos baús nem no checkout (só embrulha ZPAY.buy).
+// Uso: node tools/patches/v29.8-limite-gasto.js index.html
 const fs = require('fs');
 const F = process.argv[2];
 let s = fs.readFileSync(F, 'utf8');
@@ -18,7 +18,7 @@ const rep = (a, b) => {
 // ---------- CSS
 rep('#zpOv.hidden{display:none}',
   '#zpOv.hidden{display:none}\n' +
-  '/* v29.7: limite de gasto e minhas compras */\n' +
+  '/* v29.8: limite de gasto e minhas compras */\n' +
   '.zcMine{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin:8px 0 2px}\n' +
   '.zcMine .btn{font-size:14px;padding:6px 12px;min-height:34px}\n' +
   '.zcMo{flex-basis:100%;text-align:center;font:12px system-ui,sans-serif;color:#cfc4e0}.zcMo:empty{display:none}\n' +
@@ -66,7 +66,7 @@ rep('    root.querySelectorAll(".zcShop").forEach((w) => this.wire(w));\n',
 
 // ---------- lógica
 rep('// v29.6: vitrine de Z-Coin (cards com arte em trilho lateral).',
-  `// v29.7: limite de gasto, idade, minhas compras e devolução. Quem decide é o servidor (v29_7_limite_gasto.sql);
+  `// v29.8: limite de gasto, idade, minhas compras e devolução. Quem decide é o servidor (v29_8_limite_gasto.sql);
 // aqui só se pergunta, mostra e avisa antes de abrir o pagamento.
 Object.assign(ECO_ERR, {
   LIMITE_MES: "Passou do seu limite de gasto do mês",
@@ -195,7 +195,7 @@ const ZLIM = {
     if (!NET.logged) return Promise.resolve(true);
     const cost = this.cents(p);
     return this.load().catch(() => null).then((i) => {
-      // servidor ainda sem a v29.7: segue como antes (ele mesmo não confere teto)
+      // servidor ainda sem a v29.8: segue como antes (ele mesmo não confere teto)
       if (!i) return true;
       return (i.age ? Promise.resolve(true) : this.askAge()).then((go) => {
         if (!go) return false;
@@ -269,9 +269,9 @@ ZPAY.buy = function (p) { return ZLIM.gate(p).then((go) => go ? this.buy0(p) : Z
 // v29.6: vitrine de Z-Coin (cards com arte em trilho lateral).`);
 
 // versão
-rep("const QZ_VERSION='29.6';", "const QZ_VERSION='29.7';");
+rep("const QZ_VERSION='29.7';", "const QZ_VERSION='29.8';");
 s = s.replace(/const QZ_NOTE='[^']*';/, "const QZ_NOTE='Limite de gasto de Z-Coin, aviso para menor de idade, minhas compras e devolução em 7 dias';");
 fs.writeFileSync(F, s);
 const sw = require('path').join(require('path').dirname(F), 'sw.js');
-if (fs.existsSync(sw)) fs.writeFileSync(sw, fs.readFileSync(sw, 'utf8').replace(/qz-v29\.6\b/, 'qz-v29.7'));
-console.log('v29.7 limite de gasto aplicado');
+if (fs.existsSync(sw)) fs.writeFileSync(sw, fs.readFileSync(sw, 'utf8').replace(/qz-v29\.7\b/, 'qz-v29.8'));
+console.log('v29.8 limite de gasto aplicado');

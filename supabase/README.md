@@ -144,7 +144,7 @@ Página em `crm/index.html`, publicada em https://quebradaz.github.io/game/crm/.
 - O endereço `https://quebradaz.github.io/game/crm/` precisa estar em Authentication > URL Configuration > Redirect URLs para o login do Google voltar para o CRM.
 - Teste local: `sh tests/integration/crm/run.sh`.
 
-## Limite de gasto, idade, minhas compras e devolução (v29.7, migração `migrations/v29_7_limite_gasto.sql`)
+## Limite de gasto, idade, minhas compras e devolução (v29.8, migração `migrations/v29_8_limite_gasto.sql`)
 
 - Rodar no SQL Editor depois de `v29_zcoin_checkout` e `v29_5_crm`. Pode rodar de novo sem estragar nada.
 - A Edge Function `zcoin-checkout` **não muda**: `zc_order_open` tem a mesma assinatura e passa a recusar com

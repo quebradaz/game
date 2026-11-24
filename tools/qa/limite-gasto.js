@@ -1,5 +1,5 @@
-// Prints e conferência do limite de gasto / minhas compras (v29.7), no celular deitado e no PC.
-// O servidor é imitado aqui (mesmas respostas das funções de v29_7_limite_gasto.sql); nada sai da máquina.
+// Prints e conferência do limite de gasto / minhas compras (v29.8), no celular deitado e no PC.
+// O servidor é imitado aqui (mesmas respostas das funções de v29_8_limite_gasto.sql); nada sai da máquina.
 // Uso: node tools/qa/limite-gasto.js <pasta-saida> [index.html]
 const { chromium } = require('playwright');
 const fs = require('fs'), path = require('path');

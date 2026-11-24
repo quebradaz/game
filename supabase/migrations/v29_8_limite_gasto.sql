@@ -1,4 +1,4 @@
--- v29.7: compra de Z-Coin com responsabilidade.
+-- v29.8: compra de Z-Coin com responsabilidade.
 --   1. Teto mensal opcional (em reais) que o próprio jogador escolhe. Baixar vale na hora; subir ou tirar
 --      só vale depois de uma espera (padrão 72 h), para segurar compra por impulso.
 --   2. Idade declarada antes da primeira compra. Menor de 18 recebe aviso de pedir autorização ao responsável

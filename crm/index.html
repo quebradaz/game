@@ -445,7 +445,7 @@ td.r,th.r{text-align:right}
             <b class="num">${brl(c.centavos)}</b></button>`).join("") || '<div class="empty">Nenhuma compra ainda. Quando alguém abrir o checkout de Z-Coin, aparece aqui e entra no funil.</div>'}</div></div>`;
     $$("[data-lead]", V).forEach((b) => b.onclick = () => b.dataset.lead && openLead(+b.dataset.lead));
   }
-  // v29.7: pedidos de devolução de Z-Coin (até 7 dias, CDC art. 49). A Z-Coin já saiu da carteira do jogador.
+  // v29.8: pedidos de devolução de Z-Coin (até 7 dias, CDC art. 49). A Z-Coin já saiu da carteira do jogador.
   // Aprovar = fazer o estorno no painel da InfinitePay (pela transação) e marcar aqui. Negar = a Z-Coin volta.
   const RFS = { pedido: ["warn", "em análise"], aprovado: ["ok", "aprovada"], negado: ["bad", "negada"], cancelado: ["", "cancelada pelo jogador"] };
   async function devolucoes() {

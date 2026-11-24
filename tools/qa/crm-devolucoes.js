@@ -1,4 +1,4 @@
-// Prints da tela Devoluções do CRM (v29.7) com o servidor imitado. Nada sai da máquina.
+// Prints da tela Devoluções do CRM (v29.8) com o servidor imitado. Nada sai da máquina.
 // Uso: node tools/qa/crm-devolucoes.js <pasta-saida>
 const { chromium } = require('playwright');
 const fs = require('fs'), path = require('path');
