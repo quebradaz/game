@@ -6,6 +6,7 @@ const OUT = process.argv[2] || 'out', HTML = process.argv[3] || 'index.html';
 fs.mkdirSync(OUT, { recursive: true });
 const VPS = { pc: { width: 1366, height: 768 }, celular: { width: 844, height: 390 } };
 const html = fs.readFileSync(HTML), ROOT = path.dirname(path.resolve(HTML));
+const VWq = (vp) => vp === 'pc' ? 360 : 300;
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const __TV__ = (/TERMS = \{\s*V: "([^"]+)"/.exec(require('fs').readFileSync(process.argv[3] || 'index.html', 'utf8')) || [])[1] || '';
 (async () => {
@@ -64,7 +65,7 @@ const __TV__ = (/TERMS = \{\s*V: "([^"]+)"/.exec(require('fs').readFileSync(proc
     await p.screenshot({ path: `${OUT}/${vp}-3-partida-bots.png` });
     const fight = await p.evaluate(() => ({ botKills: S.stats.botKills || 0, kills: S.stats.kills, pos: S.bots.map((b) => Math.round(b.x - S.player.x)), alive: S.zs.filter((z) => z.state !== 'dead').length }));
     console.log(vp, JSON.stringify(fight));
-    ok(fight.pos.every((d) => Math.abs(d) < 200), vp + ' bots seguem o jogador');
+    ok(fight.pos.every((d) => Math.abs(d) < 320), vp + ' bots seguem o jogador');
     // andar pra direita: bots vêm junto
     await p.evaluate(() => { S.input.move = 1; });
     await p.waitForTimeout(2500);
@@ -72,7 +73,8 @@ const __TV__ = (/TERMS = \{\s*V: "([^"]+)"/.exec(require('fs').readFileSync(proc
     await p.waitForTimeout(1500);
     const fol = await p.evaluate(() => S.bots.map((b) => Math.round(b.x - S.player.x)));
     console.log(vp, 'depois de andar', JSON.stringify(fol));
-    ok(fol.every((d) => Math.abs(d) < 200), vp + ' bots acompanham ao andar');
+    const vw = await p.evaluate(() => VW);
+    ok(fol.every((d) => Math.abs(d) < vw * 0.7), vp + ' bots acompanham ao andar (perto de você, sem grudar)');
     // cair: zumbis param de mirar em você, bot vem levantar
     await p.evaluate(() => { window.__god = 0; S.player.iT = 0; S.player.revive = 0; S.secondUsed = true; S.reviveUsed = true; hurtPlayer(9999); window.__god = 1; for (const b of S.bots) b.iT = 99; });
     await p.waitForTimeout(600);
@@ -101,6 +103,57 @@ const __TV__ = (/TERMS = \{\s*V: "([^"]+)"/.exec(require('fs').readFileSync(proc
     const df = await p.evaluate(() => { const a = zCount(10), sb = S.bots; S.bots = []; const b2 = zCount(10); S.bots = sb; return [a, b2]; });
     console.log(vp, 'zumbis onda 10 com 2 bots / sozinho', df);
     ok(df[0] > df[1], vp + ' dificuldade sobe com bots');
+    // bots de volta, imunes, pro resto do teste
+    await p.evaluate(() => { for (const b of S.bots) { b.down = 0; b.out = 0; b.dead = false; b.hp = b.maxHp; b.iT = 1e9; b.anim = 'Idle'; } });
+    // v29.10: dinheiro individual — abate do bot vai pra carteira dele, nada cai pra você
+    const cash = await p.evaluate(() => {
+      const b = S.bots[0], z = spawnZombie({ x: S.player.x + 80, y: G0 }, 'in', 'ze'), pc = S.player.cash, bc = b.cash, drops = (S.cashD || []).length;
+      S.byBot = b; try { hurtZ(z, 1e6, false, 'gun', 1); } finally { S.byBot = 0; }
+      return { player: S.player.cash - pc, bot: b.cash - bc, drops: (S.cashD || []).length - drops };
+    });
+    console.log(vp, 'grana do abate do bot', JSON.stringify(cash));
+    ok(cash.player === 0 && cash.bot > 0 && cash.drops === 0, vp + ' dinheiro do bot é dele');
+    // limpa a horda e vai pra pausa de compra: bot prega a barricada da sua área
+    await p.evaluate(() => { for (const z of S.zs) z.state = 'dead'; S.toSpawn = S.spawned; S.endT = 0; beginPause(); for (const b of S.bots) { b.job = null; b.iT = 1e9; } });
+    const bar = await p.evaluate(() => {
+      const p0 = S.player; let bi = -1, bd = 1e9;
+      const ixOf = (b) => b.dir === 0 ? b.x : b.x + b.dir * 24;
+      S.bars.forEach((b, i) => { if (b.y !== G0 || b.kind === 'portao') return; const d = Math.abs(ixOf(b) - p0.x); if (d < bd) { bd = d; bi = i; } });
+      if (bi < 0) return null;
+      const b = S.bars[bi], side = b.dir === 0 ? 1 : b.dir;
+      // você fica na sala, a uns 70 px da barricada (do lado de dentro)
+      const x = ixOf(b) + side * 70; S.player.x = x; S.player.y = S.player.gy = G0; S.player.plat = platOf(x, G0, 4) || S.player.plat; S.player.vx = 0;
+      for (const d of M().doors) S.opened[d.id] = 1;
+      b.planks = 1; window.__bar = bi; window.__c0 = S.bots.map((x) => x.cash);
+      return { i: bi, d: Math.round(bd) };
+    });
+    await p.waitForTimeout(12000);
+    await p.screenshot({ path: `${OUT}/${vp}-6-bot-pregando.png` });
+    const rb = await p.evaluate(() => ({ planks: S.bars[window.__bar].planks, gain: S.bots.map((x, i) => x.cash - window.__c0[i]), jobs: S.bots.map((x) => x.job && x.job.k) }));
+    console.log(vp, 'barricada', JSON.stringify(bar), JSON.stringify(rb));
+    ok(bar && rb.planks > 1 && rb.gain.some((g) => g > 0), vp + ' bot prega a barricada e ganha a grana dele');
+    // posição própria: os dois bots não ficam no mesmo lugar nem grudados em você
+    await p.evaluate(() => { const b = S.bars[window.__bar]; b.planks = b.max; for (const x of S.bots) x.job = null; });
+    const sp = [];
+    for (let k = 0; k < 6; k++) { await p.waitForTimeout(1000); sp.push(await p.evaluate(() => S.bots.map((b) => Math.round(b.x - S.player.x)))); }
+    console.log(vp, 'posições', JSON.stringify(sp));
+    const last = sp[sp.length - 1];
+    ok(Math.abs(last[0] - last[1]) > 25 && last.every((d) => Math.abs(d) < 320), vp + ' bots com posição própria');
+    // mudar de área: abre as portas e você vai pra outra sala longe; os bots chegam (andando ou reaparecendo)
+    const go = await p.evaluate(() => {
+      const m = M(); for (const d of m.doors) S.opened[d.id] = 1;
+      const r0 = roomIdx(m, S.player.x), far = m.rooms.filter((r) => r.i !== r0 && Math.abs((r.x0 + r.x1) / 2 - S.player.x) > VW * 0.8).sort((a, b) => Math.abs((a.x0 + a.x1) / 2 - S.player.x) - Math.abs((b.x0 + b.x1) / 2 - S.player.x))[0];
+      if (!far) return null;
+      const x = (far.x0 + far.x1) / 2, pl = platOf(x, G0, 4);
+      if (!pl) return null;
+      S.player.x = x; S.player.y = S.player.gy = G0; S.player.plat = pl; S.player.vx = 0; S.cam.x = clamp(x - VW / 2, 0, m.w - VW);
+      return { from: r0, to: far.i };
+    });
+    await p.waitForTimeout(7000);
+    await p.screenshot({ path: `${OUT}/${vp}-7-area-nova.png` });
+    const ar = await p.evaluate(() => ({ d: S.bots.map((b) => Math.round(b.x - S.player.x)), rooms: S.bots.map((b) => roomIdx(M(), b.x)), me: roomIdx(M(), S.player.x) }));
+    console.log(vp, 'área nova', JSON.stringify(go), JSON.stringify(ar));
+    ok(!go || ar.d.every((d) => Math.abs(d) < 300), vp + ' bots vão pra área nova');
     await ctx.close();
   }
   await b.close();
