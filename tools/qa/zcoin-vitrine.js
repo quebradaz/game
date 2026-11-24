@@ -21,8 +21,12 @@ const html = fs.readFileSync(HTML);
     await p.evaluate(() => {
       NET.logged = 1;
       ECO.refresh = () => Promise.resolve(null);
-      ECO.data = { pass: null, wallet: { chips: 3, zcoin: 250 }, items: [], shop: [{ id: Object.keys(LOOK.ITEMS).find((k) => LOOK.ITEMS[k].rar >= 4), price: 600, rarity: 3 }], missions: [], boxes: 0 };
-      ECO.ready = 1; ECO.chips = 3; ECO.zcoin = 250; ECO.items = [];
+      // catálogo igual ao do servidor (shop_items ativos, 24/11): lendárias de 600 e 900 Z e as raras de 200 Z
+      const L6 = ['zc_chifres_ouro', 'zc_cangaceiro_ouro', 'zc_aureola_neon', 'zc_visor_ouro', 'zc_gas_ouro', 'zc_caveira_ouro', 'zc_prancha_ouro', 'zc_violao_neon', 'zc_taco_ouro', 'zc_camuflada_lava', 'zc_calca_camo_ouro', 'z_jaqueta_zumbi', 'v29_mascara_goleiro', 'v29_camisa_neon_beach', 'z_mochila_dragao', 'z_tenis_ouro', 'zc_coroa_diamante', 'z_capacete_ouro', 'zc_cartola_neon'];
+      const L9 = ['zc_aureola_ouro', 's1_cordao_diamante', 's1_capacete_caveira', 's1_moletom_quebrada', 's1_tatica_sangue', 's1_jaqueta_ouro', 'v29_jetpack_reveillon', 'zc_asas_fenix', 'zc_coroa_fogo'];
+      const shop = L6.map((id) => ({ id, price: 600, rarity: 3, kind: 'item' })).concat(L9.map((id) => ({ id, price: 900, rarity: 3, kind: 'item' })), [{ id: 'zc_abada_neon', price: 200, rarity: 2, kind: 'item' }]);
+      ECO.data = { pass: null, wallet: { chips: 3, zcoin: 700 }, items: ['z_jaqueta_zumbi'], shop, missions: [], boxes: 0 };
+      ECO.ready = 1; ECO.chips = 3; ECO.zcoin = 700; ECO.items = ['z_jaqueta_zumbi'];
       ECO.paint();
       UI.show('title');
     });
@@ -52,6 +56,28 @@ const html = fs.readFileSync(HTML);
     const got = await p.evaluate(() => new Promise((res) => { ZPAY.buy = (pk) => { res(pk.id); return Promise.resolve(); }; document.querySelectorAll('#msZcBox .zcCard .btn')[1].click(); setTimeout(() => res('nada'), 500); }));
     console.log(vp, 'compra', got);
     if (got !== 'saco') bad++;
+    // LOJA › LENDÁRIOS: seções, rolagem, compra em dois toques
+    await p.evaluate(() => { ZPAY.ov(0); msTab = 'skin'; showMShop(); });
+    await p.click('#msLend');
+    await p.waitForTimeout(900);
+    await p.screenshot({ path: `${OUT}/${vp}-5-lendarios.png` });
+    const lg = await p.evaluate(() => ({ secs: [...document.querySelectorAll('#msZcBox .lgH b')].map((e) => e.textContent), cards: document.querySelectorAll('#msZcBox .lgCard').length, raras: document.querySelectorAll('#msZcBox [data-lend="zc_abada_neon"]').length, sua: document.querySelectorAll('#msZcBox .lgCard.own').length }));
+    console.log(vp, 'lendarios', JSON.stringify(lg));
+    if (lg.cards !== 28 || lg.raras || lg.sua !== 1) bad++;
+    await p.evaluate(() => { document.querySelectorAll('#msZcBox .lgRail')[1].scrollBy({ left: 2000 }); document.getElementById('msZcBox').scrollTop = 9999; });
+    await p.waitForTimeout(600);
+    await p.screenshot({ path: `${OUT}/${vp}-6-lendarios-rolado.png` });
+    const buy = await p.evaluate(() => new Promise((res) => {
+      let called = null;
+      NET.rpc = (fn, a) => { called = fn + ':' + a.p_item; return Promise.resolve({ ok: true }); };
+      ECO.got = () => Promise.resolve();
+      const b = document.querySelector('#msZcBox button[data-lend][data-price="600"]');
+      b.click();
+      const armed = b.textContent;
+      setTimeout(() => { b.click(); setTimeout(() => res({ armed, called }), 200); }, 150);
+    }));
+    console.log(vp, 'compra lendaria', JSON.stringify(buy));
+    if (buy.armed !== 'CONFIRMAR' || !/^buy_item:/.test(buy.called || '')) bad++;
     await ctx.close();
   }
   await b.close();

@@ -109,19 +109,21 @@ const ZSHOP = {
     return h + '</div><button class="zcArr r" aria-label="Próximo">&rsaquo;</button></div><div class="zcDots">' + P.map(() => "<i></i>").join("") + "</div>";
   },
   mount(root) {
-    const w = root.querySelector(".zcShop");
-    if (!w) return;
-    const rail = w.querySelector(".zcRail"), L = w.querySelector(".zcArr.l"), R = w.querySelector(".zcArr.r"), dots = [...root.querySelectorAll(".zcDots i")];
-    root.querySelectorAll(".zcCard .ic.zc").forEach((e) => e.style.backgroundImage = \`url(\${ICON_ZC})\`);
-    rail.querySelectorAll("canvas[data-zc]").forEach((c) => this.art(c, +c.dataset.zc));
-    const step = () => { const c = rail.querySelector(".zcCard"); return c ? c.offsetWidth + 10 : rail.clientWidth * 0.8; };
+    root.querySelectorAll(".ic.zc").forEach((e) => e.style.backgroundImage = \`url(\${ICON_ZC})\`);
+    root.querySelectorAll("canvas[data-zc]").forEach((c) => this.art(c, +c.dataset.zc));
+    root.querySelectorAll(".zcShop").forEach((w) => this.wire(w));
+  },
+  // um trilho: setas, pontinhos (se houver .zcDots logo depois), roda do mouse, arrasto e teclado
+  wire(w) {
+    const rail = w.querySelector(".zcRail"), L = w.querySelector(".zcArr.l"), R = w.querySelector(".zcArr.r"), dw = w.nextElementSibling && w.nextElementSibling.classList.contains("zcDots") ? w.nextElementSibling : null, dots = dw ? [...dw.children] : [];
+    const step = () => { const c = rail.firstElementChild; return c ? c.offsetWidth + 10 : rail.clientWidth * 0.8; };
     const upd = () => {
       const max = rail.scrollWidth - rail.clientWidth - 2;
       L.disabled = rail.scrollLeft <= 2;
       R.disabled = rail.scrollLeft >= max;
       const k = max <= 0 ? -1 : Math.round(rail.scrollLeft / step());
       dots.forEach((d, i) => d.classList.toggle("on", max <= 0 || i === k || (rail.scrollLeft >= max && i >= dots.length - Math.round(rail.clientWidth / step()))));
-      root.querySelector(".zcDots").style.visibility = max <= 0 ? "hidden" : "";
+      if (dw) dw.style.visibility = max <= 0 ? "hidden" : "";
     };
     L.onclick = () => { SFX.swap && SFX.swap(); rail.scrollBy({ left: -step(), behavior: "smooth" }); };
     R.onclick = () => { SFX.swap && SFX.swap(); rail.scrollBy({ left: step(), behavior: "smooth" }); };
