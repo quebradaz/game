@@ -143,3 +143,14 @@ Página em `crm/index.html`, publicada em https://quebradaz.github.io/game/crm/.
 - Dar acesso (não fica no repositório): `insert into public.crm_admins (user_id) select id from auth.users where email = '<e-mail>';`
 - O endereço `https://quebradaz.github.io/game/crm/` precisa estar em Authentication > URL Configuration > Redirect URLs para o login do Google voltar para o CRM.
 - Teste local: `sh tests/integration/crm/run.sh`.
+
+## Limite de gasto, idade, minhas compras e devolução (v29.7, migração `migrations/v29_7_limite_gasto.sql`)
+
+- Rodar no SQL Editor depois de `v29_zcoin_checkout` e `v29_5_crm`. Pode rodar de novo sem estragar nada.
+- A Edge Function `zcoin-checkout` **não muda**: `zc_order_open` tem a mesma assinatura e passa a recusar com
+  `IDADE_PENDENTE` (idade nunca informada) e `LIMITE_MES` (o pacote estoura o teto do mês).
+- Valores em `zc_spend_cfg` (uma linha): teto padrão e máximo de menor (R$ 50 / R$ 100), espera para subir o teto (72 h),
+  prazo de devolução (7 dias), janela em que pedido aberto conta no mês (1 h).
+- Jogo (com login): `zc_spend_info`, `zc_age_set`, `zc_limit_set`, `zc_limit_cancel`, `zc_my_orders`, `zc_refund_request`, `zc_refund_cancel`.
+- CRM (só admin): `zc_refunds_list`, `zc_refund_decide`. Aprovar não mexe em dinheiro: o estorno é feito no painel da InfinitePay.
+- Testes: `sh tests/integration/limite/run.sh` (Postgres local).

@@ -261,6 +261,7 @@ td.r,th.r{text-align:right}
       <a class="nv" href="#painel" data-v="painel"><svg class="i"><use href="#i-home"/></svg>Painel</a>
       <a class="nv" href="#jogadores" data-v="jogadores"><svg class="i"><use href="#i-users"/></svg>Jogadores</a>
       <a class="nv" href="#funil" data-v="funil"><svg class="i"><use href="#i-funnel"/></svg>Funil<span class="badge" id="bdg" hidden></span></a>
+      <a class="nv" href="#devolucoes" data-v="devolucoes"><svg class="i"><use href="#i-reload"/></svg>Devoluções<span class="badge" id="bdgRf" hidden></span></a>
     </nav>
     <div class="who"><span>Entrou como</span><b id="whoName"></b>
       <button class="b3 ghost sm" type="button" data-out><svg class="i"><use href="#i-out"/></svg>Sair</button></div>
@@ -279,6 +280,7 @@ td.r,th.r{text-align:right}
     <a href="#painel" data-v="painel"><svg class="i"><use href="#i-home"/></svg>Painel</a>
     <a href="#jogadores" data-v="jogadores"><svg class="i"><use href="#i-users"/></svg>Jogadores</a>
     <a href="#funil" data-v="funil"><svg class="i"><use href="#i-funnel"/></svg>Funil</a>
+    <a href="#devolucoes" data-v="devolucoes"><svg class="i"><use href="#i-reload"/></svg>Devoluções</a>
   </nav>
 </div>
 
@@ -324,7 +326,8 @@ td.r,th.r{text-align:right}
     SEM_ACESSO: "Esta conta não é administradora do CRM.", SEM_LOGIN: "Sua sessão acabou. Entre de novo.", REDE: "Sem conexão com o servidor. Tente de novo.",
     CONFIRMACAO_ERRADA: "O nome digitado não confere.", NAO_PODE_SE_APAGAR: "Você não pode apagar a sua própria conta por aqui.",
     NAO_PODE_APAGAR_ADMIN: "Esta conta é administradora. Tire o acesso dela antes de apagar.", NAO_ENCONTRADO: "Registro não encontrado (talvez já tenha sido apagado).",
-    TEXTO_INVALIDO: "Escreva alguma coisa (até 2.000 letras).", ETAPA_INVALIDA: "Etapa inválida."
+    TEXTO_INVALIDO: "Escreva alguma coisa (até 2.000 letras).", ETAPA_INVALIDA: "Etapa inválida.",
+    DEVOLUCAO_JA_ANALISADA: "Essa devolução já foi analisada.", DEVOLUCAO_NAO_ENCONTRADA: "Devolução não encontrada."
   };
   const msg = (e) => ERR[e && e.message] || (e && e.message) || "Algo deu errado.";
 
@@ -395,14 +398,14 @@ td.r,th.r{text-align:right}
   // ---------- telas
   const V = $("#view");
   let me = null, view = "painel", leadsCache = [];
-  const TITLES = { painel: "Painel", jogadores: "Jogadores", funil: "Funil de compras" };
+  const TITLES = { painel: "Painel", jogadores: "Jogadores", funil: "Funil de compras", devolucoes: "Devoluções" };
   function go() {
     const h = (location.hash || "").slice(1);
     view = TITLES[h] ? h : "painel";
     $("#ttl").textContent = TITLES[view];
     $$("[data-v]").forEach((a) => a.dataset.v === view ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"));
     V.innerHTML = '<div class="spin"></div>';
-    ({ painel, jogadores, funil })[view]().catch(handle);
+    ({ painel, jogadores, funil, devolucoes })[view]().catch(handle);
   }
   function handle(e) {
     if (e && (e.message === "SEM_LOGIN")) return showLogin(ERR.SEM_LOGIN);
@@ -441,6 +444,32 @@ td.r,th.r{text-align:right}
             <span class="chip ${c.status === "paid" ? "ok" : c.status === "failed" ? "bad" : "warn"}">${c.status === "paid" ? "pago" : c.status === "failed" ? "recusado" : "pendente"}</span>
             <b class="num">${brl(c.centavos)}</b></button>`).join("") || '<div class="empty">Nenhuma compra ainda. Quando alguém abrir o checkout de Z-Coin, aparece aqui e entra no funil.</div>'}</div></div>`;
     $$("[data-lead]", V).forEach((b) => b.onclick = () => b.dataset.lead && openLead(+b.dataset.lead));
+  }
+  // v29.7: pedidos de devolução de Z-Coin (até 7 dias, CDC art. 49). A Z-Coin já saiu da carteira do jogador.
+  // Aprovar = fazer o estorno no painel da InfinitePay (pela transação) e marcar aqui. Negar = a Z-Coin volta.
+  const RFS = { pedido: ["warn", "em análise"], aprovado: ["ok", "aprovada"], negado: ["bad", "negada"], cancelado: ["", "cancelada pelo jogador"] };
+  async function devolucoes() {
+    const L = await rpc("zc_refunds_list", { p_status: null });
+    const abertas = L.filter((r) => r.status === "pedido").length;
+    const b = $("#bdgRf"); b.hidden = !abertas; b.textContent = abertas || "";
+    V.innerHTML = `<div class="vh"><div><h2>Devoluções de Z-Coin</h2><p>Pedidos feitos no jogo em até 7 dias depois da compra. A Z-Coin já saiu da carteira do jogador. Para aprovar, faça o estorno no painel da InfinitePay pela transação e depois marque aqui. Negar devolve a Z-Coin.</p></div></div>
+      <div class="card"><div class="rows">${L.map((r) => `<div class="row" style="flex-wrap:wrap">
+        <div class="av">${ini(r.nome)}</div>
+        <div class="grow"><div class="t">${esc(r.nome)} · ${int(r.zcoin)} Z-Coin · <b class="num">${brl(r.centavos)}</b></div>
+          <div class="s">Pedido ${dth(r.pedido_em)} · pago ${dth(r.pago_em)} · ${esc(r.metodo || "—")} · transação <span class="mono">${esc(r.transacao || "—")}</span></div>
+          ${r.motivo ? `<div class="s">Motivo: ${esc(r.motivo)}</div>` : ""}${r.nota ? `<div class="s">Resposta: ${esc(r.nota)}</div>` : ""}</div>
+        <span class="chip ${RFS[r.status][0]}">${RFS[r.status][1]}</span>
+        ${r.status === "pedido" ? `<div style="display:flex;gap:8px;flex-basis:100%;justify-content:flex-end;flex-wrap:wrap"><input class="inp" data-rfn="${r.id}" placeholder="Resposta ao jogador (opcional)" maxlength="300" style="flex:1;min-width:180px">
+          <button class="b3 sm" type="button" data-rfok="${r.id}"><svg class="i"><use href="#i-check"/></svg>Estornei, aprovar</button>
+          <button class="b3 danger sm" type="button" data-rfno="${r.id}"><svg class="i"><use href="#i-x"/></svg>Negar</button></div>` : ""}
+      </div>`).join("") || '<div class="empty">Nenhum pedido de devolução.</div>'}</div></div>`;
+    const decide = (id, ok) => {
+      const n = $(`[data-rfn="${id}"]`, V);
+      if (!confirm(ok ? "Confirma que o estorno já foi feito na InfinitePay?" : "Negar a devolução? A Z-Coin volta para o jogador.")) return;
+      rpc("zc_refund_decide", { p_refund: id, p_ok: ok, p_note: n ? n.value.trim() : null }).then(() => { toast(ok ? "Devolução aprovada" : "Devolução negada, Z-Coin devolvida"); return devolucoes(); }).catch((er) => toast(msg(er)));
+    };
+    $$("[data-rfok]", V).forEach((x) => x.onclick = () => decide(+x.dataset.rfok, true));
+    $$("[data-rfno]", V).forEach((x) => x.onclick = () => decide(+x.dataset.rfno, false));
   }
   function setBadge(n) { const b = $("#bdg"); b.hidden = !n; b.textContent = n || ""; }
 
