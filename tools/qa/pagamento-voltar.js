@@ -18,7 +18,7 @@ const __TV__ = (/TERMS = \{\s*V: "([^"]+)"/.exec(require('fs').readFileSync(proc
   const b = await chromium.launch();
   for (const [vp, opt] of Object.entries(VPS)) {
     const ctx = await b.newContext(opt);
-    await ctx.addInitScript((v) => { try { localStorage.setItem('qz_terms', JSON.stringify({ v })); } catch (e) {} }, __TV__); // termos já aceitos (v29.10)
+    await ctx.addInitScript((v) => { try { localStorage.setItem('qz_terms', JSON.stringify({ v })); } catch (e) {} }, __TV__); // termos já aceitos (v29.11)
     await ctx.addInitScript(() => { try { const d = JSON.parse(localStorage.getItem('qz_save') || '{}'); d.created = 1; d.matches = 3; localStorage.setItem('qz_save', JSON.stringify(d)); } catch (e) {} });
     await ctx.route('http://localhost/**', (r) => { const u = new URL(r.request().url()); if (u.pathname === '/' || u.pathname === '/index.html') return r.fulfill({ body: html, contentType: 'text/html' }); const f = path.join(path.dirname(HTML), u.pathname); return fs.existsSync(f) ? r.fulfill({ path: f }) : r.fulfill({ status: 404 }); });
     // página de pagamento: 204 = o navegador não sai do jogo (simula ir e voltar sem recarregar)
@@ -44,7 +44,10 @@ const __TV__ = (/TERMS = \{\s*V: "([^"]+)"/.exec(require('fs').readFileSync(proc
       ZPAY.open();
       ECO.show('shop');
     }, cfg);
-    const buy = () => p.evaluate(() => document.querySelectorAll('[data-act=pack]')[3].click());
+    // v29.11: depois do toque no pacote vem o aviso de entrega imediata; confirma e segue
+    const buy = () => p.evaluate(() => document.querySelectorAll('[data-act=pack]')[3].click())
+      .then(() => p.waitForFunction(() => document.querySelector('#zhBody [data-zq=ok]') && $('zhOv').className === 'ask', null, { timeout: 3000 }).catch(() => {}))
+      .then(() => p.evaluate(() => { const o = document.querySelector('#zhBody [data-zq=ok]'); if (o && $('zhOv').className === 'ask') o.click(); }));
 
     // 1) VOLTAR aparece na hora e fecha a espera, reativando o COMPRAR
     await mock({ create: 'never' });

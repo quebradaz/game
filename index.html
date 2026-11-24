@@ -1198,6 +1198,7 @@ body.hudEditing #hud *{pointer-events:none!important}
 #tmOv .tmMsg:empty{display:none}#tmOv .tmMsg{text-align:center;font:12px system-ui,sans-serif;color:#ffb0b0}
 .tmLegal{margin:8px 0 0;font:12px/1.4 system-ui,sans-serif;color:#b8b0c8;text-align:center}.tmLegal a{color:#7dff6a}
 .tmRow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0}
+#zhOv .zhBody a{color:#7dff6a}
 .zcLegal{flex-basis:100%;text-align:center;font:12px system-ui,sans-serif}.zcLegal a{color:#cfc4e0}
 @media (max-height:500px){#tmOv{padding:6px}#tmOv .tmHead{font-size:18px;padding-top:8px}#tmOv .tmBody{font-size:13px}#tmOv label{padding:5px 8px;font-size:13px}#tmOv label input{width:20px;height:20px}#tmOv .tmFoot{padding:6px 10px 8px;gap:5px}#tmOv .tmFoot .btn{min-height:38px;padding:4px 10px}}
 #zhOv .zhBox{width:min(560px,100%);max-height:100%;display:flex;flex-direction:column;box-sizing:border-box;background:linear-gradient(#221b31,#141019);border:2px solid #000;box-shadow:inset 0 0 0 2px #5b3a8a,0 0 40px rgba(176,74,255,.35);border-radius:10px;overflow:hidden}
@@ -28799,6 +28800,15 @@ addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("zhOv").classL
 // toda compra passa pela conferência de idade/limite antes de abrir o pagamento
 ZPAY.buy0 = ZPAY.buy;
 ZPAY.buy = function (p) { return ZLIM.gate(p).then((go) => go ? this.buy0(p) : ZLIM.free()); };
+// v29.10: o jogador confirma que a Z-Coin é entregue na hora e que, depois de gasta, não tem devolução
+ZPAY.buyNow = ZPAY.buy0;
+ZPAY.buy0 = function (p) {
+  return ZLIM.ask("CONFIRA ANTES DE PAGAR", "<p><b>" + ZLIM.esc(p.n) + " · " + ZLIM.brl(ZLIM.cents(p)) + "</b></p>" +
+    '<div class="zhBox2">A Z-Coin cai na sua conta <b>assim que o pagamento for confirmado</b>.</div>' +
+    "<p>Você pode pedir o dinheiro de volta em até 7 dias <b>só se toda a Z-Coin desta compra ainda estiver na carteira</b>. Depois de gastar em item, baú ou passe, não tem devolução.</p>" +
+    '<p><small>Cobrança em dobro ou Z-Coin que não chegou: sempre corrigimos. <a href="termos.html#devolucao" target="_blank" rel="noopener">Regras completas</a></small></p>',
+    [["ok", "ENTENDI, IR PARA O PAGAMENTO", "yo"], ["", "VOLTAR"]]).then((v) => v === "ok" ? this.buyNow(p) : ZLIM.free());
+};
 // v29.6: vitrine de Z-Coin (cards com arte em trilho lateral). Usada em Passe e Loja › Z-COIN e em LOJA › Z-COIN.
 const ZSHOP = {
   html() {

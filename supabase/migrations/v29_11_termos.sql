@@ -1,4 +1,4 @@
--- v29.10: termos de uso e proteção legal.
+-- v29.11: termos de uso e proteção legal.
 --   1. Aceite dos Termos de Uso e da Política de Privacidade guardado no servidor, por versão, com a hora do
 --      servidor (prova de que a pessoa aceitou aquela versão). O jogo pede o aceite de novo quando a versão muda.
 --   2. Baú de sorteio pago (chest_shop.reveal = false) só para quem declarou 18 anos ou mais.

@@ -1,4 +1,4 @@
-// Prints e conferência dos termos de uso (v29.10): aceite no primeiro acesso, termos atualizados, links e baú 18+.
+// Prints e conferência dos termos de uso (v29.11): aceite no primeiro acesso, termos atualizados, links e baú 18+.
 // O servidor é imitado aqui; nada sai da máquina.
 // Uso: node tools/qa/termos.js <pasta-saida> [index.html]
 const { chromium } = require('playwright');
@@ -115,10 +115,24 @@ const route = (ctx) => ctx.route('http://localhost/**', (r) => {
     await p.waitForTimeout(200);
     await p.screenshot({ path: `${OUT}/${vp}-8-vitrine-link.png` });
     ok(await p.evaluate(() => { const a = document.querySelector('#msZcBox .zcLegal a'); return !!a && a.getAttribute('href') === 'termos.html#compras'; }), vp + ' vitrine tem link das regras de compra');
+    // 7. aviso de entrega imediata antes de pagar Z-Coin
+    await p.evaluate(() => { window.__paid = null; ZPAY.buyNow = (pk) => { __paid = pk.id; return Promise.resolve(); }; ZPAY.buy0({ id: 'saco', n: 'Saco', p: 'R$ 20,00' }); });
+    await p.waitForTimeout(400);
+    await p.screenshot({ path: `${OUT}/${vp}-9-aviso-antes-de-pagar.png` });
+    ok(await p.evaluate(() => $('zhT').textContent === 'CONFIRA ANTES DE PAGAR' && /R\$ 20,00/.test($('zhBody').textContent) && /não tem devolução/.test($('zhBody').textContent)), vp + ' aviso de entrega imediata aparece com o valor');
+    ok(await p.evaluate(() => { const r = document.querySelector('#zhBody [data-zq=ok]').getBoundingClientRect(); return r.bottom <= innerHeight && r.top >= 0; }), vp + ' botão de pagar cabe na tela');
+    await p.evaluate(() => document.querySelector('#zhBody .zhBtns button:last-child').click());
+    await p.waitForTimeout(200);
+    ok(await p.evaluate(() => __paid === null), vp + ' VOLTAR não abre o pagamento');
+    await p.evaluate(() => { ZPAY.buy0({ id: 'saco', n: 'Saco', p: 'R$ 20,00' }); });
+    await p.waitForTimeout(300);
+    await p.evaluate(() => document.querySelector('#zhBody [data-zq=ok]').click());
+    await p.waitForTimeout(200);
+    ok(await p.evaluate(() => __paid === 'saco'), vp + ' confirmou: segue para o pagamento');
     await ctx.close();
   }
 
-  // 7. páginas dos termos: cabem no celular em pé e no PC, sem rolagem de lado
+  // 8. páginas dos termos: cabem no celular em pé e no PC, sem rolagem de lado
   for (const [vp, size] of Object.entries({ 'celular-em-pe': { width: 390, height: 844 }, pc: { width: 1366, height: 768 } })) {
     const ctx = await b.newContext({ viewport: size, deviceScaleFactor: 2, isMobile: vp !== 'pc', hasTouch: vp !== 'pc' });
     await route(ctx);
