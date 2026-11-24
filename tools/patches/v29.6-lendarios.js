@@ -1,5 +1,5 @@
 // v29.6: LOJA DE LENDÁRIOS. As roupas vendidas por Z-Coin ganham uma loja própria, separada da loja de moedas:
-// só lendárias, em seções (DESTAQUE, NA CABEÇA, ROUPAS, ACESSÓRIOS), cada uma num trilho de cards com rolagem lateral.
+// lendárias e raras vendidas por Z-Coin, em seções (DESTAQUE, NA CABEÇA, ROUPAS, ACESSÓRIOS, RARAS), cada uma num trilho de cards com rolagem lateral.
 // Fica na LOJA (aba "★ LENDÁRIOS"); a aba Z-COIN de Passe e Loja ganha o atalho para ela no lugar da lista de texto.
 // Compra: dois toques (o primeiro arma, o segundo compra) e a mesma RPC de antes, buy_item. Preço e posse vêm do servidor.
 // Aplicar DEPOIS de v29.6-zcoin-vitrine.js (usa ZSHOP e o #msZcBox). Uso: node tools/patches/v29.6-lendarios.js index.html
@@ -32,6 +32,8 @@ rep('#bZc{white-space:nowrap;',
   '.lgCard .btn{margin-top:auto;padding:5px 4px;font-size:16px;min-height:36px;display:inline-flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap}\n' +
   '.lgCard .btn .ic{width:18px;height:18px;flex:0 0 18px}\n' +
   '.lgCard .btn.poor{filter:saturate(.35) brightness(.8)}.lgCard .btn.ok{background:#3ee68a}\n' +
+  '.lgCard.rare{background:linear-gradient(180deg,#2a1840 0%,#150f1d 75%);box-shadow:inset 0 0 0 2px #b070ff,4px 4px 0 rgba(0,0,0,.55)}.lgCard.rare canvas{background:radial-gradient(circle at 50% 58%,rgba(170,90,255,.28),transparent 66%)}.lgCard.rare .lgTag{background:#b070ff;color:#fff}.lgCard.rare .lgNm{color:#ecdcff}\n' +
+  '.lgSec.rare .lgH{border-color:#b070ff}.lgSec.rare .lgH b{color:#d9a6ff}\n' +
   '.lgCard.own{opacity:.72}.lgCard.own .btn{font-size:14px}\n' +
   '@media (max-height:500px){.lgTop p{display:none}.lgTop .btn{min-height:26px;font-size:13px;padding:2px 8px}.lgCard{flex-basis:clamp(112px,21%,150px);padding:5px;gap:3px}.lgCard.big{flex-basis:clamp(150px,28%,210px)}.lgCard canvas{width:auto;height:clamp(64px,24vh,110px);align-self:center}.lgCard .lgNm{font-size:12px}.lgCard .btn{min-height:30px;font-size:14px}.lgH b{font-size:15px}}\n' +
   '#bZc{white-space:nowrap;');
@@ -49,7 +51,7 @@ rep(`  $("mshop").classList.toggle("zcOn", msTab === "zc");
     const zb = $("msZcBox"), sy = zb.scrollTop;
     zb.innerHTML = LEND.html();
     LEND.mount(zb);
-    $("msNote").textContent = "Lendárias são só visual. Toque no preço e depois em CONFIRMAR.";
+    $("msNote").textContent = "Roupas são só visual. Toque no preço e depois em CONFIRMAR.";
     UI.show("mshop");
     return;
   }
@@ -62,19 +64,20 @@ rep(`      if (!this.storeApp && (d.shop || []).length) h += '<div class="zcHd">
         h += '<div class="ecRow"><div><b>' + esc(this.name(it.id)) + "</b><small>" + (it.kind === "pack" ? "Jaqueta zumbi (lendária) + jaqueta neon + moletom roxo + 50 Z-Coin" : it.rarity >= 3 ? "Lendária" : "Rara") + "</small></div>" + (own ? "<b>✓ SUA</b>" : '<button class="btn yo" data-act="item" data-id="' + it.id + '">' + it.price + " Z</button>") + "</div>";
       });`,
   `      const nL = LEND.list().length;
-      if (nL) h += '<div class="ecRow"><div><b>★ LOJA DE LENDÁRIOS</b><small>' + nL + ' roupas lendárias por Z-Coin, em seções com destaque.</small></div><button class="btn yo" data-golend="1">VER ›</button></div>';`);
+      if (nL) h += '<div class="ecRow"><div><b>★ LOJA DE LENDÁRIOS</b><small>' + nL + ' roupas lendárias e raras por Z-Coin, em seções com destaque.</small></div><button class="btn yo" data-golend="1">VER ›</button></div>';`);
 
 // objeto LEND (depois do ZSHOP)
 rep('ZSHOP.img = new Image();',
   `const LEND = {
   // seções: DESTAQUE (as de 900 Z ou mais) e o resto por parte do corpo
-  SECS: [["feat", "DESTAQUE", "As mais caras da quebrada"], ["head", "NA CABEÇA", ""], ["body", "ROUPAS", "Peito, pernas e pés"], ["acc", "ACESSÓRIOS", "Máscaras, costas e nas mãos"]],
+  SECS: [["feat", "DESTAQUE", "As mais caras da quebrada"], ["head", "NA CABEÇA", ""], ["body", "ROUPAS", "Peito, pernas e pés"], ["acc", "ACESSÓRIOS", "Máscaras, costas e nas mãos"], ["rare", "RARAS", "Mais em conta, também por Z-Coin"]],
   list() {
     const d = ECO.data;
-    return (d && d.shop || []).filter((it) => it.kind === "item" && it.rarity >= 3 && LOOK.ITEMS[it.id]);
+    return (d && d.shop || []).filter((it) => it.kind === "item" && it.rarity >= 2 && LOOK.ITEMS[it.id]);
   },
   owns(id) { return (ECO.items || []).indexOf(id) >= 0 || (ECO.data && ECO.data.items || []).indexOf(id) >= 0; },
   sec(it) {
+    if (it.rarity < 3) return "rare";
     if (it.price >= 900) return "feat";
     const sl = LOOK.ITEMS[it.id].slot;
     return sl === "head" ? "head" : sl === "acc" ? "acc" : "body";
@@ -83,15 +86,15 @@ rep('ZSHOP.img = new Image();',
     if (!ECO.ready || !ECO.data) return '<p class="ecNote">Entre na sua conta para ver a loja de lendários.</p>';
     const L = this.list(), esc = (t) => String(t).replace(/[<>&"]/g, "");
     if (!L.length) return '<p class="ecNote">Nenhuma lendária à venda agora. Volte mais tarde.</p>';
-    let h = '<div class="lgTop"><span class="chip"><i class="ic zc"></i><b class="num">' + ECO.zcoin + '</b></span><p>Só lendárias · pague com Z-Coin · arraste para o lado para ver mais</p><button class="btn alt" data-lgzc="1">+ Z-COIN</button></div>';
+    let h = '<div class="lgTop"><span class="chip"><i class="ic zc"></i><b class="num">' + ECO.zcoin + '</b></span><p>Lendárias e raras · pague com Z-Coin · arraste para o lado para ver mais</p><button class="btn alt" data-lgzc="1">+ Z-COIN</button></div>';
     this.SECS.forEach(([k, nm, sub]) => {
       const it = L.filter((x) => this.sec(x) === k).sort((a, b) => (this.owns(a.id) ? 1 : 0) - (this.owns(b.id) ? 1 : 0) || b.price - a.price);
       if (!it.length) return;
       const big = k === "feat";
-      h += '<div class="lgSec' + (big ? " feat" : "") + '"><div class="lgH"><b>' + nm + "</b><small>" + (sub ? sub + " · " : "") + it.length + '</small></div><div class="zcShop"><button class="zcArr l" aria-label="Anterior">&lsaquo;</button><div class="zcRail lgRail" tabindex="0" aria-label="' + nm + '">';
+      h += '<div class="lgSec' + (big ? " feat" : "") + (k === "rare" ? " rare" : "") + '"><div class="lgH"><b>' + nm + "</b><small>" + (sub ? sub + " · " : "") + it.length + '</small></div><div class="zcShop"><button class="zcArr l" aria-label="Anterior">&lsaquo;</button><div class="zcRail lgRail" tabindex="0" aria-label="' + nm + '">';
       it.forEach((x) => {
         const own = this.owns(x.id), nmI = esc(LOOK.ITEMS[x.id].name);
-        h += '<div class="lgCard' + (big ? " big" : "") + (own ? " own" : "") + '"><canvas data-lg="' + esc(x.id) + '"></canvas><span class="lgTag">LENDÁRIA</span><span class="lgNm">' + nmI + "</span>" +
+        h += '<div class="lgCard' + (big ? " big" : "") + (k === "rare" ? " rare" : "") + (own ? " own" : "") + '"><canvas data-lg="' + esc(x.id) + '"></canvas><span class="lgTag">' + (k === "rare" ? "RARA" : "LENDÁRIA") + '</span><span class="lgNm">' + nmI + "</span>" +
           (own ? '<button class="btn alt" disabled>✓ SUA</button>' : '<button class="btn yo' + (ECO.zcoin < x.price ? " poor" : "") + '" data-lend="' + esc(x.id) + '" data-price="' + x.price + '"><i class="ic zc"></i>' + x.price + "</button>") + "</div>";
       });
       h += '</div><button class="zcArr r" aria-label="Próximo">&rsaquo;</button></div></div>';
