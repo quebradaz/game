@@ -16063,10 +16063,12 @@ function killZ(z, head, src) {
   }
   if (z.ab === "bomb" && !z.boomed) {
     z.boomed = 1;
+    const byBot = S.byBot;
     setTimeout(() => {
       if (S.zs.includes(z)) {
         const B = CONFIG.explosives.bomb;
-        explode(z.x, z.y - 14, B.r, B.dmg, B.player);
+        S.byBot = byBot;
+        try { explode(z.x, z.y - 14, B.r, B.dmg, B.player); } finally { S.byBot = 0; }
       }
     }, 350);
   }

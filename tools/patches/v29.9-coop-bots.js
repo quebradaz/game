@@ -183,6 +183,23 @@ rep(`  S.stats.kills++;
     S.roundKills`);
 rep(`      dropCash(z.x, z.y - z.h * 0.55, scaleCash(val * mul), {`, `      dropCash(z.x, z.y - z.h * 0.55, scaleCash(val * mul * (S.byBot ? CONFIG.coop.cashMul : 1)), {`);
 
+// zumbi-bomba derrubado por bot: a explosão também é do bot (não conta como abate seu)
+rep(`  if (z.ab === "bomb" && !z.boomed) {
+    z.boomed = 1;
+    setTimeout(() => {
+      if (S.zs.includes(z)) {
+        const B = CONFIG.explosives.bomb;
+        explode(z.x, z.y - 14, B.r, B.dmg, B.player);
+      }`, `  if (z.ab === "bomb" && !z.boomed) {
+    z.boomed = 1;
+    const byBot = S.byBot;
+    setTimeout(() => {
+      if (S.zs.includes(z)) {
+        const B = CONFIG.explosives.bomb;
+        S.byBot = byBot;
+        try { explode(z.x, z.y - 14, B.r, B.dmg, B.player); } finally { S.byBot = 0; }
+      }`);
+
 // cuspe e lixo acertam bot também
 rep(`    if (p && !p.dead && Math.abs(q.x - p.x) < 10 && q.y > p.y - 62 && q.y < p.y) {
       hurtPlayer(q.dmg, Math.sign(q.vx) * 90);

@@ -56,7 +56,8 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     console.log(vp, JSON.stringify(st));
     ok(st.n === 3, vp + ' partida com 3 atores');
     // começa a onda 6 já com horda
-    await p.evaluate(() => { hurtPlayer = ((h) => function (d, kb) { if (window.__god) return; return h(d, kb); })(hurtPlayer); window.__god = 1; skipPause(); startRound(6); S.spawnT = 0; });
+    await p.evaluate(() => { hurtPlayer = ((h) => function (d, kb) { if (window.__god) return; return h(d, kb); })(hurtPlayer); window.__god = 1; for (const b of S.bots) b.iT = 1e9; skipPause(); startRound(6); S.spawnT = 0; });
+    // no teste ninguém atira por você: os bots ficam imunes até a parte de cair, senão a horda derruba os dois
     await p.waitForTimeout(9000);
     await p.screenshot({ path: `${OUT}/${vp}-3-partida-bots.png` });
     const fight = await p.evaluate(() => ({ botKills: S.stats.botKills || 0, kills: S.stats.kills, pos: S.bots.map((b) => Math.round(b.x - S.player.x)), alive: S.zs.filter((z) => z.state !== 'dead').length }));
