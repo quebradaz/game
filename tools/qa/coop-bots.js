@@ -7,12 +7,14 @@ fs.mkdirSync(OUT, { recursive: true });
 const VPS = { pc: { width: 1366, height: 768 }, celular: { width: 844, height: 390 } };
 const html = fs.readFileSync(HTML), ROOT = path.dirname(path.resolve(HTML));
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+const __TV__ = (/TERMS = \{\s*V: "([^"]+)"/.exec(require('fs').readFileSync(process.argv[3] || 'index.html', 'utf8')) || [])[1] || '';
 (async () => {
   const b = await chromium.launch();
   let bad = 0;
   const ok = (cond, msg) => { console.log((cond ? 'ok  ' : 'FALHOU ') + msg); if (!cond) bad++; };
   for (const [vp, size] of Object.entries(VPS)) {
     const ctx = await b.newContext({ viewport: size, deviceScaleFactor: 2, hasTouch: vp !== 'pc', isMobile: vp !== 'pc' });
+    await ctx.addInitScript((v) => { try { localStorage.setItem('qz_terms', JSON.stringify({ v })); } catch (e) {} }, __TV__); // termos já aceitos (v29.10)
     await ctx.addInitScript(() => {
       try {
         const d = JSON.parse(localStorage.getItem('qz_save') || '{}');

@@ -13,10 +13,12 @@ const VPS = {
 const ok = [], bad = [];
 const expect = (name, cond, info) => { (cond ? ok : bad).push(name + (cond ? '' : ' → ' + JSON.stringify(info))); };
 
+const __TV__ = (/TERMS = \{\s*V: "([^"]+)"/.exec(require('fs').readFileSync(process.argv[3] || 'index.html', 'utf8')) || [])[1] || '';
 (async () => {
   const b = await chromium.launch();
   for (const [vp, opt] of Object.entries(VPS)) {
     const ctx = await b.newContext(opt);
+    await ctx.addInitScript((v) => { try { localStorage.setItem('qz_terms', JSON.stringify({ v })); } catch (e) {} }, __TV__); // termos já aceitos (v29.10)
     await ctx.addInitScript(() => { try { const d = JSON.parse(localStorage.getItem('qz_save') || '{}'); d.created = 1; d.matches = 3; localStorage.setItem('qz_save', JSON.stringify(d)); } catch (e) {} });
     await ctx.route('http://localhost/**', (r) => { const u = new URL(r.request().url()); if (u.pathname === '/' || u.pathname === '/index.html') return r.fulfill({ body: html, contentType: 'text/html' }); const f = path.join(path.dirname(HTML), u.pathname); return fs.existsSync(f) ? r.fulfill({ path: f }) : r.fulfill({ status: 404 }); });
     // página de pagamento: 204 = o navegador não sai do jogo (simula ir e voltar sem recarregar)
