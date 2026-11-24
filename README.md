@@ -69,6 +69,13 @@ O jogo inteiro está em `index.html` (um arquivo só). O progresso fica salvo no
 - Caixa de acerto e ponto de saída do tiro ajustados à arte nova. O jogo ficou ~840 KB mais leve.
 - O desenho é gerado por `tools/capitao/` (`build.py` renderiza as folhas, `embed.py` coloca no `index.html`).
 
+## Novidades da v29.9 — Co-op etapa 1 (parceiros bot)
+- **Tela do mapa:** tocar numa quebrada dá zoom no cenário e mostra a história dela, o horário (continua sorteado) e a escolha de parceiros.
+- **Parceiros bot (até 2):** Juninho e Luana sempre seguem o seu personagem, atiram com reação e mira de gente (erram, demoram pra reagir), dão metade do dano de uma arma igual e não compram nada. Abate deles derruba metade da grana e não conta nos seus abates.
+- **Cair e levantar:** com parceiro de pé você cai em vez de morrer e tem 30 s pra ser levantado. Parceiro caído: segure AÇÃO perto dele. Quem sangrar até o fim volta na próxima onda.
+- **Dificuldade por grupo:** por parceiro, +25% de zumbis por onda, +16% de vida, mais elites e spawn mais rápido, e um nível de pressão acima (valores em `CONFIG.coop`).
+- **Pronto pro online:** `S.players[]` lista quem está na partida (`local`, `bot`, depois `remote`); zumbis miram o ator de pé mais perto.
+
 ## Novidades da v28.9
 - **Passe de batalha visual:** os prêmios aparecem como cartas numa trilha com rolagem lateral, trilha grátis e premium lado a lado, com prévia da roupa.
 - **Área de amigos:** adicione pelo nome do personagem, aceite ou recuse pedidos e veja o ranking só entre amigos.
