@@ -26841,7 +26841,7 @@ const ECO = {
         what += "<small>Sorteio na compra, feito pelo servidor. Faltam para você " + c.left + " de " + c.total + " " + RP[t] + " de hoje.</small></div>";
       }
       const btn = none ? '<button class="btn alt" disabled>VOCÊ TEM TODAS DE HOJE</button>' : full ? '<button class="btn alt" disabled>VOLTE AMANHÃ</button>' : '<button class="btn yo" data-act="chest" data-tier="' + t + '" data-item="' + esc(c.item || "") + '" data-price="' + c.price + '">COMPRAR · ' + c.price + " Z</button>";
-      h += '<div class="chCard t' + t + (none || full ? " off" : "") + '"><canvas class="bx" width="56" height="46" data-bx="' + t + '"></canvas><span class="nm">' + esc(c.name).toUpperCase() + '</span><span class="gt"><b>' + (1 + ex.length) + " itens:</b> " + parts.join(" + ") + "<small>hoje " + c.today + "/" + c.limit + "</small></span><span></span>" + what + btn + "</div>";
+      h += '<div class="chCard t' + t + (none || full ? " off" : "") + '"><canvas class="bx" width="56" height="46" data-bx="' + t + '"></canvas><span class="nm">' + esc(c.name).toUpperCase() + '</span><span class="gt">' + (c.extras ? "<b>" + (1 + ex.length) + " itens:</b> " + parts.join(" + ") : "Sempre uma roupa " + RN[t]) + "<small>hoje " + c.today + "/" + c.limit + "</small></span><span></span>" + what + btn + "</div>";
     });
     return h + "</div>";
   },
