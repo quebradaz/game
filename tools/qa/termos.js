@@ -1,4 +1,4 @@
-// Prints e conferência dos termos de uso (v29.9): aceite no primeiro acesso, termos atualizados, links e baú 18+.
+// Prints e conferência dos termos de uso (v29.10): aceite no primeiro acesso, termos atualizados, links e baú 18+.
 // O servidor é imitado aqui; nada sai da máquina.
 // Uso: node tools/qa/termos.js <pasta-saida> [index.html]
 const { chromium } = require('playwright');

@@ -1,12 +1,12 @@
-// v29.9: termos de uso e proteção legal.
+// v29.10: termos de uso e proteção legal.
 //   - Janela de aceite (#tmOv) antes de entrar no jogo, uma vez por versão dos termos (TERMS.V). Pede duas
 //     confirmações: leu e aceita os Termos e a Privacidade; tem 18+ ou autorização do responsável.
 //     Fica no aparelho (localStorage qz_terms) e, com login, no servidor (terms_accept, com a hora do servidor).
 //   - Links para Termos de Uso e Privacidade no login, em Ajustes e embaixo da vitrine de Z-Coin.
 //   - Baú de sorteio só para 18+: o servidor recusa (BAU_SO_ADULTO / IDADE_PENDENTE_BAU) e o jogo explica
 //     ou pergunta a idade (a mesma pergunta da primeira compra de Z-Coin, ZLIM.askAge).
-// Servidor: supabase/migrations/v29_9_termos.sql. Jogo funciona sem ela (só não grava o aceite no servidor).
-// Uso: node tools/patches/v29.9-termos.js index.html
+// Servidor: supabase/migrations/v29_10_termos.sql. Jogo funciona sem ela (só não grava o aceite no servidor).
+// Uso: node tools/patches/v29.10-termos.js index.html
 const fs = require('fs');
 const F = process.argv[2];
 let s = fs.readFileSync(F, 'utf8');
@@ -19,7 +19,7 @@ const rep = (a, b) => {
 // ---------- CSS
 rep('#zhOv.hidden{display:none}',
   '#zhOv.hidden{display:none}\n' +
-  '/* v29.9: termos de uso */\n' +
+  '/* v29.10: termos de uso */\n' +
   '#tmOv{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;background:rgba(6,4,12,.92);padding:12px}\n' +
   '#tmOv.hidden{display:none}\n' +
   '#tmOv .tmBox{width:min(560px,100%);max-height:100%;display:flex;flex-direction:column;box-sizing:border-box;background:linear-gradient(#221b31,#141019);border:2px solid #000;box-shadow:inset 0 0 0 2px #5b3a8a,0 0 40px rgba(176,74,255,.35);border-radius:10px;overflow:hidden}\n' +
@@ -69,7 +69,7 @@ rep('"<small>Sorteio na compra, feito pelo servidor. Faltam para você "',
   '"<small>Sorteio na compra, feito pelo servidor. Só para maiores de 18 anos. Faltam para você "');
 rep('      if (/OFERTA_MUDOU|LIMITE_BAU_DIA|TUDO_COLETADO/.test(e && e.message || "")) this.refresh().then(() => this.show("box"));\n    });\n  },',
   '      if (/OFERTA_MUDOU|LIMITE_BAU_DIA|TUDO_COLETADO/.test(e && e.message || "")) this.refresh().then(() => this.show("box"));\n' +
-  '      // v29.9: idade ainda não informada -> mesma pergunta da primeira compra de Z-Coin\n' +
+  '      // v29.10: idade ainda não informada -> mesma pergunta da primeira compra de Z-Coin\n' +
   '      if (/IDADE_PENDENTE_BAU/.test(e && e.message || "") && typeof ZLIM !== "undefined") ZLIM.askAge().then((go) => go && UI.toast && UI.toast(ZLIM.info && ZLIM.info.age === "adult" ? "Pronto. Toque em COMPRAR de novo." : ECO_ERR.BAU_SO_ADULTO, "#c86aff"), () => {});\n' +
   '    });\n  },');
 rep('Object.assign(ECO_ERR, {',
@@ -77,7 +77,7 @@ rep('Object.assign(ECO_ERR, {',
 
 // ---------- aceite
 rep('function acctHome() {',
-  `// v29.9: aceite dos Termos de Uso e da Privacidade, uma vez por versão (TERMS.V = data da versão em termos.html)
+  `// v29.10: aceite dos Termos de Uso e da Privacidade, uma vez por versão (TERMS.V = data da versão em termos.html)
 var TERMS = {
   V: "2026-11-24",
   K: "qz_terms",
@@ -118,9 +118,9 @@ function acctHome() {
   TERMS.sync();`);
 
 // versão
-rep("const QZ_VERSION='29.8';", "const QZ_VERSION='29.9';");
+rep("const QZ_VERSION='29.9';", "const QZ_VERSION='29.10';");
 s = s.replace(/const QZ_NOTE='[^']*';/, "const QZ_NOTE='Termos de Uso e Política de Privacidade novos, aceite no primeiro acesso e baú de sorteio só para maiores de 18';");
 fs.writeFileSync(F, s);
 const sw = require('path').join(require('path').dirname(F), 'sw.js');
-if (fs.existsSync(sw)) fs.writeFileSync(sw, fs.readFileSync(sw, 'utf8').replace(/qz-v29\.8\b/, 'qz-v29.9'));
-console.log('v29.9 termos aplicado');
+if (fs.existsSync(sw)) fs.writeFileSync(sw, fs.readFileSync(sw, 'utf8').replace(/qz-v29\.9\b/, 'qz-v29.10'));
+console.log('v29.10 termos aplicado');

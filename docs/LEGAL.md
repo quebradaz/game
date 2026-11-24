@@ -1,4 +1,4 @@
-# Proteção legal do Quebrada Z (v29.9)
+# Proteção legal do Quebrada Z (v29.10)
 
 **Rascunho escrito por IA, não é parecer jurídico.** Antes de publicar, um advogado (consumidor + LGPD + ECA Digital)
 deve revisar `termos.html` e `privacidade.html`. A lista abaixo é o que ele e o dono precisam fechar.
@@ -9,8 +9,8 @@ deve revisar `termos.html` e `privacidade.html`. A lista abaixo é o que ele e o
 |---|---|
 | Termos de Uso (conta, conduta, Z-Coin, devolução 7 dias, limite de gasto, baús, passe, saúde, PI, foro) | `termos.html` |
 | Política de Privacidade (LGPD: dados, bases legais, operadores, retenção, direitos, menores) | `privacidade.html` |
-| Aceite no primeiro acesso e a cada versão nova (`TERMS.V` no jogo = `legal_cfg.terms_version` no banco) | `tools/patches/v29.9-termos.js` |
-| Registro do aceite no servidor, com hora do servidor | `terms_accept` em `supabase/migrations/v29_9_termos.sql` |
+| Aceite no primeiro acesso e a cada versão nova (`TERMS.V` no jogo = `legal_cfg.terms_version` no banco) | `tools/patches/v29.10-termos.js` |
+| Registro do aceite no servidor, com hora do servidor | `terms_accept` em `supabase/migrations/v29_10_termos.sql` |
 | Baú de sorteio pago só para 18+ (ECA Digital) | gatilho `chest_minor_guard` (desligável em `legal_cfg.chest_minor_block`) |
 | Conta excluída pelo jogador some do CRM (nome, e-mail, notas) | gatilho `crm_lead_forget` |
 | Licença "todos os direitos reservados" | `LICENSE` |
