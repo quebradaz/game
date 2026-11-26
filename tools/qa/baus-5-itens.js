@@ -7,12 +7,14 @@ const OUT = process.argv[2] || 'out', HTML = process.argv[3] || 'index.html';
 fs.mkdirSync(OUT, { recursive: true });
 const VPS = { pc: { width: 1366, height: 768 }, celular: { width: 844, height: 390 }, 'celular-pequeno': { width: 667, height: 375 } };
 const html = fs.readFileSync(HTML);
+const __TV__ = (/TERMS = \{\s*V: "([^"]+)"/.exec(require('fs').readFileSync(process.argv[3] || 'index.html', 'utf8')) || [])[1] || '';
 (async () => {
   const b = await chromium.launch();
   let bad = 0;
   const ok = (c, m) => { if (!c) { bad++; console.log('FALHA', m); } };
   for (const [vp, size] of Object.entries(VPS)) {
     const ctx = await b.newContext({ viewport: size, deviceScaleFactor: 2, hasTouch: vp !== 'pc', isMobile: vp !== 'pc' });
+    await ctx.addInitScript((v) => { try { localStorage.setItem('qz_terms', JSON.stringify({ v })); } catch (e) {} }, __TV__); // termos já aceitos (v29.12)
     await ctx.addInitScript(() => { try { const d = JSON.parse(localStorage.getItem('qz_save') || '{}'); d.created = 1; d.matches = 3; d.level = 8; d.coins = 4200; localStorage.setItem('qz_save', JSON.stringify(d)); } catch (e) {} });
     await ctx.route('http://localhost/**', (r) => { const u = new URL(r.request().url()); if (u.pathname === '/' || u.pathname === '/index.html') return r.fulfill({ body: html, contentType: 'text/html' }); const f = path.join(path.dirname(HTML), u.pathname); return fs.existsSync(f) ? r.fulfill({ path: f }) : r.fulfill({ status: 404 }); });
     const p = await ctx.newPage();

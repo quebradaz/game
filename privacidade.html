@@ -2,59 +2,120 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="index,follow">
 <title>Política de Privacidade · Quebrada Z</title>
 <style>
-:root{--bg:#120e1a;--fg:#e8e4f0;--mute:#9a96a8;--acc:#7dff6a}
+:root{--bg:#120e1a;--fg:#e8e4f0;--mute:#9a96a8;--acc:#7dff6a;--box:#1c1628;--line:#3a2f4c;--warn:#ffc23a}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 main{max-width:760px;margin:0 auto;padding:24px 16px 48px}
-h1{font-size:1.6rem;margin:0 0 4px}h2{font-size:1.15rem;margin:28px 0 6px;color:var(--acc)}
-p,li{color:var(--fg)}small,.mute{color:var(--mute)}a{color:var(--acc)}
-ul{padding-left:20px}
+h1{font-size:1.6rem;margin:0 0 4px}h2{font-size:1.15rem;margin:30px 0 6px;color:var(--acc);scroll-margin-top:12px}
+.mute{color:var(--mute)}a{color:var(--acc)}ul{padding-left:22px}li{margin:3px 0}
+.box{background:var(--box);border:1px solid var(--line);border-radius:8px;padding:12px 16px;margin:16px 0}
+.pend{background:rgba(255,194,58,.18);color:var(--warn);padding:0 4px;border-radius:3px}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;margin:8px 0;font-size:.93rem;min-width:520px}
+td,th{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}th{background:var(--box)}
+footer{margin-top:36px;padding-top:12px;border-top:1px solid var(--line)}
 </style>
 </head>
 <body>
 <main>
 <h1>Política de Privacidade</h1>
-<p class="mute">Quebrada Z · em vigor desde 19 de novembro de 2026</p>
+<p class="mute">Quebrada Z · versão 2026-11-24 · em vigor desde 24 de novembro de 2026</p>
+<p>Esta política explica quais dados o jogo Quebrada Z (<a href="https://quebradaz.github.io/game/">quebradaz.github.io/game</a>) coleta, para que usa, com quem compartilha, por quanto tempo guarda e como você exerce seus direitos.
+Ela segue a Lei Geral de Proteção de Dados (LGPD, Lei 13.709/2018) e faz parte dos <a href="termos.html">Termos de Uso</a>.</p>
 
-<p>Esta política explica quais dados o jogo Quebrada Z (<a href="https://quebradaz.github.io/game/">quebradaz.github.io/game</a>) coleta, para que usa e como você pode pedir a exclusão. Ela segue a Lei Geral de Proteção de Dados (LGPD, Lei 13.709/2018).</p>
+<div class="box">
+<b>Em poucas palavras:</b> usamos seus dados para salvar seu jogo, montar o ranking e a área de amigos, processar compras e proteger quem joga.
+Não vendemos dados, não mostramos anúncios e não guardamos cartão. Você pode excluir tudo em PERFIL › EXCLUIR MINHA CONTA.
+</div>
 
-<h2>Quais dados coletamos</h2>
+<h2 id="controlador">1. Quem cuida dos seus dados</h2>
+<p>Controladora: <b>Amplitude Lab</b> (<span class="pend">[RAZÃO SOCIAL]</span>, <span class="pend">[CNPJ]</span>), <span class="pend">[ENDEREÇO COMPLETO]</span>.</p>
+<p>Encarregado pelo tratamento de dados (DPO): <span class="pend">[NOME DO ENCARREGADO]</span>, pelo e-mail <a href="mailto:amplitudelabb@gmail.com">amplitudelabb@gmail.com</a>.</p>
+
+<h2 id="dados">2. Quais dados coletamos</h2>
 <ul>
-<li><b>Da sua conta Google</b>, quando você entra: o identificador da conta e o e-mail. Não recebemos sua senha.</li>
-<li><b>O nome do personagem</b> que você escolhe. Ele aparece no ranking para outros jogadores.</li>
-<li><b>A foto da sua conta Google</b>, que aparece ao lado do nome no ranking. Dá para desligar no site, em Minha conta.</li>
-<li><b>O que você escreve no Feedback</b>, junto com a versão do jogo e o tipo de aparelho (PC, Android ou iOS, e o tamanho da tela).</li>
-<li><b>O progresso do jogo</b>: mapas liberados, nível, habilidades, roupas, moedas do jogo e configurações.</li>
-<li><b>Estatísticas de partida</b>: mapa, onda alcançada, abates, tiros, acertos, chefes derrotados, duração e horário de início e fim.</li>
+<li><b>Conta Google</b>, quando você entra: identificador da conta, e-mail, nome e foto da conta. Não recebemos sua senha.</li>
+<li><b>Perfil</b>: nome do personagem (aparece no ranking e para amigos), aparência e corpo do personagem, nível, se a foto da conta aparece ou não.</li>
+<li><b>Progresso do jogo</b>: mapas liberados, nível, habilidades, roupas, itens, moedas, Z-Coin, passe, missões e configurações.</li>
+<li><b>Estatísticas de partida</b>: mapa, onda alcançada, abates, tiros, acertos, chefes derrotados, duração e horário.</li>
+<li><b>Amigos e jogo online</b>: pedidos de amizade, amizades, se você está on agora (no menu, na sala ou em partida) e a última vez que esteve no jogo; salas online que você criou ou entrou, convites e a troca de sinais para conectar os aparelhos.</li>
+<li><b>Compras de Z-Coin</b>: pacote, valor, data, situação do pedido, forma de pagamento (Pix ou cartão), código da transação e link do comprovante enviados pela InfinitePay. <b>Não recebemos número de cartão nem dados bancários</b>: eles ficam com a InfinitePay.</li>
+<li><b>Idade declarada e limite</b>: se você informou ter 18 anos ou mais ou menos de 18 (não pedimos data de nascimento nem documento), o limite de gasto escolhido e as mudanças agendadas.</li>
+<li><b>Devoluções</b>: pedidos de devolução, o motivo que você escrever e a decisão.</li>
+<li><b>Aceite dos Termos</b>: a versão aceita e a data e hora do aceite.</li>
+<li><b>Feedback</b>: o que você escreve, a versão do jogo e o tipo de aparelho (PC, Android ou iOS e o tamanho da tela).</li>
+<li><b>Dados técnicos</b>: endereço IP, data e hora de acesso e informações do navegador, registrados pelos serviços que hospedam o jogo e o servidor.</li>
+<li><b>No seu aparelho</b>: o jogo guarda no armazenamento do navegador o save, as configurações, a sessão de login e uma cópia do jogo para abrir sem internet. Não usamos cookies de publicidade nem de rastreamento.</li>
 </ul>
-<p>Não coletamos localização, contatos, fotos do aparelho, microfone nem dados de pagamento.</p>
+<p>Não coletamos localização, contatos, fotos do aparelho, microfone, câmera nem dados de pagamento.</p>
 
-<h2>Para que usamos</h2>
+<h2 id="usos">3. Para que usamos e com qual base legal</h2>
+<div class="tw"><table>
+<tr><th>Para quê</th><th>Dados</th><th>Base legal (LGPD, art. 7º)</th></tr>
+<tr><td>Criar a conta, salvar e sincronizar o progresso entre aparelhos</td><td>conta Google, perfil, progresso</td><td>execução do contrato (Termos de Uso), inciso V</td></tr>
+<tr><td>Ranking por mapa, área de amigos e jogo online (presença, perfil, salas, convites, conexão entre aparelhos)</td><td>nome, foto (se ligada), nível, estatísticas, itens, amizades, presença, IP na conexão da partida</td><td>execução do contrato, inciso V</td></tr>
+<tr><td>Vender Z-Coin, entregar, mostrar MINHAS COMPRAS e processar devoluções</td><td>compras, devoluções, e-mail</td><td>execução do contrato, inciso V; cumprimento de obrigação legal (CDC e regras fiscais), inciso II</td></tr>
+<tr><td>Proteger menores: aviso ao responsável, limite obrigatório, trava de baú de sorteio</td><td>idade declarada, limite</td><td>cumprimento de obrigação legal (ECA e ECA Digital), inciso II</td></tr>
+<tr><td>Atendimento a compradores (dúvidas, problemas de pagamento, devoluções) pelo nosso painel interno</td><td>nome, e-mail, histórico de compras, anotações do atendimento</td><td>execução do contrato, inciso V; legítimo interesse, inciso IX</td></tr>
+<tr><td>Manter o jogo justo e seguro: conferir resultados, evitar fraude e trapaça, investigar abuso</td><td>estatísticas, compras, dados técnicos</td><td>legítimo interesse, inciso IX; prevenção à fraude</td></tr>
+<tr><td>Provar que você aceitou os Termos e qual versão</td><td>aceite</td><td>exercício regular de direitos, inciso VI</td></tr>
+<tr><td>Melhorar o jogo a partir do Feedback e de números agregados</td><td>feedback, estatísticas</td><td>legítimo interesse, inciso IX</td></tr>
+<tr><td>Guardar registros de acesso</td><td>IP, data e hora</td><td>obrigação legal (Marco Civil da Internet, art. 15), inciso II</td></tr>
+</table></div>
+<p>Não tomamos decisões automatizadas que afetem seus direitos além das regras do jogo descritas nos Termos (por exemplo, o servidor recusar uma compra acima do limite). Não usamos seus dados para publicidade nem criamos perfil de marketing.
+Se um dia formos mandar mensagens de promoção, pediremos seu consentimento antes, com opção de sair a qualquer momento.</p>
+
+<h2 id="compartilhamento">4. Com quem compartilhamos</h2>
+<p>Não vendemos nem alugamos dados. Compartilhamos só com quem nos ajuda a fazer o jogo funcionar, cada um com o mínimo necessário:</p>
 <ul>
-<li>Salvar seu personagem e seu progresso para você continuar em qualquer aparelho.</li>
-<li>Montar o ranking por mapa (mostra o nome do personagem, a foto da conta se ela estiver ligada e os números da partida).</li>
-<li>Conferir se um resultado enviado é plausível, para manter o ranking justo.</li>
+<li><b>Supabase</b>: banco de dados e login, com servidores em São Paulo (Brasil).</li>
+<li><b>Google</b>: login com a conta Google.</li>
+<li><b>InfinitePay</b>: processa os pagamentos de Z-Coin. Você paga numa página dela, que segue a política de privacidade dela.</li>
+<li><b>GitHub</b> (GitHub Pages): hospeda os arquivos do jogo e registra acessos técnicos.</li>
+<li><b>Servidores de conexão (STUN) do Google e da Cloudflare</b>: no jogo online, ajudam os aparelhos a se encontrarem. Recebem só o endereço de internet (IP) do aparelho, nada da sua conta.</li>
+<li><b>Outros jogadores</b>: veem o nome do personagem, a foto da conta (se ligada), o nível e os números das partidas no ranking. Amigos e quem está na mesma sala online veem também seu perfil (personagem, estatísticas e itens) e se você está on. Na partida online, os aparelhos da sala se conectam direto e por isso os outros aparelhos recebem o endereço de internet (IP) do seu.</li>
+<li><b>Autoridades</b>: quando a lei ou uma ordem judicial exigir.</li>
+</ul>
+<p><b>Transferência internacional:</b> Google, Cloudflare e GitHub podem tratar dados fora do Brasil (por exemplo, nos Estados Unidos). Isso ocorre com as garantias previstas no art. 33 da LGPD, como cláusulas contratuais desses fornecedores.</p>
+
+<h2 id="tempo">5. Por quanto tempo guardamos</h2>
+<ul>
+<li>Conta, perfil, progresso, estatísticas, amizades, idade, limite e aceite dos termos: enquanto a conta existir.</li>
+<li>Registros de acesso (IP, data e hora): pelo menos 6 meses, como exige o Marco Civil da Internet.</li>
+<li>Registros de compra e devolução: enquanto a conta existir. Quando a conta é excluída, fica só um resumo sem nome e sem e-mail (total pago e datas), para cumprir obrigações fiscais e de defesa do consumidor.</li>
+<li>Feedback: até 2 anos, depois apagado ou mantido sem ligação com a conta.</li>
 </ul>
 
-<h2>Onde os dados ficam</h2>
-<p>Os dados ficam no Supabase, em servidores em São Paulo (Brasil). O login usa o Google. Não vendemos nem compartilhamos seus dados com terceiros para publicidade. Se o jogo passar a exibir anúncios, esta política será atualizada antes disso.</p>
+<h2 id="direitos">6. Seus direitos e como excluir a conta</h2>
+<p>A LGPD (art. 18) garante a você: confirmar se tratamos seus dados, acessar, corrigir, pedir anonimização, bloqueio ou eliminação do que for desnecessário, portabilidade, informação sobre com quem compartilhamos, revogar consentimento e se opor a um tratamento.</p>
+<ul>
+<li><b>Ver e corrigir</b>: o perfil, o progresso e MINHAS COMPRAS estão no jogo; o nome do personagem pode ser trocado em PERFIL.</li>
+<li><b>Excluir tudo</b>: PERFIL › EXCLUIR MINHA CONTA. A exclusão é imediata e não pode ser desfeita. Apagamos perfil, progresso, estatísticas, partidas, amizades, aceite e posição no ranking, e tiramos nome e e-mail do atendimento. Ficam só os registros que a lei manda guardar, sem ligação com você.</li>
+<li><b>Outros pedidos</b>, ou se não conseguir entrar no jogo: escreva para <a href="mailto:amplitudelabb@gmail.com">amplitudelabb@gmail.com</a> com o e-mail da conta Google usada no jogo. Respondemos em até 15 dias.</li>
+<li>Você também pode reclamar na Autoridade Nacional de Proteção de Dados (<a href="https://www.gov.br/anpd/">ANPD</a>).</li>
+</ul>
 
-<h2>Por quanto tempo</h2>
-<p>Enquanto sua conta existir. Se você excluir a conta, apagamos perfil, progresso, estatísticas, partidas e sua posição no ranking.</p>
+<h2 id="menores">7. Crianças e adolescentes</h2>
+<ul>
+<li>O jogo tem violência e sangue e <b>não é destinado a crianças</b> (menores de 12 anos). Não coletamos dados de crianças de propósito. Se soubermos que uma criança criou conta, apagamos a conta e os dados.</li>
+<li>Adolescentes (12 a 17 anos) só devem usar o jogo com autorização e acompanhamento do responsável. Tratamos os dados deles no seu melhor interesse (LGPD, art. 14): só o necessário para o jogo, sem publicidade, sem perfil de consumo, com limite de gasto obrigatório e sem baú de sorteio.</li>
+<li>O responsável pode pedir acesso, correção ou exclusão dos dados do adolescente pelo e-mail de atendimento.</li>
+</ul>
 
-<h2>Seus direitos e como excluir a conta</h2>
-<p>Você pode ver seus dados no perfil do jogo e trocar o nome do personagem. Para apagar tudo, abra o jogo, vá em <b>Perfil › Excluir minha conta</b> e confirme. A exclusão é imediata e não pode ser desfeita.</p>
-<p>Se não conseguir entrar no jogo, peça a exclusão ou tire dúvidas pelo e-mail <a href="mailto:amplitudelabb@gmail.com">amplitudelabb@gmail.com</a>, informando o e-mail da conta Google usada no jogo.</p>
+<h2 id="seguranca">8. Segurança</h2>
+<p>A conexão com o jogo e o servidor é criptografada (HTTPS). As tabelas do servidor são fechadas: o jogo só chama funções que conferem quem é você, e cada pessoa só vê os próprios dados.
+Saldo, compras, limites e prêmios são conferidos no servidor, não no aparelho. O acesso ao painel interno é restrito a pessoas autorizadas da equipe e fica registrado.
+Nenhum sistema é 100% seguro; se houver um incidente que possa trazer risco ou dano relevante a você, avisaremos você e a ANPD, como manda a lei.</p>
 
-<h2>Crianças e adolescentes</h2>
-<p>O jogo tem violência contra zumbis e sangue. Não é destinado a crianças. Menores de 18 anos só devem jogar com autorização dos responsáveis.</p>
+<h2 id="mudancas">9. Mudanças</h2>
+<p>Quando esta política mudar, a data no topo é atualizada. Mudanças importantes são avisadas no jogo e pedem novo aceite.</p>
 
-<h2>Mudanças</h2>
-<p>Quando esta política mudar, a data no topo será atualizada e as mudanças importantes serão avisadas no jogo.</p>
-
-<p class="mute"><a href="termos.html">Termos de Uso</a> · <a href="./">Voltar ao jogo</a></p>
+<footer>
+<p><a href="termos.html">Termos de Uso</a> · <a href="./">Voltar ao jogo</a></p>
+<p class="mute">Versões anteriores: 19 de novembro de 2026.</p>
+</footer>
 </main>
 </body>
 </html>

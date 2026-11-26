@@ -173,6 +173,7 @@ let rtCount = 0;
 // ------------------------------------------------------------ páginas
 async function player(b, uid, size, mobile) {
   const ctx = await b.newContext({ viewport: size, deviceScaleFactor: 1, hasTouch: !!mobile, isMobile: !!mobile });
+  await ctx.addInitScript((v) => { try { localStorage.setItem('qz_terms', JSON.stringify({ v })); } catch (e) {} }, __TV__); // termos já aceitos (v29.12)
   await ctx.addInitScript(([uid, relay]) => {
     try {
       const d = JSON.parse(localStorage.getItem('qz_save') || '{}');
@@ -196,6 +197,7 @@ async function player(b, uid, size, mobile) {
   return p;
 }
 
+const __TV__ = (/TERMS = \{\s*V: "([^"]+)"/.exec(String(html)) || [])[1] || '';
 (async () => {
   const b = await chromium.launch({ args: ['--use-fake-ui-for-media-stream'] });
   let bad = 0;
