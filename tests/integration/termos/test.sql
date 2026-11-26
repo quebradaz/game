@@ -1,5 +1,5 @@
--- Testes da v29_11 (aceite dos termos e baú de sorteio só para adulto). Cada bloco falha com exceção se der errado.
--- Ordem: base_stub, v28_8_moedas_nivel_servidor, v28_10_baus, v29_7_baus_5_itens, mock.sql, v29_11_termos, este arquivo.
+-- Testes da v29_12 (aceite dos termos e baú de sorteio só para adulto). Cada bloco falha com exceção se der errado.
+-- Ordem: base_stub, v28_8_moedas_nivel_servidor, v28_10_baus, v29_7_baus_5_itens, mock.sql, v29_12_termos, este arquivo.
 \set ON_ERROR_STOP 1
 insert into public.profiles (id) values ('00000000-0000-0000-0000-0000000000a1'), ('00000000-0000-0000-0000-0000000000a2'), ('00000000-0000-0000-0000-0000000000a3');
 insert into public.wallets (user_id, zcoin, coins) select id, 50000, 0 from public.profiles;

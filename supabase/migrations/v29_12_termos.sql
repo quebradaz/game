@@ -1,4 +1,4 @@
--- v29.11: termos de uso e proteção legal.
+-- v29.12: termos de uso e proteção legal.
 --   1. Aceite dos Termos de Uso e da Política de Privacidade guardado no servidor, por versão, com a hora do
 --      servidor (prova de que a pessoa aceitou aquela versão). O jogo pede o aceite de novo quando a versão muda.
 --   2. Baú de sorteio pago (chest_shop.reveal = false) só para quem declarou 18 anos ou mais.
@@ -18,7 +18,7 @@ create table if not exists public.legal_cfg (
   terms_version text not null default '2026-11-24',
   chest_minor_block boolean not null default true,
   -- false: quem ainda não disse a idade compra baú de sorteio (só o menor declarado é barrado). Usado enquanto
-  -- o jogo no ar não sabe perguntar a idade no baú; ligar (true) junto com o jogo v29.11.
+  -- o jogo no ar não sabe perguntar a idade no baú; ligar (true) junto com o jogo v29.12.
   chest_need_age boolean not null default true
 );
 alter table public.legal_cfg add column if not exists chest_need_age boolean not null default true;
