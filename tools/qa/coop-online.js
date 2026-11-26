@@ -327,6 +327,81 @@ async function player(b, uid, size, mobile) {
   ok(k1 === k0 + 1, 'abate do convidado conta pra ele (' + k0 + ' -> ' + k1 + ')');
   ok(dz && bk1 === bk0 + 1, 'zumbi morre no anfitrião e não conta como abate do anfitrião');
   if (C) { const dc = await C.evaluate((n) => { const z = S.zs.find((q) => q.nid === n); return !z || z.state === 'dead'; }, tz); ok(dc, 'terceiro jogador vê o zumbi morrer'); }
+  // ------------------------------------------------ v29.12: loot da tropa
+  if (await A.evaluate(() => typeof ONL.itemOk === 'function')) {
+    const items = (p) => p.evaluate(() => S.items.filter((i) => i.iid).map((i) => [i.iid, i.id, i.rk, Math.round(i.x)]));
+    // arma do mundo nasce no anfitrião e aparece igual pra todos
+    const iid = await A.evaluate(() => { const b = S.bots.find((q) => q.name === 'BRAVO'); const it = spawnItem('m4', 'gold', b.x + 30, b.y - 30); return it.iid; });
+    await wait(900);
+    const seen = await Promise.all(all.map(items));
+    ok(seen.every((L) => L.some((i) => i[0] === iid && i[1] === 'm4' && i[2] === 'gold')), 'arma dourada do anfitrião aparece pra todos (' + iid + ')');
+    const xs = seen.map((L) => (L.find((i) => i[0] === iid) || [])[3]);
+    ok(Math.max(...xs) - Math.min(...xs) <= 2, 'no mesmo lugar (' + xs.join(', ') + ')');
+    // convidado não sorteia loot do mundo
+    const g0 = await B.evaluate(() => { const n = S.items.length; spawnItem('aug', 'purple', S.player.x, S.player.y - 30); dropPow(S.player.x, S.player.y - 20, 'dbl'); return [S.items.length - n, S.pows.length]; });
+    ok(g0[0] === 0, 'convidado não cria loot do mundo sozinho');
+    // convidado pega: some pra todos e a arma antiga dele cai pros outros
+    const before = await B.evaluate(() => S.player.ws.map((w) => w && w.id));
+    await B.evaluate((n) => { const it = S.items.find((q) => q.iid === n); it.np = 0; takeItem(it); }, iid);
+    await wait(1000);
+    const after = await B.evaluate(() => S.player.ws.map((w) => w && (w.id + ':' + w.rk)));
+    ok(after[0] === 'm4:gold', 'convidado pegou a M4 dourada (' + JSON.stringify(before) + ' -> ' + JSON.stringify(after) + ')');
+    const left = await Promise.all(all.map(items));
+    ok(left.every((L) => !L.some((i) => i[0] === iid)), 'a arma some do chão de todo mundo');
+    if (before[0]) ok(left[0].some((i) => i[1] === before[0] && i[0] >= 1e6) && (!C || left[2].some((i) => i[1] === before[0])), 'a arma que ele largou na troca aparece pros outros');
+    // disputa: os dois pegam ao mesmo tempo, só um leva
+    const iid2 = await A.evaluate(() => spawnItem('scar', 'purple', S.player.x, S.player.y - 30).iid);
+    await wait(700);
+    await Promise.all([A, B].map((p) => p.evaluate((n) => { const it = S.items.find((q) => q.iid === n); if (it) { it.np = 0; takeItem(it); } }, iid2)));
+    await wait(1000);
+    const own = await Promise.all([A, B].map((p) => p.evaluate(() => S.player.ws.some((w) => w && w.id === 'scar'))));
+    ok(own.filter(Boolean).length === 1, 'pegaram juntos: só um leva (anfitrião ' + own[0] + ', convidado ' + own[1] + ')');
+    // power-up: anfitrião solta, convidado pega, efeito pra tropa toda
+    const pid = await A.evaluate(() => { const b = S.bots.find((q) => q.name === 'BRAVO'); S.fx.dbl = 0; dropPow(b.x + 200, b.y - 20, 'dbl'); return S.pows[S.pows.length - 1].pid; });
+    await wait(800);
+    const pws = await Promise.all(all.map((p) => p.evaluate((n) => S.pows.some((q) => q.pid === n && !q.got), pid)));
+    ok(pws.every(Boolean), 'power-up do anfitrião aparece pra todos');
+    await B.evaluate((n) => { S.fx.dbl = 0; const pw = S.pows.find((q) => q.pid === n); pw.x = S.player.x; pw.y = S.player.y - 30; }, pid);
+    await wait(1200);
+    const fx = await Promise.all(all.map((p) => p.evaluate((n) => [S.fx.dbl > 0, S.pows.some((q) => q.pid === n && !q.got)], pid)));
+    ok(fx.every((f) => f[0] && !f[1]), 'convidado pegou GRANA EM DOBRO e vale pra todos (' + JSON.stringify(fx) + ')');
+    // chefe: uma dourada por jogador
+    const bx = await A.evaluate(() => { const n = S.items.length; S.goldGot = []; ONL.bossExtra({ x: S.player.x + 60, y: S.player.y }); bossGold({ x: S.player.x + 60, y: S.player.y }); return S.items.length - n; });
+    ok(bx === all.length, 'chefe solta uma dourada pra cada jogador (' + bx + ')');
+    await wait(900);
+    const golds = await B.evaluate(() => S.items.filter((i) => i.iid && i.rk === 'gold').length);
+    ok(golds >= all.length, 'as douradas do chefe aparecem no convidado (' + golds + ')');
+    // arrastar a arma do HUD pra fora: larga no chão e o amigo vê
+    await B.evaluate(() => { S.items.length = 0; });
+    const r = await B.evaluate(() => { const e = $('slot0').getBoundingClientRect(); return [e.left + e.width / 2, e.top + e.height / 2]; });
+    await B.mouse.move(r[0], r[1]);
+    await B.mouse.down();
+    await B.mouse.move(r[0] + 40, r[1] - 60, { steps: 4 });
+    await B.mouse.move(r[0] + 180, r[1] - 170, { steps: 6 });
+    await wait(200);
+    await B.screenshot({ path: `${OUT}/celular-7-arrastando-arma.png` });
+    const ghost = await B.evaluate(() => !$('dragGhost').classList.contains('hidden') && $('dragGhost').classList.contains('out'));
+    ok(ghost, 'arma segue o dedo e avisa que vai largar');
+    await B.mouse.up();
+    await wait(900);
+    const dr = await B.evaluate(() => ({ w0: S.player.ws[0], cur: S.player.cur, n: S.items.filter((i) => i.id === 'm4').length }));
+    ok(!dr.w0 && dr.cur !== 0 && dr.n === 1, 'soltou fora do HUD: a M4 foi pro chão (' + JSON.stringify(dr) + ')');
+    const onA = await A.evaluate(() => ({ it: S.items.some((i) => i.id === 'm4' && i.rk === 'gold' && i.iid >= 1e6), t: $('banner').textContent }));
+    ok(onA.it && /BRAVO LARGOU/.test(onA.t), 'o anfitrião vê a arma que o amigo largou (' + onA.t + ')');
+    await A.evaluate(() => { const b = S.bots.find((q) => q.name === 'BRAVO'); S.player.x = b.x - 40; });
+    await wait(700);
+    await A.screenshot({ path: `${OUT}/pc-6-arma-largada-pelo-amigo.png` });
+    // anfitrião pega a arma do amigo
+    await A.evaluate(() => { const it = S.items.find((i) => i.id === 'm4' && i.rk === 'gold'); it.np = 0; takeItem(it); });
+    await wait(900);
+    const fin = await Promise.all([A.evaluate(() => S.player.ws.some((w) => w && w.id === 'm4' && w.rk === 'gold')), B.evaluate(() => S.items.some((i) => i.id === 'm4' && i.rk === 'gold'))]);
+    ok(fin[0] && !fin[1], 'anfitrião pegou a arma que o amigo largou e ela sumiu do chão dele');
+    // toque curto no slot continua trocando de arma
+    await B.evaluate(() => { giveWeapon('aug', 'blue', 0); S.player.cur = 1; S.player.swapT = 0; });
+    await B.click('#slot0');
+    await wait(500);
+    ok(await B.evaluate(() => S.player.cur === 0 && !!S.player.ws[0]), 'toque curto no slot só troca de arma (não larga)');
+  }
   // golpe de zumbi no boneco do convidado (no anfitrião) chega no aparelho do convidado
   const h0 = await B.evaluate(() => window.__hits || 0);
   await A.evaluate(() => { const b = S.bots[0]; b.iT = 0; hurtActor(b, 5, 0); });
