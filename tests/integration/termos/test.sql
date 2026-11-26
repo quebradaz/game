@@ -54,6 +54,16 @@ do $$ declare r jsonb; e text; z int; begin
   assert e = 'IDADE_PENDENTE_BAU', 'sem idade: ' || e;
   select zcoin into z from public.wallets where user_id = '00000000-0000-0000-0000-0000000000a2';
   assert z = 50000, 'menor perdeu Z-Coin ' || z;
+  -- modo de transição (jogo velho no ar): sem idade passa, menor declarado continua barrado
+  update public.legal_cfg set chest_need_age = false;
+  perform set_config('test.uid', '00000000-0000-0000-0000-0000000000a2', false);
+  e := pg_temp.err($q$select public.buy_chest(2, null)$q$);
+  assert e = 'BAU_SO_ADULTO', 'menor na transição: ' || e;
+  perform set_config('test.uid', '00000000-0000-0000-0000-0000000000a3', false);
+  r := public.buy_chest(3, null);
+  assert r->>'item' is not null, 'sem idade na transição ' || r::text;
+  delete from public.boxes where user_id = '00000000-0000-0000-0000-0000000000a3';
+  update public.legal_cfg set chest_need_age = true;
   assert (select count(*) from public.boxes where user_id <> '00000000-0000-0000-0000-0000000000a1') = 0, 'compra barrada ficou gravada';
   raise notice 'ok: baú de sorteio só para adulto; menor e sem idade não perdem nada';
 end $$;

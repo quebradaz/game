@@ -16,8 +16,12 @@
 create table if not exists public.legal_cfg (
   id boolean primary key default true check (id),
   terms_version text not null default '2026-11-24',
-  chest_minor_block boolean not null default true
+  chest_minor_block boolean not null default true,
+  -- false: quem ainda não disse a idade compra baú de sorteio (só o menor declarado é barrado). Usado enquanto
+  -- o jogo no ar não sabe perguntar a idade no baú; ligar (true) junto com o jogo v29.11.
+  chest_need_age boolean not null default true
 );
+alter table public.legal_cfg add column if not exists chest_need_age boolean not null default true;
 insert into public.legal_cfg (id) values (true) on conflict do nothing;
 alter table public.legal_cfg enable row level security;
 
@@ -66,7 +70,10 @@ begin
   select reveal into rev from public.chest_shop where tier = new.tier;
   if rev is not false then return new; end if;
   select age into a from public.zc_limits where user_id = new.user_id;
-  if a is null then raise exception 'IDADE_PENDENTE_BAU'; end if;
+  if a is null then
+    if (select chest_need_age from public.legal_cfg) is not false then raise exception 'IDADE_PENDENTE_BAU'; end if;
+    return new;
+  end if;
   if a <> 'adult' then raise exception 'BAU_SO_ADULTO'; end if;
   return new;
 end $$;
